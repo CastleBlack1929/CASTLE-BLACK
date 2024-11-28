@@ -12,8 +12,10 @@ body {
     align-items: center; /* Centrar horizontalmente */
 }
 
-.container {
-    padding: 20px;
+/* Ajustar el tamaño del logo */
+.logo {
+    width: 150px; /* Cambia este valor según el tamaño deseado */
+    height: auto; /* Mantén la proporción del logo */
+    margin: 20px auto; /* Centrar el logo */
+    display: block;
 }
-
-
