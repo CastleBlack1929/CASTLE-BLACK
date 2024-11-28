@@ -1,23 +1,19 @@
-/* General Reset */
-body, html {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Fondo y Estilo General */
 body {
     background-color: #000; /* Fondo negro */
+    color: #fff; /* Letras blancas */
     font-family: Arial, sans-serif;
+    text-align: center; /* Centrar contenido */
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* Altura completa de la ventana */
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh; /* Ocupa toda la pantalla */
-    margin: 0;
-    color: #fff; /* Letras blancas */
+    justify-content: center; /* Centrar verticalmente */
+    align-items: center; /* Centrar horizontalmente */
 }
 
-/* Est
+.container {
+    padding: 20px;
+}
 
 
