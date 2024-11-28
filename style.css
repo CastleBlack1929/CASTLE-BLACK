@@ -1,0 +1,39 @@
+/* General */
+body {
+    background-color: black;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor principal */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Logo */
+.logo {
+    width: 200px; /* Ajusta el tamaño según necesites */
+    height: auto;
+    margin-bottom: 20px;
+}
+
+/* Título de la empresa */
+.empresa {
+    font-size: 2.5em;
+    margin: 0;
+}
+
+/* Mensaje */
+.proximamente {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
