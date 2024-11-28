@@ -1,39 +1,23 @@
-/* General */
-body {
-    background-color: black;
-    color: white;
-    font-family: Arial, sans-serif;
-    text-align: center;
+/* General Reset */
+body, html {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
-/* Contenedor principal */
-.container {
+/* Fondo y Estilo General */
+body {
+    background-color: #000; /* Fondo negro */
+    font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
-    padding: 20px;
-}
-
-/* Logo */
-.logo {
-    width: 200px; /* Ajusta el tamaño según necesites */
-    height: auto;
-    margin-bottom: 20px;
-}
-
-/* Título de la empresa */
-.empresa {
-    font-size: 2.5em;
+    height: 100vh; /* Ocupa toda la pantalla */
     margin: 0;
+    color: #fff; /* Letras blancas */
 }
 
-/* Mensaje */
-.proximamente {
-    font-size: 1.2em;
-    margin: 10px 0;
-}
+/* Est
+
 
