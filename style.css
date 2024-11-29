@@ -79,3 +79,9 @@ body {
     background-color: black; /* Fondo negro al pasar el mouse */
     color: white;            /* Texto blanco al pasar el mouse */
 }
+
+/* Desactiva el estilo predeterminado */
+.login-form .btn:focus {
+    outline: none;           /* Elimina el borde de enfoque */
+    box-shadow: none;        /* Elimina la sombra que puede poner el navegador */
+}
