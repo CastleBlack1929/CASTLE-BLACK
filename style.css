@@ -1,14 +1,14 @@
-/* Fondo negro y estilos generales */
+/* Fondo negro para toda la página */
 body {
+    background-color: black; /* Fondo negro */
+    color: white;            /* Texto blanco por defecto */
+    font-family: Arial, sans-serif; /* Fuente básica */
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: black;
-    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;       /* Asegura que ocupe toda la pantalla */
 }
 
 /* Contenedor centrado */
@@ -18,36 +18,65 @@ body {
 
 /* Logo */
 .logo {
-    max-width: 150px;
+    width: 150px;            /* Tamaño adecuado para el logo */
+    height: auto;            /* Mantiene proporción */
+    margin-bottom: 20px;     /* Espaciado debajo del logo */
+}
+
+/* Título */
+.empresa {
+    font-size: 28px;
     margin-bottom: 20px;
 }
 
-/* Título de la empresa */
-.empresa {
-    font-size: 2.5em;
-    margin: 10px 0;
+/* Mensaje de proximidad */
+.proximamente {
+    font-size: 18px;
+    margin-bottom: 30px;
 }
 
-/* Mensaje de próximamente */
-.proximamente {
-    font-size: 1em; /* Reducido */
-    margin: 10px 0 20px;
+/* Formulario centrado verticalmente */
+.login-form {
+    display: flex;            /* Flexbox para organización vertical */
+    flex-direction: column;   /* Elementos uno debajo del otro */
+    align-items: center;      /* Centra los elementos horizontalmente */
+    gap: 15px;                /* Espaciado entre los elementos */
+    width: 100%;
+    max-width: 300px;         /* Limita el ancho del formulario */
+    margin: 0 auto;
+}
+
+/* Etiquetas */
+.login-form label {
+    font-size: 16px;
+    text-align: left;
+    width: 100%;
+}
+
+/* Inputs de texto */
+.login-form input {
+    width: 100%;             /* Ocupa el 100% del ancho permitido */
+    padding: 10px;           /* Espaciado interno */
+    border: 1px solid #ccc;  /* Borde claro */
+    border-radius: 5px;      /* Bordes redondeados */
+    font-size: 14px;
 }
 
 /* Botón */
-.btn {
-    display: inline-block;
-    padding: 10px 20px;
+.login-form .btn {
+    background-color: white; /* Fondo blanco */
+    color: black;            /* Texto negro */
+    border: 2px solid black; /* Borde negro */
+    padding: 10px 20px;      /* Tamaño y espacio interno */
     font-size: 16px;
-    color: white;
-    background-color: black;
-    text-decoration: none;
-    border: 2px solid white;
-    border-radius: 5px;
     cursor: pointer;
+    border-radius: 5px;      /* Bordes redondeados */
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.btn:hover {
-    background-color: white;
-    color: black;
+/* Hover del botón */
+.login-form .btn:hover {
+    background-color: black; /* Fondo negro al pasar el mouse */
+    color: white;            /* Texto blanco al pasar el mouse */
 }
+
