@@ -64,19 +64,19 @@ body {
 
 /* Botón */
 .login-form .btn {
-    background-color: white; /* Fondo blanco */
-    color: black;            /* Texto negro */
-    border: 2px solid black; /* Borde negro */
-    padding: 10px 20px;      /* Tamaño y espacio interno */
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;      /* Bordes redondeados */
-    transition: background-color 0.3s, color 0.3s;
+    background-color: white !important; /* Fondo blanco */
+    color: black !important;            /* Texto negro */
+    border: 2px solid black !important; /* Borde negro */
+    padding: 10px 20px !important;      /* Tamaño y espacio interno */
+    font-size: 16px !important;
+    cursor: pointer !important;
+    border-radius: 5px !important;      /* Bordes redondeados */
+    transition: background-color 0.3s, color 0.3s !important;
 }
 
-/* Hover del botón */
 .login-form .btn:hover {
-    background-color: black; /* Fondo negro al pasar el mouse */
-    color: white;            /* Texto blanco al pasar el mouse */
+    background-color: black !important; /* Fondo negro al pasar el mouse */
+    color: white !important;            /* Texto blanco al pasar el mouse */
 }
+
 
