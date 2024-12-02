@@ -1,87 +1,69 @@
-/* Fondo negro para toda la página */
+/* Fondo negro */
 body {
-    background-color: black; /* Fondo negro */
-    color: white;            /* Texto blanco por defecto */
-    font-family: Arial, sans-serif; /* Fuente básica */
+    background-color: black;
+    color: white;
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;       /* Asegura que ocupe toda la pantalla */
 }
 
-/* Contenedor centrado */
+/* Botón fijo */
+.fixed-button {
+    position: fixed;
+    top: 20px; /* Espaciado uniforme desde el techo */
+    right: 20px; /* Espaciado uniforme desde el borde derecho */
+    background-color: black;
+    text-align: right;
+    z-index: 1000; /* Asegura que esté siempre visible encima del contenido */
+}
+
+.fixed-button .btn {
+    background-color: white;
+    color: black;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 16px;
+    border: 2px solid black;
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.fixed-button .btn:hover {
+    background-color: gray; /* Fondo gris al pasar el mouse */
+    color: white; /* Texto blanco al pasar el mouse */
+}
+
+/* Contenedor principal */
 .container {
-    text-align: center;
+    padding: 20px;
+    text-align: left;
+    max-width: 800px; /* Ancho máximo */
+    margin: 0 auto; /* Centrado horizontal */
 }
 
 /* Logo */
 .logo {
-    width: 150px;            /* Tamaño adecuado para el logo */
-    height: auto;            /* Mantiene proporción */
-    margin-bottom: 20px;     /* Espaciado debajo del logo */
+    display: block;
+    margin: 30px auto 20px; /* Espaciado superior e inferior */
+    width: 150px; /* Tamaño adecuado del logo */
+    height: auto; /* Mantener proporción */
 }
 
-/* Título */
-.empresa {
-    font-size: 28px;
-    margin-bottom: 20px;
+/* Títulos de sección */
+h2 {
+    color: white;
+    border-bottom: 2px solid white; /* Línea debajo del título */
+    padding-bottom: 5px;
+    margin-top: 30px; /* Separación entre secciones */
 }
 
-/* Mensaje de proximidad */
-.proximamente {
-    font-size: 18px;
-    margin-bottom: 30px;
+/* Lista de servicios */
+ul {
+    padding-left: 20px; /* Sangría para la lista */
 }
 
-/* Formulario centrado verticalmente */
-.login-form {
-    display: flex;            /* Flexbox para organización vertical */
-    flex-direction: column;   /* Elementos uno debajo del otro */
-    align-items: center;      /* Centra los elementos horizontalmente */
-    gap: 15px;                /* Espaciado entre los elementos */
-    width: 100%;
-    max-width: 300px;         /* Limita el ancho del formulario */
-    margin: 0 auto;
+ul li {
+    margin-bottom: 10px; /* Separación entre elementos de la lista */
 }
 
-/* Etiquetas */
-.login-form label {
-    font-size: 16px;
-    text-align: left;
-    width: 100%;
-}
-
-/* Inputs de texto */
-.login-form input {
-    width: 100%;             /* Ocupa el 100% del ancho permitido */
-    padding: 10px;           /* Espaciado interno */
-    border: 1px solid #ccc;  /* Borde claro */
-    border-radius: 5px;      /* Bordes redondeados */
-    font-size: 14px;
-}
-
-/* Botón */
-.login-form .btn {
-    background-color: white; /* Fondo blanco */
-    color: black;            /* Texto negro */
-    border: 2px solid black; /* Borde negro */
-    padding: 10px 20px;      /* Tamaño y espacio interno */
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;      /* Bordes redondeados */
-    transition: background-color 0.3s, color 0.3s;
-}
-
-/* Hover del botón */
-.login-form .btn:hover {
-    background-color: black; /* Fondo negro al pasar el mouse */
-    color: white;            /* Texto blanco al pasar el mouse */
-}
-
-/* Desactiva el estilo predeterminado */
-.login-form .btn:focus {
-    outline: none;           /* Elimina el borde de enfoque */
-    box-shadow: none;        /* Elimina la sombra que puede poner el navegador */
-}
