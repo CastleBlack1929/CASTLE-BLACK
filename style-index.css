@@ -7,75 +7,81 @@ body {
     padding: 0;
 }
 
+/* Botón fijo */
+.fixed-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: black;
+    z-index: 1000;
+}
+
+.fixed-button .btn {
+    background-color: white;
+    color: black;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 16px;
+    border: 2px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.fixed-button .btn:hover {
+    background-color: gray;
+    color: white;
+}
+
 /* Contenedor principal */
 .container {
-    text-align: center; /* Centrar contenido */
     padding: 20px;
     max-width: 800px;
     margin: 0 auto;
+    text-align: left; /* Alinea el contenido hacia la izquierda */
 }
 
 /* Logo */
 .logo {
     display: block;
-    margin: 30px auto; /* Centrado y separado */
-    width: 150px;      /* Tamaño adecuado */
-    height: auto;      /* Mantener proporción */
+    margin: 30px auto; /* Centrado horizontal para el logo */
+    width: 150px;
+    height: auto;
 }
 
-/* Título */
-.empresa {
-    font-size: 28px;   /* Tamaño del título */
-    font-weight: bold; /* Texto en negrita */
-    margin-bottom: 20px;
-    text-align: center; /* Centrado */
-}
-
-/* Formulario centrado y vertical */
-.login-form {
-    display: flex;
-    flex-direction: column; /* Elementos en columna (uno debajo del otro) */
-    align-items: center;    /* Centrar elementos horizontalmente */
-    gap: 15px;              /* Espaciado uniforme entre elementos */
-    margin-top: 20px;
-}
-
-/* Etiquetas */
-.login-form label {
-    font-size: 16px;       /* Mismo tamaño para preguntas */
-    font-weight: bold;     /* Negrita */
-    text-align: left;      /* Alineado al inicio */
-    width: 100%;           /* Ocupa todo el ancho */
-    max-width: 300px;      /* Ancho máximo */
-}
-
-/* Campos de entrada */
-.login-form input {
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ccc; /* Borde ligero */
-    border-radius: 5px;
-    width: 100%;            /* Ocupa todo el ancho */
-    max-width: 300px;       /* Ancho máximo */
-}
-
-/* Botón */
-.login-form .btn {
-    background-color: white;
-    color: black;
-    padding: 10px 20px;
-    font-size: 16px;        /* Mismo tamaño que las etiquetas */
-    font-weight: bold;      /* Negrita, igual que las etiquetas */
-    font-family: Arial, sans-serif; /* Asegura la misma tipografía */
-    border: 2px solid black;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-    width: 100%;            /* Ocupa todo el ancho */
-    max-width: 300px;       /* Tamaño consistente */
-}
-
-.login-form .btn:hover {
-    background-color: gray; /* Fondo gris al pasar el mouse */
+/* Títulos de sección */
+h2 {
     color: white;
+    border-bottom: 2px solid white;
+    padding-bottom: 5px;
+    margin-top: 30px;
+}
+
+/* Listas */
+ul {
+    padding-left: 20px; /* Sangría para las listas */
+}
+
+ul li {
+    margin-bottom: 10px;
+}
+
+/* Pie de página */
+footer {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: black;
+    color: white;
+    text-align: center;
+    border-top: 2px solid white;
+}
+
+footer h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+footer p {
+    font-size: 16px;
+    line-height: 1.5;
 }
