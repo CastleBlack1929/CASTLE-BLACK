@@ -67,3 +67,23 @@ ul li {
     margin-bottom: 10px; /* Separación entre elementos de la lista */
 }
 
+/* Sección de contacto */
+footer {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: black;
+    color: white;
+    text-align: center;
+    border-top: 2px solid white;
+}
+
+footer h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+footer p {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
