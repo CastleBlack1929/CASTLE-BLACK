@@ -7,83 +7,75 @@ body {
     padding: 0;
 }
 
-/* Botón fijo */
-.fixed-button {
-    position: fixed;
-    top: 20px; /* Espaciado uniforme desde el techo */
-    right: 20px; /* Espaciado uniforme desde el borde derecho */
-    background-color: black;
-    text-align: right;
-    z-index: 1000; /* Asegura que esté siempre visible encima del contenido */
-}
-
-.fixed-button .btn {
-    background-color: white;
-    color: black;
-    padding: 10px 20px;
-    text-decoration: none;
-    font-size: 16px;
-    border: 2px solid black;
-    border-radius: 5px; /* Bordes redondeados */
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.fixed-button .btn:hover {
-    background-color: gray; /* Fondo gris al pasar el mouse */
-    color: white; /* Texto blanco al pasar el mouse */
-}
-
 /* Contenedor principal */
 .container {
+    text-align: center; /* Centrar contenido */
     padding: 20px;
-    text-align: left;
-    max-width: 800px; /* Ancho máximo */
-    margin: 0 auto; /* Centrado horizontal */
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 /* Logo */
 .logo {
     display: block;
-    margin: 30px auto 20px; /* Espaciado superior e inferior */
-    width: 150px; /* Tamaño adecuado del logo */
-    height: auto; /* Mantener proporción */
+    margin: 30px auto; /* Centrado y separado */
+    width: 150px;      /* Tamaño adecuado */
+    height: auto;      /* Mantener proporción */
 }
 
-/* Títulos de sección */
-h2 {
+/* Título */
+.empresa {
+    font-size: 28px;   /* Tamaño del título */
+    font-weight: bold; /* Texto en negrita */
+    margin-bottom: 20px;
+    text-align: center; /* Centrado */
+}
+
+/* Formulario centrado y vertical */
+.login-form {
+    display: flex;
+    flex-direction: column; /* Elementos en columna (uno debajo del otro) */
+    align-items: center;    /* Centrar elementos horizontalmente */
+    gap: 15px;              /* Espaciado uniforme entre elementos */
+    margin-top: 20px;
+}
+
+/* Etiquetas */
+.login-form label {
+    font-size: 16px;       /* Mismo tamaño para preguntas */
+    font-weight: bold;     /* Negrita */
+    text-align: left;      /* Alineado al inicio */
+    width: 100%;           /* Ocupa todo el ancho */
+    max-width: 300px;      /* Ancho máximo */
+}
+
+/* Campos de entrada */
+.login-form input {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc; /* Borde ligero */
+    border-radius: 5px;
+    width: 100%;            /* Ocupa todo el ancho */
+    max-width: 300px;       /* Ancho máximo */
+}
+
+/* Botón */
+.login-form .btn {
+    background-color: white;
+    color: black;
+    padding: 10px 20px;
+    font-size: 16px;        /* Mismo tamaño que las etiquetas */
+    font-weight: bold;      /* Negrita, igual que las etiquetas */
+    font-family: Arial, sans-serif; /* Asegura la misma tipografía */
+    border: 2px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    width: 100%;            /* Ocupa todo el ancho */
+    max-width: 300px;       /* Tamaño consistente */
+}
+
+.login-form .btn:hover {
+    background-color: gray; /* Fondo gris al pasar el mouse */
     color: white;
-    border-bottom: 2px solid white; /* Línea debajo del título */
-    padding-bottom: 5px;
-    margin-top: 30px; /* Separación entre secciones */
 }
-
-/* Lista de servicios */
-ul {
-    padding-left: 20px; /* Sangría para la lista */
-}
-
-ul li {
-    margin-bottom: 10px; /* Separación entre elementos de la lista */
-}
-
-/* Sección de contacto */
-footer {
-    margin-top: 30px;
-    padding: 20px;
-    background-color: black;
-    color: white;
-    text-align: center;
-    border-top: 2px solid white;
-}
-
-footer h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-footer p {
-    font-size: 16px;
-    line-height: 1.5;
-}
-
