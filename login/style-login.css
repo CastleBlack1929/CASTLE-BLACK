@@ -1,4 +1,4 @@
-/* Fondo negro */
+/* Fondo negro y texto blanco */
 body {
     background-color: black;
     color: white;
@@ -7,75 +7,28 @@ body {
     padding: 0;
 }
 
-/* Contenedor principal */
 .container {
-    text-align: center;
     padding: 20px;
     max-width: 800px;
-    margin: 0 auto;
+    margin: auto;
+    text-align: center;
 }
 
-/* Logo */
 .logo {
     display: block;
-    margin: 30px auto; /* Centrado horizontal */
+    margin: 30px auto;
     width: 150px;
     height: auto;
 }
 
-/* Título */
-.empresa {
-    font-size: 28px;
-    font-weight: bold;
+h1 {
+    color: white;
     margin-bottom: 20px;
-    text-align: center; /* Centrado */
 }
 
-/* Formulario centrado y vertical */
 .login-form {
     display: flex;
-    flex-direction: column; /* Elementos en columna (uno debajo del otro) */
-    align-items: center;    /* Centrar elementos horizontalmente */
-    gap: 15px;              /* Espaciado uniforme entre elementos */
-    margin-top: 20px;
-}
-
-/* Etiquetas */
-.login-form label {
-    font-size: 16px;
-    font-weight: bold;
-    text-align: left;
-    width: 100%;           /* Ocupa todo el ancho */
-    max-width: 300px;      /* Ancho máximo */
-}
-
-/* Campos de entrada */
-.login-form input {
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ccc; /* Borde ligero */
-    border-radius: 5px;
-    width: 100%;            /* Ocupa todo el ancho */
-    max-width: 300px;       /* Ancho máximo */
-}
-
-/* Botón */
-.login-form .btn {
-    background-color: white;
-    color: black;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    font-family: Arial, sans-serif; /* Asegura la misma tipografía */
-    border: 2px solid black;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-    width: 100%;            /* Ocupa todo el ancho */
-    max-width: 300px;       /* Tamaño consistente */
-}
-
-.login-form .btn:hover {
-    background-color: gray;
-    color: white;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
 }
