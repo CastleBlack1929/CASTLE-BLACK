@@ -1,0 +1,58 @@
+/* Configuración General */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: black; /* Fondo negro */
+    color: white; /* Texto blanco */
+}
+
+/* Contenedor Principal */
+.container {
+    text-align: center;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Logo */
+.logo {
+    width: 150px; /* Tamaño del logo */
+    height: auto;
+    margin-top: 20px;
+}
+
+/* Título */
+.empresa {
+    font-size: 36px;
+    margin: 20px 0;
+}
+
+/* Sección */
+section {
+    margin: 30px 0;
+}
+
+section h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+section p {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Footer */
+footer {
+    margin-top: 40px;
+}
+
+footer h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+footer p {
+    font-size: 14px;
+    color: lightgray;
+}
