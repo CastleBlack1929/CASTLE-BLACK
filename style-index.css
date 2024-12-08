@@ -9,27 +9,29 @@ body {
 
 /* Contenedor Principal */
 .container {
-    text-align: center;
     margin: 0 auto;
     padding: 20px;
 }
 
 /* Logo */
 .logo {
+    display: block;
+    margin: 0 auto;
     width: 150px; /* Tamaño del logo */
     height: auto;
-    margin-top: 20px;
 }
 
 /* Título */
 .empresa {
     font-size: 36px;
+    text-align: center;
     margin: 20px 0;
 }
 
-/* Sección */
+/* Secciones con texto alineado a la izquierda */
 section {
     margin: 30px 0;
+    text-align: left; /* Texto a la izquierda */
 }
 
 section h2 {
@@ -37,13 +39,14 @@ section h2 {
     margin-bottom: 10px;
 }
 
-section p {
+section p, section ul {
     font-size: 16px;
     line-height: 1.6;
 }
 
-/* Footer */
+/* Footer centrado */
 footer {
+    text-align: center;
     margin-top: 40px;
 }
 
