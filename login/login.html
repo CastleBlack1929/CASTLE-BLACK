@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio de Sesión</title>
+    <title>Inicio de Sesión - Castle Black</title>
     <link rel="stylesheet" href="../css/style-login.css">
     <link rel="icon" href="../img/logo.png" type="image/png">
 </head>
@@ -11,11 +11,15 @@
     <div class="container">
         <img src="../img/logo.png" class="logo" alt="Logo Castle Black">
         <h1>Inicio de Sesión</h1>
+        
+        <!-- Formulario de inicio de sesión -->
         <form action="/validate" method="POST" class="login-form">
             <label for="username">Usuario:</label>
             <input type="text" id="username" name="username" required>
+
             <label for="password">Contraseña:</label>
             <input type="password" id="password" name="password" required>
+
             <button type="submit" class="btn">Ingresar</button>
         </form>
     </div>
