@@ -38,7 +38,7 @@ def validate():
 # Ruta para el dashboard
 @app.route('/dashboard', methods=['GET'])
 def dashboard():
-    return render_template('../dashboard/dashboard.html')  # Redirige a dashboard.html
+    return render_template('dashboard/dashboard.html')  # Redirige a dashboard.html
 
 # Ejecutar la aplicación
 if __name__ == '__main__':
