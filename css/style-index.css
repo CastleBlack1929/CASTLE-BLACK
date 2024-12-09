@@ -1,32 +1,83 @@
+/* Configuración General */
 body {
-    background-color: black;
-    color: white;
+    background-color: black; /* Fondo negro */
+    color: white; /* Texto blanco */
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
 }
 
+/* Contenedor Principal */
 .container {
-    text-align: center;
+    text-align: left; /* Texto alineado a la izquierda */
     margin: 0 auto;
     padding: 20px;
+    max-width: 800px; /* Ancho máximo del contenido */
 }
 
+/* Logo */
 .logo {
-    width: 150px;
-    margin: 20px auto;
+    display: block;
+    margin: 20px auto; /* Centrado horizontal */
+    width: 150px; /* Tamaño del logo */
+    height: auto;
 }
 
+/* Título */
 .empresa {
     font-size: 36px;
     margin: 20px 0;
+    text-align: left; /* Alineación a la izquierda */
 }
 
+/* Sección */
+section {
+    margin: 30px 0;
+}
+
+section h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+section p {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Footer */
+footer {
+    text-align: center; /* Footer centrado */
+    margin-top: 40px;
+}
+
+footer h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+footer p {
+    font-size: 14px;
+    color: lightgray;
+}
+
+/* Botón Estático */
 .btn {
+    position: fixed; /* Fijo en la pantalla */
+    top: 10px; /* Separación desde el borde superior */
+    right: 10px; /* Separación desde el borde derecho */
     background-color: white;
     color: black;
-    padding: 10px 15px;
     text-decoration: none;
+    padding: 10px 15px;
     border-radius: 5px;
-    display: inline-block;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+.btn:hover {
+    background-color: black; /* Fondo negro al pasar el cursor */
+    color: white; /* Texto blanco */
 }
