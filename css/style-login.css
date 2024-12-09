@@ -13,20 +13,13 @@ body {
 }
 
 .logo {
-    width: 150px;
+    width: 100px;
     margin: 20px auto;
 }
 
-.empresa {
-    font-size: 36px;
-    margin: 20px 0;
-}
-
-.btn {
-    background-color: white;
-    color: black;
-    padding: 10px 15px;
-    text-decoration: none;
-    border-radius: 5px;
-    display: inline-block;
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
 }
