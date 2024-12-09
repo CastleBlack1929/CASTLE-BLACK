@@ -30,7 +30,7 @@ def validate():
 
     if not user.empty:
         # Redirigir al dashboard si las credenciales son correctas
-        return redirect('/dashboard')
+        return redirect('/dashboard')  # Redirección a dashboard.html
     else:
         # Mensaje de error si las credenciales son inválidas
         return "Credenciales inválidas. Intente nuevamente.", 401
@@ -38,7 +38,7 @@ def validate():
 # Ruta para el dashboard
 @app.route('/dashboard', methods=['GET'])
 def dashboard():
-    return render_template('../dashboard/dashboard.html')
+    return render_template('../dashboard/dashboard.html')  # Redirige a dashboard.html
 
 # Ejecutar la aplicación
 if __name__ == '__main__':
