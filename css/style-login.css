@@ -1,25 +1,68 @@
+/* Fondo blanco */
 body {
-    background-color: black;
-    color: white;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
+/* Contenedor negro */
 .container {
-    text-align: center;
-    margin: 0 auto;
-    padding: 20px;
+  background-color: #000000;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  text-align: center;
+  width: 350px;
 }
 
+/* Logo */
 .logo {
-    width: 100px;
-    margin: 20px auto;
+  width: 80px;
+  margin-bottom: 15px;
 }
 
+/* Título */
+h1 {
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+/* Formulario */
 .login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  color: #ffffff;
+  text-align: left;
+  margin-bottom: 5px;
+}
+
+input {
+  padding: 10px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+}
+
+/* Botón */
+.btn {
+  background-color: #ffffff;
+  color: #000000;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn:hover {
+  background-color: #dddddd;
 }
