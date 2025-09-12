@@ -3,26 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio de Sesión - Castle Black</title>
+    <title>Login - Castle Black</title>
     <link rel="stylesheet" href="../css/style-login.css">
-    <link rel="icon" href="../img/logo.png" type="image/png">
 </head>
 <body>
-    <div class="container">
-        <img src="../img/logo.png" class="logo" alt="Logo Castle Black">
-        <h1>Inicio de Sesión</h1>
-        
-        <!-- Formulario de inicio de sesión -->
-        <form id="loginForm" class="login-form">
-            <label for="username">Usuario:</label>
-            <input type="text" id="username" name="username" placeholder="Ingrese su usuario" required>
-
-            <label for="password">Contraseña:</label>
-            <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
-
-            <button type="submit" class="btn">Ingresar</button>
+    <div class="login-container">
+        <h1>Castle Black</h1>
+        <form id="loginForm">
+            <input type="text" id="usuario" placeholder="Usuario" required>
+            <input type="password" id="contraseña" placeholder="Contraseña" required>
+            <div id="mensaje-error" class="mensaje-error"></div>
+            <button type="submit">Iniciar sesión</button>
         </form>
     </div>
-    <script src="../scripts/validate.js"></script>
+
+    <script>
+        // Usuarios preautorizados
+        const usuarios = [
+            { "usuario": "admin", "contraseña": "1234" },
+            { "usuario": "fede", "contraseña": "abc123" },
+            { "usuario": "paola", "contraseña": "qwerty" }
+        ];
+
+        function validarLogin() {
+            const usuario = document.getElementById('usuario');
+            const contraseña = document.getElementById('contraseña');
+            const mensajeError = document.getElementById('mensaje-error');
+
+            const usuarioValido = usuarios.find(u => u.usuario === usuario.value && u.contraseña === contraseña.value);
+
+            if (usuarioValido) {
+                // Limpiar estilos de error
+                mensajeError.textContent = "";
+                usuario.style.border = "";
+                contraseña.style.border = "";
+                window.location.href = "../dashboard/dashboard.html"; // redirigir directamente
+            } else {
+                // Mostrar mensaje de error
+                mensajeError.textContent = "Usuario o contraseña incorrectos";
+                usuario.style.border = "2px solid #ff4d4d";
+                contraseña.style.border = "2px solid #ff4d4d";
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', e => {
+            e.preventDefault();
+            validarLogin();
+        });
+    </script>
 </body>
 </html>

@@ -1,68 +1,91 @@
-/* Fondo blanco */
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif; /* fuente general */
+}
+
+/* Fondo del body */
 body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background-color: #ffffff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #000000, #434343);
 }
 
-/* Contenedor negro */
-.container {
-  background-color: #000000;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.3);
-  text-align: center;
-  width: 350px;
+/* Contenedor del login */
+.login-container {
+    background: rgba(255, 255, 255, 0.1); /* transparencia para efecto difuminado */
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    backdrop-filter: blur(10px);
+    text-align: center;
+    width: 300px;
 }
 
-/* Logo */
-.logo {
-  width: 80px;
-  margin-bottom: 15px;
+/* Título con Times New Roman */
+.login-container h1 {
+    margin-bottom: 30px;
+    color: #fff;
+    font-size: 28px;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
 }
 
-/* Título */
-h1 {
-  color: #ffffff;
-  margin-bottom: 20px;
+/* Inputs */
+.login-container input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    font-size: 16px;
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    transition: all 0.3s;
 }
 
-/* Formulario */
-.login-form {
-  display: flex;
-  flex-direction: column;
+/* Placeholder de los inputs */
+.login-container input::placeholder {
+    color: #ddd;
 }
 
-label {
-  color: #ffffff;
-  text-align: left;
-  margin-bottom: 5px;
-}
-
-input {
-  padding: 10px;
-  margin-bottom: 15px;
-  border: none;
-  border-radius: 5px;
-  outline: none;
+/* Inputs con error */
+.login-container input.error {
+    border: 2px solid #ff4d4d;
 }
 
 /* Botón */
-.btn {
-  background-color: #ffffff;
-  color: #000000;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
+.login-container button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #000;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
 }
 
-.btn:hover {
-  background-color: #dddddd;
+.login-container button:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+/* Mensaje de error */
+.mensaje-error {
+    background-color: #ff4d4d;
+    color: #fff;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+    display: none; /* inicialmente oculto */
 }
