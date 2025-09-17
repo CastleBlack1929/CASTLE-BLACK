@@ -1,55 +1,66 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Castle Black</title>
-    <link rel="stylesheet" href="../css/style-login.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login - Castle Black</title>
+  <link rel="stylesheet" href="../css/style-login.css">
 </head>
 <body>
-    <div class="login-container">
-        <h1>Castle Black</h1>
-        <form id="loginForm">
-            <input type="text" id="usuario" placeholder="Usuario" required>
-            <input type="password" id="contraseña" placeholder="Contraseña" required>
-            <div id="mensaje-error" class="mensaje-error"></div>
-            <button type="submit">Iniciar sesión</button>
-        </form>
-    </div>
+  <div class="login-container">
+    <h1>Castle Black</h1>
+    <form id="loginForm" autocomplete="off">
+      <input type="text" id="usuario" placeholder="Usuario" required />
+      <input type="password" id="contraseña" placeholder="Contraseña" required />
+      <div id="mensaje-error" class="mensaje-error"></div>
+      <button type="submit">Iniciar sesión</button>
+    </form>
+  </div>
 
-    <script>
-        // Usuarios preautorizados
-        const usuarios = [
-            { "usuario": "admin", "contraseña": "1234" },
-            { "usuario": "fede", "contraseña": "abc123" },
-            { "usuario": "paola", "contraseña": "qwerty" }
-        ];
+  <script>
+  const usuariosHashed = [
+    { usuario: "admin", hash: "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4" },
+    { usuario: "fede",  hash: "6ca13d52ca70c883e0f0bb101e425a89e8624de51db2d2392593af6a84118090" },
+    { usuario: "paola", hash: "65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5" }
+  ];
 
-        function validarLogin() {
-            const usuario = document.getElementById('usuario');
-            const contraseña = document.getElementById('contraseña');
-            const mensajeError = document.getElementById('mensaje-error');
+  function buf2hex(buffer) {
+    const bytes = new Uint8Array(buffer);
+    return Array.from(bytes).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
 
-            const usuarioValido = usuarios.find(u => u.usuario === usuario.value && u.contraseña === contraseña.value);
+  async function sha256Hex(message) {
+    const enc = new TextEncoder();
+    const data = enc.encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    return buf2hex(hashBuffer);
+  }
 
-            if (usuarioValido) {
-                // Limpiar estilos de error
-                mensajeError.textContent = "";
-                usuario.style.border = "";
-                contraseña.style.border = "";
-                window.location.href = "../dashboard/dashboard.html"; // redirigir directamente
-            } else {
-                // Mostrar mensaje de error
-                mensajeError.textContent = "Usuario o contraseña incorrectos";
-                usuario.style.border = "2px solid #ff4d4d";
-                contraseña.style.border = "2px solid #ff4d4d";
-            }
-        }
+  async function validarLogin() {
+    const inputUsuario = document.getElementById('usuario');
+    const inputPass    = document.getElementById('contraseña');
+    const mensajeError = document.getElementById('mensaje-error');
 
-        document.getElementById('loginForm').addEventListener('submit', e => {
-            e.preventDefault();
-            validarLogin();
-        });
-    </script>
-</body>
-</html>
+    mensajeError.style.display = 'none';
+    mensajeError.textContent = '';
+    inputUsuario.classList.remove('error');
+    inputPass.classList.remove('error');
+
+    const user = inputUsuario.value.trim();
+    const pass = inputPass.value;
+
+    if (!user || !pass) {
+      mensajeError.textContent = 'Ingresa usuario y contraseña';
+      mensajeError.style.display = 'block';
+      inputUsuario.classList.add('error');
+      inputPass.classList.add('error');
+      return;
+    }
+
+    const passHash = await sha256Hex(pass);
+
+    const found = usuariosHashed.find(u => u.usuario === user && u.hash === passHash);
+
+    if (found) {
+      inputPass.value = '';
+      window.location.href = "../dashboard/dashboar
