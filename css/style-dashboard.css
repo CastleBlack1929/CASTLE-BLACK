@@ -120,3 +120,15 @@ footer {
   font-size: 14px;
   color: #aaa;
 }
+.chart-card {
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 25px;
+}
+
+.chart-card canvas {
+  width: 100%;
+  height: 300px;
+}
+

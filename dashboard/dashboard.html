@@ -5,11 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - Castle Black</title>
   <link rel="stylesheet" href="../css/style-dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <header class="header">
     <div class="logo-container">
-      <img src="../img/logo.png" alt="Logo" class="logo">
+      <img src="../img/logo.png" alt="Logo Castle Black" class="logo">
     </div>
     <div class="user-info">
       <h1 class="username">CASTLE BLACK</h1>
@@ -21,46 +22,58 @@
 
   <main class="container">
     <section class="card resumen">
+      <h2>Resumen</h2>
       <div class="info-grid">
+        <!-- Patrimonio -->
         <div class="info-box">
-          <b>APORTE</b>
-          <p>$420.87</p>
-        </div>
-         <div class="info-box">
-         <b>PATRIMONIO</b>
+          <b>Patrimonio (USD)</b>
           <p>$420.87</p>
         </div>
         <div class="info-box">
-          <b>CRECIMINETO</b>
+          <b>Patrimonio (COP)</b>
+          <p>$1.631.990,76</p>
+        </div>
+
+        <!-- Porcentaje de utilidad -->
+        <div class="info-box negative">
+          <b>% de utilidad (USD)</b>
           <p>0,00%</p>
         </div>
-        <div class="info-box">
-          <b>UTILIDA:</b>
-          <p>$0.00</p>
-        </div>
-        <div class="info-box">
-          <b>Aporte(COP)</b>
-          <p>$1.667.909,60</p>
-        </div>
-        <div class="info-box">
-          <b>PATRIMONIO (COP)</b>
-          <p>1.631.990,76</p>
-        </div>
         <div class="info-box negative">
-          <b>CRECIMIENTO(COP)</b>
+          <b>% de utilidad (COP)</b>
           <p>-2.15%</p>
         </div>
+
+        <!-- Utilidad -->
+        <div class="info-box">
+          <b>Utilidad (USD)</b>
+          <p>$0.00</p>
+        </div>
         <div class="info-box negative">
-          <b>UTILIDAD (COP)</b>
+          <b>Utilidad (COP)</b>
           <p>-$35.919</p>
+        </div>
+
+        <!-- Aportes adicionales -->
+        <div class="info-box">
+          <b>Aporte (USD)</b>
+          <p>$420.87</p>
+        </div>
+        <div class="info-box">
+          <b>Aporte (COP)</b>
+          <p>$1.667.909,60</p>
         </div>
       </div>
     </section>
 
+    <!-- Gráfico de línea -->
+    <section class="card chart-card">
+      <h2>Patrimonio últimos 12 meses</h2>
+      <canvas id="patrimonioChart"></canvas>
+    </section>
+
     <section class="card actions">
-   
       <button>Ver movimientos</button>
-   
       <button>Descargar PDF</button>
     </section>
   </main>
@@ -68,5 +81,50 @@
   <footer>
     © 2025 Castle Black
   </footer>
+
+  <!-- Script Chart.js -->
+  <script>
+    const ctx = document.getElementById('patrimonioChart').getContext('2d');
+    const patrimonioChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [
+          'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 
+          'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
+        ],
+        datasets: [{
+          label: 'Patrimonio (USD)',
+          data: [350, 370, 390, 400, 405, 410, 415, 418, 420, 421, 420, 420.87],
+          borderColor: 'red',
+          backgroundColor: 'rgba(255,0,0,0.2)',
+          tension: 0.4,
+          fill: true,
+          pointBackgroundColor: '#fff',
+          pointBorderColor: 'red',
+          pointRadius: 5
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: {
+              color: 'white'
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: 'white' },
+            grid: { color: 'rgba(255,255,255,0.1)' }
+          },
+          y: {
+            ticks: { color: 'white' },
+            grid: { color: 'rgba(255,255,255,0.1)' }
+          }
+        }
+      }
+    });
+  </script>
 </body>
 </html>
