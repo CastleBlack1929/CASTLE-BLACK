@@ -1,3 +1,4 @@
+<!-- login/login.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -19,9 +20,7 @@
 
   <script>
   const usuariosHashed = [
-    { u_hash: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918", p_hash: "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4" },
-    { u_hash: "5d942a1d73fd8f28d71e6b03d2e42f44721db94b734c2edcfe6fcd48b76a74f9", p_hash: "6ca13d52ca70c883e0f0bb101e425a89e8624de51db2d2392593af6a84118090" },
-    { u_hash: "395acd169ca407da8ba4ce63046bbea547468235c2823b28d28a4d66f1bd7bb6", p_hash: "65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5" }
+    { u_hash: "b5e733d9594c3aebcc0624431becf18f0b1c18a6c652c235dba1d33bb15198f5", p_hash: "b5e733d9594c3aebcc0624431becf18f0b1c18a6c652c235dba1d33bb15198f5" }
   ];
 
   function buf2hex(buffer) {
@@ -63,6 +62,7 @@
     const found = usuariosHashed.find(u => u.u_hash === userHash && u.p_hash === passHash);
 
     if (found) {
+      localStorage.setItem('loggedUser', user);
       inputPass.value = '';
       window.location.href = "../dashboard/dashboard.html";
     } else {
