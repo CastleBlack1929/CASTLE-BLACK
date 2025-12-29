@@ -1,11 +1,11 @@
-const userData = {
+window.userData = {
   idCliente: "001",
   socio: "JUAN FEDERICO PERALTA GONZALEZ",
   region: "COP",
   cedula: "1141514508",
   telefono: "(-57-)3102886062",
-  username: "fede",
-  password: "fede",
+  username: "FEDE",
+  password: "FEDE",
   aporte: 994.37,
   patrimonio: 1053.01,
   utilidad: 58.64,

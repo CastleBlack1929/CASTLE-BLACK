@@ -1,14 +1,25 @@
 function login(event) {
   event.preventDefault();
 
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value.trim();
+  const usernameInput = document.getElementById("username");
+  const passwordInput = document.getElementById("password");
+  const errorMsg = document.getElementById("error-msg");
+
+  // Limpiar estados previos
+  [usernameInput, passwordInput].forEach(input => input.classList.remove("input-error"));
+  if (errorMsg) errorMsg.textContent = "";
+
+  const username = usernameInput.value.trim();
+  const password = passwordInput.value.trim();
 
   // Buscar usuario en users.js
-  const user = users.find(u => u.username === username && u.password === password);
+  const user = users.find(
+    u => u.username.toLowerCase() === username.toLowerCase() && u.password.toLowerCase() === password.toLowerCase()
+  );
 
   if (!user) {
-    alert("Usuario o contraseña incorrectos");
+    [usernameInput, passwordInput].forEach(input => input.classList.add("input-error"));
+    if (errorMsg) errorMsg.textContent = "Usuario o contraseña incorrectos";
     return;
   }
 

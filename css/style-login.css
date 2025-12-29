@@ -5,6 +5,28 @@ body {
   flex-direction: column;
   background: #000; /* Fondo negro */
   font-family: Arial, sans-serif;
+  position: relative;
+}
+
+.back-btn {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  padding: 10px 15px;
+  background: #fff;
+  color: #000;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.back-btn:hover {
+  background-color: #000;
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
 }
 
 /* Contenedor que centra el login */
@@ -49,8 +71,26 @@ input {
   box-sizing: border-box;
 }
 
+input:focus {
+  outline: none;
+  border-color: #555;
+  box-shadow: 0 0 0 2px rgba(85, 85, 85, 0.35);
+}
+
 input::placeholder {
   color: #777;
+}
+
+.input-error {
+  border-color: #c62828;
+  background: #2a0c0c;
+  box-shadow: 0 0 0 2px rgba(198, 40, 40, 0.25);
+}
+
+.input-error:focus {
+  outline: none;
+  border-color: #c62828;
+  box-shadow: 0 0 0 2px rgba(198, 40, 40, 0.35);
 }
 
 button {

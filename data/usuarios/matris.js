@@ -1,11 +1,11 @@
-const userData = {
+window.userData = {
   idCliente: "002",
   socio: "CASTLE BLACK HOLDINGS",
   region: "USA",
   cedula: "CB-HQ-2023",
   telefono: "(+1)2120000000",
-  username: "castleblack",
-  password: "Castle/2023.black",
+  username: "MATRIS",
+  password: "MATRIS",
   aporte: 5892.50,
   patrimonio: 6340.00,
   utilidad: 447.50,
