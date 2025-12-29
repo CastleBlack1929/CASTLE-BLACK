@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="css/style-dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-left">
+      <img src="img/logo.png" alt="Logo Castle Black" class="logo">
+      <div class="user-info">
+        <h2 id="nombreCliente"></h2>
+        <p id="nivelText"></p>
+      </div>
+    </div>
+    <button id="logoutBtn">Cerrar sesión</button>
+  </header>
+
+  <!-- Contenido principal -->
+  <main>
+    <!-- Datos principales -->
+    <div class="data-container">
+      <div class="column">
+        <h3>Dólares (USD)</h3>
+        <p><strong>Aporte:</strong> <span id="aporte"></span></p>
+        <p><strong>Patrimonio:</strong> <span id="patrimonio"></span></p>
+        <p><strong>Utilidad:</strong> <span id="utilidad"></span></p>
+        <p><strong>CRCMNT:</strong> <span id="crcmnt"></span></p>
+      </div>
+
+      <div class="column">
+        <h3>Pesos (COP)</h3>
+        <p><strong>Aporte L:</strong> <span id="aporteL"></span></p>
+        <p><strong>Patrimonio L:</strong> <span id="patrimonioL"></span></p>
+        <p><strong>Utilidad L:</strong> <span id="utilidadL"></span></p>
+        <p><strong>CRCMNT L:</strong> <span id="crcmntL"></span></p>
+      </div>
+    </div>
+
+    <!-- Información extra -->
+    <div class="extra-info">
+      <p><strong>ID:</strong> <span id="idCliente"></span></p>
+      <p><strong>Cédula/NIT:</strong> <span id="cedula"></span></p>
+      <p><strong>Teléfono:</strong> <span id="telefono"></span></p>
+      <p><strong>Honorarios:</strong> <span id="honorarios"></span></p>
+    </div>
+
+    <!-- Reportes -->
+    <section class="reportes">
+      <h3>Reporte Mensual</h3>
+      <table id="tablaMeses">
+        <thead>
+          <tr>
+            <th>Mes</th>
+            <th>Aporte</th>
+            <th>Patrimonio</th>
+            <th>Margen</th>
+            <th>Ganancia</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div class="graficos">
+        <canvas id="graficoPatrimonio"></canvas>
+        <canvas id="graficoUtilidades"></canvas>
+      </div>
+    </section>
+
+    <!-- Movimientos -->
+    <section class="movimientos">
+      <h3>Últimos Movimientos</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Recibo</th>
+            <th>Fecha</th>
+            <th>ID</th>
+            <th>Socio</th>
+            <th>Cédula / NIT</th>
+            <th>Cantidad</th>
+            <th>Tipo</th>
+            <th>Tasa de Cambio</th>
+            <th>Cambio</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-movimientos"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© Castle Black 2025</p>
+  </footer>
+
+  <!-- Script principal -->
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

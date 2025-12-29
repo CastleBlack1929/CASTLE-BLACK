@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="css/style-login.css">
+</head>
+<body>
+  <div class="wrapper">
+    <div class="login-container">
+      <img src="img/logo.png" alt="Logo" class="logo">
+      <form onsubmit="login(event)">
+        <input type="text" id="username" placeholder="Usuario" required>
+        <input type="password" id="password" placeholder="Contraseña" required>
+        <button type="submit">Entrar</button>
+      </form>
+      <p id="error-msg"></p>
+    </div>
+  </div>
+
+  <footer>
+    <p>Castle Black 2025</p>
+  </footer>
+
+  <script src="data/users.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

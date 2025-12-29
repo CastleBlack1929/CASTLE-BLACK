@@ -1,0 +1,33 @@
+const userData = {
+  idCliente: "002",
+  socio: "CASTLE BLACK HOLDINGS",
+  region: "USA",
+  cedula: "CB-HQ-2023",
+  telefono: "(+1)2120000000",
+  username: "castleblack",
+  password: "Castle/2023.black",
+  aporte: 5892.50,
+  patrimonio: 6340.00,
+  utilidad: 447.50,
+  crcmnt: 7.60,
+  honorarios: 250.00,
+  aporteL: 28500000.00,
+  patrimonioL: 30650000.00,
+  utilidadL: 2150000.00,
+  crcmntL: 7.54,
+  nivel: "AAA",
+  meses: {
+    enero: { aporte: 5200.00, patrimonio: 5400.00, margen: 3.84, g_p: 200.00 },
+    febrero: { aporte: 0.00, patrimonio: 5450.00, margen: 0.92, g_p: 50.00 },
+    marzo: { aporte: 0.00, patrimonio: 5530.00, margen: 1.47, g_p: 80.00 },
+    abril: { aporte: 0.00, patrimonio: 5740.00, margen: 3.81, g_p: 210.00 },
+    mayo: { aporte: 0.00, patrimonio: 5900.00, margen: 2.79, g_p: 160.00 },
+    junio: { aporte: 0.00, patrimonio: 6080.00, margen: 3.05, g_p: 180.00 },
+    julio: { aporte: 0.00, patrimonio: 6200.00, margen: 1.97, g_p: 120.00 },
+    agosto: { aporte: 0.00, patrimonio: 6280.00, margen: 1.29, g_p: 80.00 },
+    septiembre: { aporte: 0.00, patrimonio: 6340.00, margen: 0.95, g_p: 60.00 },
+    octubre: { aporte: 0.00, patrimonio: 6340.00, margen: 0.00, g_p: 0.00 },
+    noviembre: { aporte: 0.00, patrimonio: 6340.00, margen: 0.00, g_p: 0.00 },
+    diciembre: { aporte: 0.00, patrimonio: 6340.00, margen: 0.00, g_p: 0.00 }
+  }
+};
