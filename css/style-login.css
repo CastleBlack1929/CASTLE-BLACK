@@ -39,9 +39,9 @@ body {
 
 .login-container {
   background: #000;
-  padding: 20px;
+  padding: 22px;
   text-align: center;
-  width: 320px;
+  width: 340px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -117,28 +117,30 @@ button:hover {
 
 @media (max-width: 480px) {
   .login-container {
-    width: 280px;
-    padding: 16px;
+    width: 90%;
+    max-width: 360px;
+    padding: 18px;
   }
 
   .logo {
-    width: 120px;
-    margin-bottom: 18px;
+    width: 140px;
+    margin-bottom: 20px;
   }
 
   input {
-    padding: 10px;
-    margin: 6px 0;
+    padding: 12px;
+    margin: 8px 0;
+    font-size: 16px;
   }
 
   button {
-    padding: 11px;
-    font-size: 15px;
+    padding: 12px;
+    font-size: 16px;
   }
 
   .back-btn {
-    padding: 8px 12px;
-    font-size: 12px;
+    padding: 9px 14px;
+    font-size: 13px;
   }
 }
 
