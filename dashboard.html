@@ -140,6 +140,51 @@
       <p class="honorarios-total">Total anual honorarios: <span id="honorariosTotal"></span></p>
     </section>
 
+    <!-- Estado de cuenta total (histórico) -->
+    <section class="resumen resumen-historico">
+      <h3>Estado de Cuenta Total</h3>
+      <p class="resumen-desc">
+        Como consecuencia de los aportes y movimientos realizados durante el tiempo que ha mantenido su relación con nosotros, a continuación podrá observar el margen de utilidad obtenido desde el momento en que se unió al portafolio. Este análisis refleja el desempeño acumulado histórico de su inversión y el crecimiento real de su capital tras considerar utilidades, retiros y comisiones.
+      </p>
+      <p class="resumen-fecha">Fecha de unión: <span id="fechaUnionHist"></span></p>
+      <table class="tabla-resumen">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Dólares (USD)</th>
+            <th>Pesos (COP)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Aporte</th>
+            <td id="aporteHist"></td>
+            <td id="aporteHistL"></td>
+          </tr>
+          <tr>
+            <th>Patrimonio</th>
+            <td id="patrimonioHist"></td>
+            <td id="patrimonioHistL"></td>
+          </tr>
+          <tr>
+            <th>Crecimiento</th>
+            <td id="crcmntHist"></td>
+            <td id="crcmntHistL"></td>
+          </tr>
+          <tr>
+            <th>Utilidad R</th>
+            <td><span id="utilidadRHist"></span><span id="utilidadRHistArrow" class="arrow-indicator"></span></td>
+            <td id="utilidadRHistL"></td>
+          </tr>
+          <tr>
+            <th>Utilidad</th>
+            <td><span id="utilidadHist"></span><span id="utilidadHistArrow" class="arrow-indicator"></span></td>
+            <td id="utilidadHistL"></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
     <!-- Movimientos -->
     <section class="movimientos">
       <h3>Movimientos</h3>

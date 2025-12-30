@@ -4,6 +4,7 @@ window.userData = {
   region: "COP",
   cedula: "1141514508",
   telefono: "(-57-)3102886062",
+  fechaUnion: "12/12/2023",
   username: "FEDE",
   password: "FEDE",
   nivel: "BBB",

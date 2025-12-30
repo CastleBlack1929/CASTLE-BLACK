@@ -199,6 +199,23 @@ h2 {
   font-weight: 700;
 }
 
+.resumen-historico {
+  margin-top: 20px;
+}
+
+.resumen-desc {
+  margin: 0 0 10px 0;
+  font-size: 13px;
+  color: #aaa;
+  line-height: 1.5;
+}
+
+.resumen-fecha {
+  margin: 0 0 10px 0;
+  font-size: 13px;
+  color: #ccc;
+}
+
 /* Footer */
 footer {
   text-align: center;

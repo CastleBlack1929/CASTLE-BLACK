@@ -4,6 +4,7 @@ window.userData = {
   region: "USA",
   cedula: "CB-HQ-2023",
   telefono: "(+1)2120000000",
+  fechaUnion: "12/12/2023",
   username: "MATRIS",
   password: "MATRIS",
   nivel: "AAA",

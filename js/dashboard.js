@@ -164,6 +164,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   const tablaMeses = document.getElementById("tablaMeses")?.querySelector("tbody");
   const tablaHonorarios = document.getElementById("tablaHonorarios")?.querySelector("tbody");
   const honorariosTotal = document.getElementById("honorariosTotal");
+  const aporteHist = document.getElementById("aporteHist");
+  const patrimonioHist = document.getElementById("patrimonioHist");
+  const crcmntHist = document.getElementById("crcmntHist");
+  const utilidadRHist = document.getElementById("utilidadRHist");
+  const utilidadRHistArrow = document.getElementById("utilidadRHistArrow");
+  const utilidadHist = document.getElementById("utilidadHist");
+  const utilidadHistArrow = document.getElementById("utilidadHistArrow");
+  const aporteHistL = document.getElementById("aporteHistL");
+  const patrimonioHistL = document.getElementById("patrimonioHistL");
+  const crcmntHistL = document.getElementById("crcmntHistL");
+  const utilidadRHistL = document.getElementById("utilidadRHistL");
+  const utilidadHistL = document.getElementById("utilidadHistL");
+  const fechaUnionHist = document.getElementById("fechaUnionHist");
   const logoutBtn = document.getElementById("logoutBtn");
   const menuBtn = document.getElementById("menuBtn");
   const menuDropdown = document.getElementById("menuDropdown");
@@ -209,6 +222,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     crcmnt.textContent = formatPercent(derived.crcmntActual);
     crcmntBaseUsd = derived.crcmntActual;
 
+    // Estado de cuenta total (provisionalmente igual al resumen actual)
+    if (aporteHist) aporteHist.textContent = formatNumber(derived.totalAporte);
+    if (patrimonioHist) patrimonioHist.textContent = formatNumber(derived.patrimonioActual);
+    if (utilidadRHist) utilidadRHist.textContent = formatNumber(derived.utilidadActual);
+    if (utilidadHist) utilidadHist.textContent = formatNumber(derived.utilidadActual);
+    if (crcmntHist) crcmntHist.textContent = formatPercent(derived.crcmntActual);
+    if (utilidadRHistArrow) utilidadRHistArrow.textContent = "—";
+    if (utilidadHistArrow) utilidadHistArrow.textContent = "—";
+    if (fechaUnionHist) fechaUnionHist.textContent = userData.fechaUnion || "";
+
     // Datos en COP (cálculo dinámico)
     const rateBase =
       toNumber(userData.patrimonioL) && derived.patrimonioActual
@@ -252,6 +275,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       setTrendClass(utilidadTotalL, utilidadTotalCop);
       setTrendClass(crcmntL, crcmntLCur);
       updateRateDisplay(rate);
+
+      // Histórico
+      if (aporteHistL) aporteHistL.textContent = formatNumber(aporteCop);
+      if (patrimonioHistL) patrimonioHistL.textContent = formatNumber(patrimonioCop);
+      if (utilidadRHistL) utilidadRHistL.textContent = formatNumber(utilidadCop);
+      if (utilidadHistL) utilidadHistL.textContent = formatNumber(utilidadTotalCop);
+      if (crcmntHistL) crcmntHistL.textContent = formatPercent(crcmntLCur);
+      setTrendClass(utilidadRHistL, utilidadCop);
+      setTrendClass(utilidadHistL, utilidadTotalCop);
+      setTrendClass(crcmntHistL, crcmntLCur);
     };
 
     applyPesos(currentRate);
@@ -509,8 +542,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     patrimonio.textContent = formatNumber(nuevoPatrimonio);
     aplicarTendencia(utilidad, utilidadArrow, nuevoUtilidad, ultimoUtilidad);
     aplicarTendencia(utilidadTotal, utilidadTotalArrow, nuevoUtilidad, ultimoUtilidad);
+    if (utilidadRHist && utilidadRHistArrow) aplicarTendencia(utilidadRHist, utilidadRHistArrow, nuevoUtilidad, ultimoUtilidad);
+    if (utilidadHist && utilidadHistArrow) aplicarTendencia(utilidadHist, utilidadHistArrow, nuevoUtilidad, ultimoUtilidad);
     crcmnt.textContent = formatPercent(nuevoCrcmnt);
     setTrendClass(crcmnt, nuevoCrcmnt);
+    if (crcmntHist) {
+      crcmntHist.textContent = formatPercent(nuevoCrcmnt);
+      setTrendClass(crcmntHist, nuevoCrcmnt);
+    }
 
     if (currentRate) {
       applyPesos(currentRate);
