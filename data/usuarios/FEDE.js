@@ -7,7 +7,14 @@ window.userData = {
   username: "FEDE",
   password: "FEDE",
   nivel: "BBB",
+  tasaBase: 4040,
   aporteL: 4251763.26,
+  honorariosTrimestres: [
+    { nombre: "TRIMESTRE 1", meses: ["enero", "febrero", "marzo"] },
+    { nombre: "TRIMESTRE 2", meses: ["abril", "mayo", "junio"] },
+    { nombre: "TRIMESTRE 3", meses: ["julio", "agosto", "septiembre"] },
+    { nombre: "TRIMESTRE 4", meses: ["octubre", "noviembre", "diciembre"] }
+  ],
   meses: {
     enero: { aporte: 734.79, patrimonio: 756.12 },
     febrero: { aporte: 138.17, patrimonio: 906.00 },

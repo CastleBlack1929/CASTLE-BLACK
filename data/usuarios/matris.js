@@ -7,7 +7,14 @@ window.userData = {
   username: "MATRIS",
   password: "MATRIS",
   nivel: "AAA",
+  tasaBase: 4000,
   aporteL: 0,
+  honorariosTrimestres: [
+    { nombre: "TRIMESTRE 1", meses: ["enero", "febrero", "marzo"] },
+    { nombre: "TRIMESTRE 2", meses: ["abril", "mayo", "junio"] },
+    { nombre: "TRIMESTRE 3", meses: ["julio", "agosto", "septiembre"] },
+    { nombre: "TRIMESTRE 4", meses: ["octubre", "noviembre", "diciembre"] }
+  ],
   meses: {
     enero: { aporte: 0.00, patrimonio: 0.00 },
     febrero: { aporte: 0.00, patrimonio: 0.00 },

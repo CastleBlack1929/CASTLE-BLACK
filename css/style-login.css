@@ -115,6 +115,33 @@ button:hover {
   font-size: 14px;
 }
 
+@media (max-width: 480px) {
+  .login-container {
+    width: 280px;
+    padding: 16px;
+  }
+
+  .logo {
+    width: 120px;
+    margin-bottom: 18px;
+  }
+
+  input {
+    padding: 10px;
+    margin: 6px 0;
+  }
+
+  button {
+    padding: 11px;
+    font-size: 15px;
+  }
+
+  .back-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}
+
 /* Footer siempre abajo */
 footer {
   padding: 15px;

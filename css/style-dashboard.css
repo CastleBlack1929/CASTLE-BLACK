@@ -158,6 +158,46 @@ h2 {
   color: #888;
 }
 
+/* Honorarios */
+.honorarios {
+  margin: 24px auto;
+  max-width: 720px;
+}
+
+.honorarios h3 {
+  margin: 0 0 8px 0;
+}
+
+.honorarios-desc {
+  margin: 0 0 12px 0;
+  color: #aaa;
+  font-size: 13px;
+}
+
+#tablaHonorarios {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 12px 0;
+  background: #000;
+  color: #fff;
+}
+
+#tablaHonorarios th, #tablaHonorarios td {
+  border: 1px solid #444;
+  padding: 10px;
+  text-align: center;
+}
+
+#tablaHonorarios th {
+  background: #1a1a1a;
+  font-weight: bold;
+}
+
+.honorarios-total {
+  margin: 0;
+  font-weight: 700;
+}
+
 /* Footer */
 footer {
   text-align: center;
@@ -184,7 +224,7 @@ table {
   border-collapse: collapse;
   width: auto;
   max-width: 100%;
-  margin: 20px auto;
+  margin: 16px auto;
   font-size: 14px;
   border: 1px solid #444;
   table-layout: auto;
@@ -389,6 +429,29 @@ table tr:hover {
   }
 
   table {
-    font-size: 13px;
+    font-size: 12px;
+    margin: 10px auto;
+  }
+
+  .reportes h3,
+  .movimientos h3,
+  .honorarios h3 {
+    margin-bottom: 8px;
+  }
+
+  .reportes table,
+  .movimientos table,
+  #tablaHonorarios {
+    margin: 8px auto;
+  }
+
+  .reportes table th, .reportes table td,
+  .movimientos table th, .movimientos table td,
+  #tablaHonorarios th, #tablaHonorarios td {
+    padding: 8px;
+  }
+
+  .graficos {
+    gap: 18px;
   }
 }

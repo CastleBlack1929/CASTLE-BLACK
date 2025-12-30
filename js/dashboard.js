@@ -100,6 +100,22 @@ const computeDerived = (meses = {}) => {
   return { monthly, totalAporte, patrimonioActual, utilidadActual, crcmntActual };
 };
 
+const defaultTrimestres = [
+  { nombre: "TRIMESTRE 1", meses: ["enero", "febrero", "marzo"] },
+  { nombre: "TRIMESTRE 2", meses: ["abril", "mayo", "junio"] },
+  { nombre: "TRIMESTRE 3", meses: ["julio", "agosto", "septiembre"] },
+  { nombre: "TRIMESTRE 4", meses: ["octubre", "noviembre", "diciembre"] }
+];
+
+const tarifaHonorarios = (utilidad) => {
+  if (utilidad <= 40) return { nombre: "BRONCE / PLATA", comision: "Fijo $10", valor: 10 };
+  if (utilidad <= 100) return { nombre: "ORO", comision: "25%", valor: utilidad * 0.25 };
+  if (utilidad <= 500) return { nombre: "PLATINO", comision: "20%", valor: utilidad * 0.20 };
+  if (utilidad <= 1000) return { nombre: "DIAMANTE", comision: "15%", valor: utilidad * 0.15 };
+  if (utilidad <= 5000) return { nombre: "RUBÍ", comision: "10%", valor: utilidad * 0.10 };
+  return { nombre: "ZAFIRO", comision: "5%", valor: utilidad * 0.05 };
+};
+
 const loadUserData = (filePath) =>
   new Promise((resolve, reject) => {
     delete window.userData;
@@ -146,6 +162,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const utilidadTotalL = document.getElementById("utilidadTotalL");
   const crcmntL = document.getElementById("crcmntL");
   const tablaMeses = document.getElementById("tablaMeses")?.querySelector("tbody");
+  const tablaHonorarios = document.getElementById("tablaHonorarios")?.querySelector("tbody");
+  const honorariosTotal = document.getElementById("honorariosTotal");
   const logoutBtn = document.getElementById("logoutBtn");
   const menuBtn = document.getElementById("menuBtn");
   const menuDropdown = document.getElementById("menuDropdown");
@@ -257,6 +275,34 @@ document.addEventListener("DOMContentLoaded", async () => {
         `;
         tablaMeses.appendChild(row);
       });
+    }
+
+    // Honorarios
+    if (tablaHonorarios && honorariosTotal) {
+      const trimestres = Array.isArray(userData.honorariosTrimestres) && userData.honorariosTrimestres.length
+        ? userData.honorariosTrimestres
+        : defaultTrimestres;
+
+      tablaHonorarios.innerHTML = "";
+      const utilPorMes = derived.monthly.reduce((acc, m) => ({ ...acc, [m.mes]: m.g_p }), {});
+      let totalHonorarios = 0;
+
+      trimestres.forEach((tri) => {
+        const utilTrim = (tri.meses || []).reduce((sum, mes) => sum + (toNumber(utilPorMes[mes]) || 0), 0);
+        const tarifa = tarifaHonorarios(utilTrim);
+        totalHonorarios += tarifa.valor || 0;
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${tri.nombre}</td>
+          <td>${tarifa.nombre}</td>
+          <td>${tarifa.comision}</td>
+          <td>${formatNumber(tarifa.valor || 0)}</td>
+        `;
+        tablaHonorarios.appendChild(row);
+      });
+
+      honorariosTotal.textContent = formatNumber(totalHonorarios);
     }
 
     // Gráficos
