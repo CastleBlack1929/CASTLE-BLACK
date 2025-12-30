@@ -15,39 +15,80 @@
       <img src="img/logo.png" alt="Logo Castle Black" class="logo">
       <div class="user-info">
         <h2 id="nombreCliente"></h2>
-        <p id="nivelText"></p>
+        <div class="user-meta">
+          <span id="idClienteHeader" class="user-id"></span>
+          <span id="nivelText" class="user-id"></span>
+          <span id="datetime" class="datetime-text"></span>
+        </div>
       </div>
     </div>
-    <button id="logoutBtn">Cerrar sesión</button>
+    <div class="header-right">
+      <div class="menu-container">
+        <button id="menuBtn" class="menu-btn" aria-label="Abrir menú">
+          <span class="menu-line"></span>
+          <span class="menu-line"></span>
+          <span class="sr-only">Menú</span>
+        </button>
+        <div id="menuDropdown" class="menu-dropdown">
+          <div class="menu-info">
+            <p class="menu-title">Cuenta</p>
+            <p class="menu-label">Cédula / NIT: <span id="menuCedula"></span></p>
+            <p class="menu-label">Teléfono: <span id="menuTelefono"></span></p>
+          </div>
+          <button type="button" class="menu-item" id="logoutBtn">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
   </header>
 
   <!-- Contenido principal -->
   <main>
-    <!-- Datos principales -->
-    <div class="data-container">
-      <div class="column">
-        <h3>Dólares (USD)</h3>
-        <p><strong>Aporte:</strong> <span id="aporte"></span></p>
-        <p><strong>Patrimonio:</strong> <span id="patrimonio"></span></p>
-        <p><strong>Utilidad:</strong> <span id="utilidad"></span></p>
-        <p><strong>CRCMNT:</strong> <span id="crcmnt"></span></p>
-      </div>
+    <!-- Datos principales comparativos -->
+    <section class="resumen">
+      <h3>Resumen</h3>
+      <table class="tabla-resumen">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Dólares (USD)</th>
+            <th>Pesos (COP)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Aporte</th>
+            <td id="aporte"></td>
+            <td id="aporteL"></td>
+          </tr>
+          <tr>
+            <th>Patrimonio</th>
+            <td id="patrimonio"></td>
+            <td id="patrimonioL"></td>
+          </tr>
+          <tr>
+            <th>Crecimiento</th>
+            <td id="crcmnt"></td>
+            <td id="crcmntL"></td>
+          </tr>
+          <tr>
+            <th>Utilidad R</th>
+            <td><span id="utilidad"></span><span id="utilidadArrow" class="arrow-indicator"></span></td>
+            <td id="utilidadL"></td>
+          </tr>
+          <tr>
+            <th>Utilidad</th>
+            <td><span id="utilidadTotal"></span><span id="utilidadTotalArrow" class="arrow-indicator"></span></td>
+            <td id="utilidadTotalL"></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
 
-      <div class="column">
-        <h3>Pesos (COP)</h3>
-        <p><strong>Aporte L:</strong> <span id="aporteL"></span></p>
-        <p><strong>Patrimonio L:</strong> <span id="patrimonioL"></span></p>
-        <p><strong>Utilidad L:</strong> <span id="utilidadL"></span></p>
-        <p><strong>CRCMNT L:</strong> <span id="crcmntL"></span></p>
-      </div>
-    </div>
-
-    <!-- Información extra -->
-    <div class="extra-info">
-      <p><strong>ID:</strong> <span id="idCliente"></span></p>
-      <p><strong>Cédula/NIT:</strong> <span id="cedula"></span></p>
-      <p><strong>Teléfono:</strong> <span id="telefono"></span></p>
-      <p><strong>Honorarios:</strong> <span id="honorarios"></span></p>
+    <!-- Cotización en vivo -->
+    <div class="rate-box">
+      <p class="rate-title">COP por USD</p>
+      <p class="rate-value" id="rateValue"></p>
+      <p class="rate-time">Actualizado: <span id="rateTime"></span></p>
     </div>
 
     <!-- Reportes -->
@@ -80,15 +121,13 @@
 
     <!-- Movimientos -->
     <section class="movimientos">
-      <h3>Últimos Movimientos</h3>
+      <h3>Movimientos</h3>
       <table>
         <thead>
           <tr>
             <th>Recibo</th>
             <th>Fecha</th>
             <th>ID</th>
-            <th>Socio</th>
-            <th>Cédula / NIT</th>
             <th>Cantidad</th>
             <th>Tipo</th>
             <th>Tasa de Cambio</th>
