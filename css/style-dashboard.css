@@ -52,6 +52,7 @@ header {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
   margin-top: 4px;
 }
 
@@ -65,6 +66,19 @@ header {
   font-size: 13px;
   color: #ccc;
   white-space: nowrap;
+  display: inline-block;
+  margin-left: 6px;
+  min-width: 120px;
+}
+
+.year-select {
+  background: #111;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 13px;
+  cursor: pointer;
 }
 
 #logoutBtn {
@@ -368,6 +382,12 @@ table tr:hover {
   margin: 2px 0;
   font-size: 13px;
   color: #111;
+}
+
+.menu-info select.year-select {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 6px;
 }
 
 .menu-item {

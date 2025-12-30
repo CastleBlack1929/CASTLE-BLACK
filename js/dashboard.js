@@ -187,6 +187,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const tablaMovimientos = document.getElementById("tabla-movimientos");
   const rateValue = document.getElementById("rateValue");
   const rateTime = document.getElementById("rateTime");
+  const yearSelect = document.getElementById("yearSelect");
   let currentRate = null;
   let baseRate = null;
   let applyPesos = () => {};
@@ -204,7 +205,70 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const userData = await loadUserData(currentUserFile);
+    const baseData = await loadUserData(currentUserFile);
+
+    const years = ["actual", ...Object.keys(baseData.historico || {})];
+    let selectedYear = localStorage.getItem("dashboardYear") || "actual";
+    if (!years.includes(selectedYear)) selectedYear = "actual";
+
+    const isActualYear = selectedYear === "actual";
+    const yearLabel = selectedYear !== "actual" ? selectedYear : new Date().getFullYear();
+
+    const pad = (n) => n.toString().padStart(2, "0");
+    const formatLive = () => {
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = pad(now.getMonth() + 1);
+      const dd = pad(now.getDate());
+      const hh = pad(now.getHours());
+      const min = pad(now.getMinutes());
+      const ss = pad(now.getSeconds());
+      return `${dd}/${mm}/${yyyy} ${hh}:${min}:${ss}`;
+    };
+
+    // Reloj visible inmediato
+    if (datetimeEl) {
+      if (isActualYear) {
+        datetimeEl.textContent = formatLive();
+        setInterval(() => {
+          datetimeEl.textContent = formatLive();
+        }, 1000);
+      } else {
+        datetimeEl.textContent = `31/12/${yearLabel} 23:59`;
+      }
+    }
+
+    if (yearSelect && years.length > 1) {
+      yearSelect.innerHTML = years.map(y => {
+        const label = y === "actual" ? "Actual" : y;
+        const selected = y === selectedYear ? "selected" : "";
+        return `<option value="${y}" ${selected}>${label}</option>`;
+      }).join("");
+      yearSelect.addEventListener("change", (e) => {
+        localStorage.setItem("dashboardYear", e.target.value);
+        window.location.reload();
+      });
+      yearSelect.addEventListener("click", (e) => e.stopPropagation());
+    } else if (yearSelect) {
+      yearSelect.style.display = "none";
+    }
+
+    const getDataForYear = (year) => {
+      if (year !== "actual" && baseData.historico?.[year]) {
+        const hist = baseData.historico[year];
+        return {
+          ...baseData,
+          ...hist,
+          meses: hist.meses || baseData.meses,
+          honorariosTrimestres: hist.honorariosTrimestres || baseData.honorariosTrimestres,
+          tasaBase: hist.tasaBase || baseData.tasaBase,
+          aporteL: hist.aporteL ?? baseData.aporteL
+        };
+      }
+      return baseData;
+    };
+
+    const userData = getDataForYear(selectedYear);
     const derived = computeDerived(userData.meses || {});
 
     // Mostrar datos del usuario
@@ -232,29 +296,45 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (utilidadHistArrow) utilidadHistArrow.textContent = "—";
     if (fechaUnionHist) fechaUnionHist.textContent = userData.fechaUnion || "";
 
+    const updateRateDisplay = (rate) => {
+      if (!Number.isFinite(rate)) return;
+      if (rateValue) {
+        rateValue.textContent = formatNumber(rate, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+      if (rateTime) {
+        if (isActualYear) {
+          rateTime.textContent = `Actualizada a ${new Date().toLocaleTimeString("es-CO", { timeZone: "America/Bogota" })}`;
+        } else {
+          rateTime.textContent = `Actualizada a 31/12/${yearLabel} 23:59`;
+        }
+      }
+    };
+
     // Datos en COP (cálculo dinámico)
-    const rateBase =
-      toNumber(userData.patrimonioL) && derived.patrimonioActual
-        ? toNumber(userData.patrimonioL) / derived.patrimonioActual
-        : toNumber(userData.aporteL) && derived.totalAporte
-          ? toNumber(userData.aporteL) / derived.totalAporte
-          : toNumber(userData.tasaBase) || 4000;
-    baseRate = rateBase || 4000;
-    currentRate = baseRate;
+    if (isActualYear) {
+      baseRate = null;
+      currentRate = null;
+      if (rateValue) rateValue.textContent = "Cargando...";
+    } else {
+      const rateBaseRaw =
+        toNumber(userData.patrimonioL) && derived.patrimonioActual
+          ? toNumber(userData.patrimonioL) / derived.patrimonioActual
+          : toNumber(userData.aporteL) && derived.totalAporte
+            ? toNumber(userData.aporteL) / derived.totalAporte
+            : toNumber(userData.tasaBase);
+      baseRate = Number.isFinite(rateBaseRaw) && rateBaseRaw > 0 ? rateBaseRaw : 4409.15;
+      if (userData.tasaBase) baseRate = toNumber(userData.tasaBase) || baseRate;
+      currentRate = baseRate;
+      if (rateValue) {
+        rateValue.textContent = formatNumber(baseRate, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+    }
     crcmntBaseL = toNumber(userData.crcmntL) ?? derived.crcmntActual ?? 0;
     aporteBaseL = toNumber(userData.aporteL);
     aporteL.textContent = formatNumber(aporteBaseL ?? derived.totalAporte * baseRate);
 
-  const updateRateDisplay = (rate) => {
-    if (rateValue) {
-      rateValue.textContent = formatNumber(rate, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
-    if (rateTime) {
-        rateTime.textContent = new Date().toLocaleTimeString("es-CO", { timeZone: "America/Bogota" });
-      }
-    };
-
     applyPesos = (rate) => {
+      if (!Number.isFinite(rate)) return;
       const usdAporte = derived.totalAporte;
       const usdPatrimonio = toNumber(patrimonio.textContent) || derived.patrimonioActual;
       const usdUtilidad = toNumber(utilidad.textContent) || derived.utilidadActual;
@@ -457,9 +537,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Fecha y hora actualizadas
   if (datetimeEl) {
-    const updateDateTime = () => {
-      const now = new Date();
-      const formatted = now.toLocaleString("es-CO", {
+    const yearLabel = selectedYear !== "actual" ? selectedYear : new Date().getFullYear();
+    const formatNow = () =>
+      new Date().toLocaleString("es-CO", {
         timeZone: "America/Bogota",
         weekday: "short",
         year: "numeric",
@@ -469,33 +549,86 @@ document.addEventListener("DOMContentLoaded", async () => {
         minute: "2-digit",
         second: "2-digit"
       });
-      datetimeEl.textContent = formatted;
-    };
-    updateDateTime();
-    setInterval(updateDateTime, 1000);
+
+    if (isActualYear) {
+      datetimeEl.textContent = formatNow();
+      setInterval(() => {
+        datetimeEl.textContent = formatNow();
+      }, 1000);
+    } else {
+      datetimeEl.textContent = `31/12/${yearLabel} 23:59`;
+    }
   }
 
   // Cotización de mercado COP/USD (actual sin oscilación)
-  const actualizarTasaMercado = async () => {
+  const fetchWithTimeout = (url, options = {}, ms = 5000) => {
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), ms);
+    return fetch(url, { ...options, signal: controller.signal })
+      .finally(() => clearTimeout(id));
+  };
+
+  const fetchTasaCOP = async () => {
+    // Fuente 1: open.er-api
     try {
-      const resp = await fetch("https://open.er-api.com/v6/latest/USD");
-      if (!resp.ok) throw new Error("No se pudo obtener la tasa");
-      const data = await resp.json();
-      const cop = data?.rates?.COP;
-      if (Number.isFinite(cop)) {
+      const res = await fetchWithTimeout("https://open.er-api.com/v6/latest/USD");
+      if (res.ok) {
+        const data = await res.json();
+        const cop = data?.rates?.COP;
+        if (Number.isFinite(cop) && cop > 0) return cop;
+      }
+    } catch (e) {
+      console.warn("Fallo open.er-api", e);
+    }
+
+    // Fuente 2: exchangerate.host
+    try {
+      const res = await fetchWithTimeout("https://api.exchangerate.host/latest?base=USD&symbols=COP");
+      if (res.ok) {
+        const data = await res.json();
+        const cop = data?.rates?.COP;
+        if (Number.isFinite(cop) && cop > 0) return cop;
+      }
+    } catch (e) {
+      console.warn("Fallo exchangerate.host", e);
+    }
+
+    return null;
+  };
+
+  const actualizarTasaMercado = async () => {
+    if (!isActualYear) {
+      currentRate = baseRate;
+      updateRateDisplay(currentRate);
+      applyPesos(currentRate);
+      return;
+    }
+
+    // En el año actual, intentamos la tasa en vivo (sin bloquear la UI)
+    try {
+      const cop = await fetchTasaCOP();
+      if (Number.isFinite(cop) && cop > 0) {
         currentRate = cop;
         baseRate = cop;
         applyPesos(currentRate);
+      } else {
+        throw new Error("Tasa inválida");
       }
     } catch (err) {
-      console.warn("No se pudo actualizar la tasa, se mantiene la base", err);
-      if (currentRate) applyPesos(currentRate);
+      console.warn("No se pudo actualizar la tasa en vivo", err);
+      // Mantén la tasa actual (provisional) pero no dejes el texto en "Cargando"
+      if (baseRate) {
+        currentRate = baseRate;
+        updateRateDisplay(baseRate);
+        applyPesos(baseRate);
+      } else if (rateValue) {
+        rateValue.textContent = "No disponible";
+      }
     }
   };
 
-  if (currentRate && rateValue && rateTime) {
-    applyPesos(currentRate);
-    actualizarTasaMercado();
+  actualizarTasaMercado();
+  if (isActualYear) {
     setInterval(actualizarTasaMercado, 10000); // refresca cada 10 s
   }
 
@@ -563,7 +696,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     setTimeout(oscilarValores, siguiente);
   };
 
-  if (patrimonioBase && utilidadBase) {
+  if (patrimonioBase && utilidadBase && isActualYear) {
     oscilarValores();
   }
 });
