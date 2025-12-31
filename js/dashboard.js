@@ -290,9 +290,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     lastPatOsc = patrimonioCalc;
     utilidad.textContent = formatNumber(utilCalcBase);
     if (utilidadTotal) utilidadTotal.textContent = formatNumber(utilCalcBase);
+    setTrendClass(utilidad, utilCalcBase);
+    setTrendClass(utilidadTotal, utilCalcBase);
     if (utilidadArrow) utilidadArrow.textContent = "—";
     if (utilidadTotalArrow) utilidadTotalArrow.textContent = "—";
     crcmnt.textContent = formatPercent(crcmntBaseUsd);
+    setTrendClass(crcmnt, crcmntBaseUsd);
 
     // Estado de cuenta total (provisionalmente igual al resumen actual)
     if (aporteHist) aporteHist.textContent = formatNumber(derived.totalAporte);
@@ -323,18 +326,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       baseRate = 3754.70; // valor fijo de respaldo
       currentRate = baseRate;
       updateRateDisplay(currentRate);
-      // Oscilar ligera variación ±0.10% cada segundo
+      // Oscilar ligera variación ±0.70% cada 3 segundos
       setInterval(() => {
-        const factor = 1 + ((Math.random() - 0.5) * 0.002); // +/-0.1%
+        const factor = 1 + ((Math.random() - 0.5) * 0.014); // +/-0.7%
         currentRate = baseRate * factor;
         updateRateDisplay(currentRate);
         applyPesos(currentRate);
-      }, 1000);
-      // Oscilar crecimiento USD ±10% cada segundo y recalcular patrimonio/utilidad
-      let lastCrcmntOsc = crcmntBaseUsd;
+      }, 3000);
+      // Oscilar crecimiento USD ±0.50% cada 3 segundos y recalcular patrimonio/utilidad
       const baseAporte = derived.totalAporte || 0;
       setInterval(() => {
-        const factor = 1 + ((Math.random() - 0.5) * 0.2); // +/-10%
+        const factor = 1 + ((Math.random() - 0.5) * 0.01); // +/-0.5%
         const nuevoCrcmnt = crcmntBaseUsd * factor;
         const nuevoPat = baseAporte * (1 + nuevoCrcmnt / 100);
         const nuevaUtil = nuevoPat - baseAporte;
@@ -345,15 +347,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (patrimonio) patrimonio.textContent = formatNumber(nuevoPat);
         utilidad.textContent = formatNumber(nuevaUtil);
         if (utilidadTotal) utilidadTotal.textContent = formatNumber(nuevaUtil);
+        // Tendencia con flechas para utilidades
+        const utilidadPrev = toNumber(utilidad?.textContent) ?? utilCalcBase;
+        const utilidadTotPrev = toNumber(utilidadTotal?.textContent) ?? utilCalcBase;
+        setTrendClass(utilidad, nuevaUtil);
+        setTrendClass(utilidadTotal, nuevaUtil);
+        if (utilidadArrow) {
+          utilidadArrow.textContent = nuevaUtil > utilidadPrev ? "▲" : (nuevaUtil < utilidadPrev ? "▼" : "—");
+        }
+        if (utilidadTotalArrow) {
+          utilidadTotalArrow.textContent = nuevaUtil > utilidadTotPrev ? "▲" : (nuevaUtil < utilidadTotPrev ? "▼" : "—");
+        }
 
         crcmnt.textContent = formatPercent(nuevoCrcmnt);
-        crcmnt.classList.remove("value-up", "value-down");
-        if (nuevoCrcmnt > lastCrcmntOsc) {
-          crcmnt.classList.add("value-up");
-        } else if (nuevoCrcmnt < lastCrcmntOsc) {
-          crcmnt.classList.add("value-down");
-        }
-        lastCrcmntOsc = nuevoCrcmnt;
+        setTrendClass(crcmnt, nuevoCrcmnt);
 
         if (Number.isFinite(currentRate || baseRate)) {
           const rateToUse = Number.isFinite(currentRate) ? currentRate : baseRate;

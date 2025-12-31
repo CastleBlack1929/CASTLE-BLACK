@@ -148,6 +148,13 @@ h2 {
   font-weight: bold;
 }
 
+.tabla-tip {
+  margin: 6px 0 12px 0;
+  font-size: 13px;
+  color: #b3b3b3;
+  text-align: center;
+}
+
 .rate-box {
   margin: 0 auto 28px auto;
   text-align: center;

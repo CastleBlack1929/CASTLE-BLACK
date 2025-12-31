@@ -20,6 +20,7 @@
           <span id="idClienteHeader" class="user-id"></span>
           <span id="nivelText" class="user-id"></span>
           <span id="datetime" class="datetime-text"></span>
+          <span id="yearBadge" class="year-badge"></span>
         </div>
       </div>
     </div>
@@ -51,6 +52,8 @@
     <!-- Datos principales comparativos -->
     <section class="resumen">
       <h3>Resumen</h3>
+      <p class="tabla-tip">Aquí ves tu aporte, patrimonio, crecimiento y utilidades en USD y COP con tendencia en vivo.</p>
+      <p class="tabla-tip">Este resumen está vigente desde el 01/01/2025; años anteriores se consultan en la sección histórica.</p>
       <table class="tabla-resumen">
         <thead>
           <tr>
@@ -99,6 +102,7 @@
     <!-- Reportes -->
     <section class="reportes">
       <h3>Reporte Mensual</h3>
+      <p class="tabla-tip">Cada fila muestra lo que aportaste, el patrimonio al cierre del mes y la ganancia/margen mensual.</p>
       <table id="tablaMeses">
         <thead>
           <tr>
@@ -115,10 +119,12 @@
       <div class="graficos">
         <div class="grafico">
           <h4>Patrimonio</h4>
+          <p class="tabla-tip">Línea verde: evolución de tu patrimonio mes a mes.</p>
           <canvas id="graficoPatrimonio"></canvas>
         </div>
         <div class="grafico">
           <h4>Utilidad</h4>
+          <p class="tabla-tip">Barras: utilidad de cada mes y su acumulado.</p>
           <canvas id="graficoUtilidades"></canvas>
         </div>
       </div>
@@ -192,6 +198,7 @@
     <!-- Movimientos -->
     <section class="movimientos">
       <h3>Movimientos</h3>
+      <p class="tabla-tip">Listado de consignaciones y retiros con su tasa y valor en COP.</p>
       <table>
         <thead>
           <tr>
