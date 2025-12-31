@@ -8,6 +8,12 @@ window.userData = {
   username: "MATRIS",
   password: "MATRIS",
   nivel: "AAA",
+  // Bases para oscilación en el dashboard (datos coherentes)
+  oscilacionBase: {
+    aporteUsd: 820.00,
+    patrimonioUsd: 1100.00,
+    aporteCop: 3300000.00
+  },
   tasaBase: 4000,
   aporteL: 0,
   honorariosTrimestres: [

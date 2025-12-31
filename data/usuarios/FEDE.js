@@ -8,6 +8,12 @@ window.userData = {
   username: "FEDE",
   password: "FEDE",
   nivel: "BBB",
+  // Bases para oscilación en el dashboard
+  oscilacionBase: {
+    aporteUsd: 994.37,
+    patrimonioUsd: 1053.01,
+    aporteCop: 4251763.26
+  },
   tasaBase: 4040,
   aporteL: 4251763.26,
   honorariosTrimestres: [

@@ -193,7 +193,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   let applyPesos = () => {};
   let crcmntBaseL = 0;
   let crcmntBaseUsd = 0;
+  let utilCalcBase = 0;
+  let utilOsc = 0;
+  let patrimonioCalc = 0;
   let aporteBaseL = null;
+  let lastPatOsc = 0;
   let lastMonthCells = null;
 
   // Verificar sesión activa
@@ -278,13 +282,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Datos principales (USD)
     aporte.textContent = formatNumber(derived.totalAporte);
-    patrimonio.textContent = formatNumber(derived.patrimonioActual);
-    utilidad.textContent = formatNumber(derived.utilidadActual);
-    if (utilidadTotal) utilidadTotal.textContent = formatNumber(derived.utilidadActual);
+    patrimonioCalc = (derived.totalAporte || 0) * (1 + ((derived.crcmntActual || 0) / 100));
+    patrimonio.textContent = formatNumber(patrimonioCalc);
+    utilCalcBase = patrimonioCalc - (derived.totalAporte || 0);
+    utilOsc = utilCalcBase;
+    crcmntBaseUsd = derived.crcmntActual;
+    lastPatOsc = patrimonioCalc;
+    utilidad.textContent = formatNumber(utilCalcBase);
+    if (utilidadTotal) utilidadTotal.textContent = formatNumber(utilCalcBase);
     if (utilidadArrow) utilidadArrow.textContent = "—";
     if (utilidadTotalArrow) utilidadTotalArrow.textContent = "—";
-    crcmnt.textContent = formatPercent(derived.crcmntActual);
-    crcmntBaseUsd = derived.crcmntActual;
+    crcmnt.textContent = formatPercent(crcmntBaseUsd);
 
     // Estado de cuenta total (provisionalmente igual al resumen actual)
     if (aporteHist) aporteHist.textContent = formatNumber(derived.totalAporte);
@@ -312,9 +320,46 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Datos en COP (cálculo dinámico)
     if (isActualYear) {
-      baseRate = null;
-      currentRate = null;
-      if (rateValue) rateValue.textContent = "Cargando...";
+      baseRate = 3754.70; // valor fijo de respaldo
+      currentRate = baseRate;
+      updateRateDisplay(currentRate);
+      // Oscilar ligera variación ±0.10% cada segundo
+      setInterval(() => {
+        const factor = 1 + ((Math.random() - 0.5) * 0.002); // +/-0.1%
+        currentRate = baseRate * factor;
+        updateRateDisplay(currentRate);
+        applyPesos(currentRate);
+      }, 1000);
+      // Oscilar crecimiento USD ±10% cada segundo y recalcular patrimonio/utilidad
+      let lastCrcmntOsc = crcmntBaseUsd;
+      const baseAporte = derived.totalAporte || 0;
+      setInterval(() => {
+        const factor = 1 + ((Math.random() - 0.5) * 0.2); // +/-10%
+        const nuevoCrcmnt = crcmntBaseUsd * factor;
+        const nuevoPat = baseAporte * (1 + nuevoCrcmnt / 100);
+        const nuevaUtil = nuevoPat - baseAporte;
+
+        patrimonioCalc = nuevoPat;
+        utilCalcBase = nuevaUtil;
+        utilOsc = nuevaUtil;
+        if (patrimonio) patrimonio.textContent = formatNumber(nuevoPat);
+        utilidad.textContent = formatNumber(nuevaUtil);
+        if (utilidadTotal) utilidadTotal.textContent = formatNumber(nuevaUtil);
+
+        crcmnt.textContent = formatPercent(nuevoCrcmnt);
+        crcmnt.classList.remove("value-up", "value-down");
+        if (nuevoCrcmnt > lastCrcmntOsc) {
+          crcmnt.classList.add("value-up");
+        } else if (nuevoCrcmnt < lastCrcmntOsc) {
+          crcmnt.classList.add("value-down");
+        }
+        lastCrcmntOsc = nuevoCrcmnt;
+
+        if (Number.isFinite(currentRate || baseRate)) {
+          const rateToUse = Number.isFinite(currentRate) ? currentRate : baseRate;
+          applyPesos(rateToUse, nuevoPat, nuevaUtil);
+        }
+      }, 1000);
     } else {
       const rateBaseRaw =
         toNumber(userData.patrimonioL) && derived.patrimonioActual
@@ -329,20 +374,27 @@ document.addEventListener("DOMContentLoaded", async () => {
         rateValue.textContent = formatNumber(baseRate, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       }
     }
-    crcmntBaseL = toNumber(userData.crcmntL) ?? derived.crcmntActual ?? 0;
+    crcmntBaseL = toNumber(userData.crcmntL) ?? crcmntBaseUsd ?? 0;
     aporteBaseL = toNumber(userData.aporteL);
+    utilOsc = utilCalcBase;
+
     aporteL.textContent = formatNumber(aporteBaseL ?? derived.totalAporte * baseRate);
 
-    applyPesos = (rate) => {
+    applyPesos = (rate, patrUsdOverride = null, utilUsdOverride = null) => {
       if (!Number.isFinite(rate)) return;
       const usdAporte = derived.totalAporte;
-      const usdPatrimonio = toNumber(patrimonio.textContent) || derived.patrimonioActual;
-      const usdUtilidad = toNumber(utilidad.textContent) || derived.utilidadActual;
+      const usdPatrimonio = Number.isFinite(patrUsdOverride)
+        ? patrUsdOverride
+        : patrimonioCalc;
+      const usdUtilidad = Number.isFinite(utilUsdOverride)
+        ? utilUsdOverride
+        : utilOsc || utilCalcBase;
 
       const aporteCop = Number.isFinite(aporteBaseL) ? aporteBaseL : usdAporte * baseRate;
       const patrimonioCop = usdPatrimonio * rate;
       const utilidadCop = patrimonioCop - aporteCop;
-      const utilidadTotalCop = derived.utilidadActual * rate;
+      const utilidadTotalCop = usdUtilidad * rate;
+      utilOsc = usdUtilidad; // mantener utilidad oscilada para próximos cálculos
 
       aporteL.textContent = formatNumber(aporteCop);
       patrimonioL.textContent = formatNumber(patrimonioCop);
@@ -560,81 +612,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Cotización de mercado COP/USD (actual sin oscilación)
-  const fetchWithTimeout = (url, options = {}, ms = 5000) => {
-    const controller = new AbortController();
-    const id = setTimeout(() => controller.abort(), ms);
-    return fetch(url, { ...options, signal: controller.signal })
-      .finally(() => clearTimeout(id));
-  };
-
-  const fetchTasaCOP = async () => {
-    // Fuente 1: open.er-api
-    try {
-      const res = await fetchWithTimeout("https://open.er-api.com/v6/latest/USD");
-      if (res.ok) {
-        const data = await res.json();
-        const cop = data?.rates?.COP;
-        if (Number.isFinite(cop) && cop > 0) return cop;
-      }
-    } catch (e) {
-      console.warn("Fallo open.er-api", e);
-    }
-
-    // Fuente 2: exchangerate.host
-    try {
-      const res = await fetchWithTimeout("https://api.exchangerate.host/latest?base=USD&symbols=COP");
-      if (res.ok) {
-        const data = await res.json();
-        const cop = data?.rates?.COP;
-        if (Number.isFinite(cop) && cop > 0) return cop;
-      }
-    } catch (e) {
-      console.warn("Fallo exchangerate.host", e);
-    }
-
-    return null;
-  };
-
-  const actualizarTasaMercado = async () => {
-    if (!isActualYear) {
-      currentRate = baseRate;
-      updateRateDisplay(currentRate);
-      applyPesos(currentRate);
-      return;
-    }
-
-    // En el año actual, intentamos la tasa en vivo (sin bloquear la UI)
-    try {
-      const cop = await fetchTasaCOP();
-      if (Number.isFinite(cop) && cop > 0) {
-        currentRate = cop;
-        baseRate = cop;
-        applyPesos(currentRate);
-      } else {
-        throw new Error("Tasa inválida");
-      }
-    } catch (err) {
-      console.warn("No se pudo actualizar la tasa en vivo", err);
-      // Mantén la tasa actual (provisional) pero no dejes el texto en "Cargando"
-      if (baseRate) {
-        currentRate = baseRate;
-        updateRateDisplay(baseRate);
-        applyPesos(baseRate);
-      } else if (rateValue) {
-        rateValue.textContent = "No disponible";
-      }
-    }
-  };
-
-  actualizarTasaMercado();
-  if (isActualYear) {
-    setInterval(actualizarTasaMercado, 10000); // refresca cada 10 s
-  }
-
-  // Oscilación de patrimonio y utilidad (±0.25% cada 10-20s)
+ // Oscilación de patrimonio y utilidad (±0.25% cada 10-20s)
   const patrimonioBase = toNumber(patrimonio?.textContent) || 0;
-  const utilidadBase = toNumber(utilidad?.textContent) || 0;
+  const utilidadBase = utilCalcBase || toNumber(utilidad?.textContent) || 0;
   const crcmntBaseUsdOsc = crcmntBaseUsd;
   let ultimoPatrimonio = patrimonioBase;
   let ultimoUtilidad = utilidadBase;
@@ -666,37 +646,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     el.textContent = formatNumber(nuevoValor);
   };
 
-  const oscilarValores = () => {
-    const factor = 1 + ((Math.random() - 0.5) * 0.005); // +/-0.25%
-    const nuevoPatrimonio = patrimonioBase * factor;
-    const nuevoUtilidad = utilidadBase * factor;
-    const nuevoCrcmnt = crcmntBaseUsdOsc * factor;
-
-    patrimonio.textContent = formatNumber(nuevoPatrimonio);
-    aplicarTendencia(utilidad, utilidadArrow, nuevoUtilidad, ultimoUtilidad);
-    aplicarTendencia(utilidadTotal, utilidadTotalArrow, nuevoUtilidad, ultimoUtilidad);
-    if (utilidadRHist && utilidadRHistArrow) aplicarTendencia(utilidadRHist, utilidadRHistArrow, nuevoUtilidad, ultimoUtilidad);
-    if (utilidadHist && utilidadHistArrow) aplicarTendencia(utilidadHist, utilidadHistArrow, nuevoUtilidad, ultimoUtilidad);
-    crcmnt.textContent = formatPercent(nuevoCrcmnt);
-    setTrendClass(crcmnt, nuevoCrcmnt);
-    if (crcmntHist) {
-      crcmntHist.textContent = formatPercent(nuevoCrcmnt);
-      setTrendClass(crcmntHist, nuevoCrcmnt);
-    }
-
-    if (currentRate) {
-      applyPesos(currentRate);
-    }
-
-    ultimoPatrimonio = nuevoPatrimonio;
-    ultimoUtilidad = nuevoUtilidad;
-    ultimoCrcmnt = nuevoCrcmnt;
-
-    const siguiente = 10000 + Math.random() * 10000; // 10 a 20 segundos
-    setTimeout(oscilarValores, siguiente);
-  };
-
-  if (patrimonioBase && utilidadBase && isActualYear) {
-    oscilarValores();
-  }
+  // Sin oscilador adicional
 });
