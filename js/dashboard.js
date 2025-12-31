@@ -227,18 +227,25 @@ document.addEventListener("DOMContentLoaded", async () => {
       const hh = pad(now.getHours());
       const min = pad(now.getMinutes());
       const ss = pad(now.getSeconds());
-      return `${dd}/${mm}/${yyyy} ${hh}:${min}:${ss}`;
+      return `${hh}:${min}:${ss} ${dd}/${mm}/${yyyy}`;
+    };
+    const highlightYear = (text, year, isActual) => {
+      const cls = isActual ? "year-pill year-pill-current" : "year-pill";
+      return text.replace(year.toString(), `<span class="${cls}">${year}</span>`);
     };
 
     // Reloj visible inmediato
     if (datetimeEl) {
       if (isActualYear) {
-        datetimeEl.textContent = formatLive();
-        setInterval(() => {
-          datetimeEl.textContent = formatLive();
-        }, 1000);
+        const setLive = () => {
+          const txt = formatLive();
+          datetimeEl.innerHTML = highlightYear(txt, yearLabel, true);
+        };
+        setLive();
+        setInterval(setLive, 1000);
       } else {
-        datetimeEl.textContent = `31/12/${yearLabel} 23:59`;
+        const txt = `23:59 31/12/${yearLabel}`;
+        datetimeEl.innerHTML = highlightYear(txt, yearLabel, false);
       }
     }
 
@@ -303,6 +310,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (utilidadRHist) utilidadRHist.textContent = formatNumber(derived.utilidadActual);
     if (utilidadHist) utilidadHist.textContent = formatNumber(derived.utilidadActual);
     if (crcmntHist) crcmntHist.textContent = formatPercent(derived.crcmntActual);
+    setTrendClass(patrimonioHist, derived.patrimonioActual);
+    setTrendClass(utilidadRHist, derived.utilidadActual);
+    setTrendClass(utilidadHist, derived.utilidadActual);
+    setTrendClass(crcmntHist, derived.crcmntActual);
     if (utilidadRHistArrow) utilidadRHistArrow.textContent = "—";
     if (utilidadHistArrow) utilidadHistArrow.textContent = "—";
     if (fechaUnionHist) fechaUnionHist.textContent = userData.fechaUnion || "";
@@ -357,6 +368,32 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         if (utilidadTotalArrow) {
           utilidadTotalArrow.textContent = nuevaUtil > utilidadTotPrev ? "▲" : (nuevaUtil < utilidadTotPrev ? "▼" : "—");
+        }
+
+        // Estado de cuenta total (USD) en sincronía con el resumen
+        if (patrimonioHist) {
+          setTrendClass(patrimonioHist, nuevoPat);
+          patrimonioHist.textContent = formatNumber(nuevoPat);
+        }
+        if (utilidadRHist) {
+          const prevUR = toNumber(utilidadRHist.textContent) ?? utilCalcBase;
+          setTrendClass(utilidadRHist, nuevaUtil);
+          utilidadRHist.textContent = formatNumber(nuevaUtil);
+          if (utilidadRHistArrow) {
+            utilidadRHistArrow.textContent = nuevaUtil > prevUR ? "▲" : (nuevaUtil < prevUR ? "▼" : "—");
+          }
+        }
+        if (utilidadHist) {
+          const prevU = toNumber(utilidadHist.textContent) ?? utilCalcBase;
+          setTrendClass(utilidadHist, nuevaUtil);
+          utilidadHist.textContent = formatNumber(nuevaUtil);
+          if (utilidadHistArrow) {
+            utilidadHistArrow.textContent = nuevaUtil > prevU ? "▲" : (nuevaUtil < prevU ? "▼" : "—");
+          }
+        }
+        if (crcmntHist) {
+          setTrendClass(crcmntHist, nuevoCrcmnt);
+          crcmntHist.textContent = formatPercent(nuevoCrcmnt);
         }
 
         crcmnt.textContent = formatPercent(nuevoCrcmnt);

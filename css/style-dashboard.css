@@ -71,6 +71,22 @@ header {
   min-width: 120px;
 }
 
+.year-pill {
+  display: inline-block;
+  padding: 0 6px;
+  font-size: 13px;
+  color: #0f0;
+  border: 1px solid #2e2e2e;
+  border-radius: 6px;
+  background: rgba(0, 255, 0, 0.08);
+}
+
+.year-pill-current {
+  color: #60a5fa;
+  border-color: #1e3a8a;
+  background: rgba(96, 165, 250, 0.12);
+}
+
 .year-select {
   background: #111;
   color: #fff;
