@@ -217,6 +217,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const isActualYear = selectedYear === "actual";
     const yearLabel = selectedYear !== "actual" ? selectedYear : new Date().getFullYear();
+    const displayYear = isActualYear ? 2025 : yearLabel; // año congelado para el reloj/etiqueta
 
     const pad = (n) => n.toString().padStart(2, "0");
     const formatLive = () => {
@@ -229,23 +230,20 @@ document.addEventListener("DOMContentLoaded", async () => {
       const ss = pad(now.getSeconds());
       return `${hh}:${min}:${ss} ${dd}/${mm}/${yyyy}`;
     };
-    const highlightYear = (text, year, isActual) => {
-      const cls = isActual ? "year-pill year-pill-current" : "year-pill";
-      return text.replace(year.toString(), `<span class="${cls}">${year}</span>`);
+    const fixedPastLabel = "23:59 31/12/2025";
+    const highlightYear = (text, year) => {
+      return text.replace(year.toString(), `<span class="year-pill">${year}</span>`);
     };
 
     // Reloj visible inmediato
     if (datetimeEl) {
       if (isActualYear) {
-        const setLive = () => {
-          const txt = formatLive();
-          datetimeEl.innerHTML = highlightYear(txt, yearLabel, true);
-        };
-        setLive();
-        setInterval(setLive, 1000);
+        // Congelado al cierre del año pasado
+        const txt = fixedPastLabel;
+        datetimeEl.innerHTML = highlightYear(txt, displayYear);
       } else {
         const txt = `23:59 31/12/${yearLabel}`;
-        datetimeEl.innerHTML = highlightYear(txt, yearLabel, false);
+        datetimeEl.innerHTML = highlightYear(txt, displayYear);
       }
     }
 
@@ -324,26 +322,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         rateValue.textContent = formatNumber(rate, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       }
       if (rateTime) {
-        if (isActualYear) {
-          rateTime.textContent = `Actualizada a ${new Date().toLocaleTimeString("es-CO", { timeZone: "America/Bogota" })}`;
-        } else {
-          rateTime.textContent = `Actualizada a 31/12/${yearLabel} 23:59`;
-        }
+        const label = isActualYear ? "31/12/2025 23:59" : `31/12/${yearLabel} 23:59`;
+        rateTime.textContent = `Actualizada a ${label}`;
       }
     };
 
     // Datos en COP (cálculo dinámico)
     if (isActualYear) {
-      baseRate = 3754.70; // valor fijo de respaldo
+      baseRate = 3773.6; // valor fijo cierre 2025
       currentRate = baseRate;
       updateRateDisplay(currentRate);
-      // Oscilar ligera variación ±0.70% cada 3 segundos
-      setInterval(() => {
-        const factor = 1 + ((Math.random() - 0.5) * 0.014); // +/-0.7%
-        currentRate = baseRate * factor;
-        updateRateDisplay(currentRate);
-        applyPesos(currentRate);
-      }, 3000);
+      applyPesos(currentRate);
       // Oscilar crecimiento USD ±0.50% cada 3 segundos y recalcular patrimonio/utilidad
       const baseAporte = derived.totalAporte || 0;
       setInterval(() => {
@@ -594,7 +583,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         row.innerHTML = `
           <td>${mov.recibo || ""}</td>
           <td>${mov.fecha || ""}</td>
-          <td>${mov.cliente || ""}</td>
           <td>${formatNumber(mov.cantidad)}</td>
           <td>${mov.tipo || ""}</td>
           <td>${mov.tasa ? formatNumber(mov.tasa) : ""}</td>

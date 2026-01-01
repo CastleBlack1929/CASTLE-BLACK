@@ -82,9 +82,9 @@ header {
 }
 
 .year-pill-current {
-  color: #60a5fa;
-  border-color: #1e3a8a;
-  background: rgba(96, 165, 250, 0.12);
+  color: #0f0;
+  border-color: #2e2e2e;
+  background: rgba(0, 255, 0, 0.08);
 }
 
 .year-select {
@@ -213,16 +213,17 @@ h2 {
 }
 
 #tablaHonorarios {
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   border-collapse: collapse;
-  margin: 0 0 12px 0;
+  margin: 16px auto 12px auto;
   background: #000;
   color: #fff;
 }
 
 #tablaHonorarios th, #tablaHonorarios td {
   border: 1px solid #444;
-  padding: 10px;
+  padding: 8px;
   text-align: center;
 }
 
@@ -287,7 +288,7 @@ table {
 
 table th, table td {
   border: 1px solid #444;
-  padding: 10px;
+  padding: 8px;
   text-align: center;
 }
 
@@ -302,6 +303,10 @@ table tr:nth-child(even) {
 
 table tr:hover {
   background-color: #222;
+}
+
+.movimientos {
+  margin: 0 auto 30px;
 }
 
 /* Gráficos */
@@ -520,10 +525,19 @@ table tr:hover {
   .reportes table th, .reportes table td,
   .movimientos table th, .movimientos table td,
   #tablaHonorarios th, #tablaHonorarios td {
-    padding: 9px;
+    padding: 7px;
   }
 
   .graficos {
     gap: 16px;
+  }
+
+  .tabla-resumen th,
+  .tabla-resumen td {
+    padding: 8px;
+  }
+
+  .graficos canvas {
+    max-height: 300px;
   }
 }
