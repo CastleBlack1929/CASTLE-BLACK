@@ -383,7 +383,7 @@ table tr:hover {
   border-radius: 6px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
   display: none;
-  min-width: 160px;
+  min-width: 200px;
   overflow: hidden;
   z-index: 20;
 }
@@ -416,6 +416,21 @@ table tr:hover {
   width: 100%;
   box-sizing: border-box;
   margin-top: 6px;
+}
+
+.menu-support {
+  background: #f3f6f4;
+}
+
+.menu-link {
+  color: #0f5132;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.menu-link:hover {
+  text-decoration: underline;
+  color: #000;
 }
 
 .menu-item {
