@@ -107,6 +107,33 @@ const defaultTrimestres = [
   { nombre: "TRIMESTRE 4", meses: ["octubre", "noviembre", "diciembre"] }
 ];
 
+const validateUserData = (data) => {
+  const errors = [];
+  if (!data || typeof data !== "object") {
+    errors.push("El archivo de datos no tiene un formato válido.");
+    return { valid: false, errors };
+  }
+
+  if (!data.meses || typeof data.meses !== "object") {
+    errors.push("Faltan los meses para calcular aportes y patrimonio.");
+  } else {
+    const monthKeys = Object.keys(data.meses || {});
+    const hasAtLeastOne = monthKeys.some((m) => {
+      const entry = data.meses[m];
+      const aporteVal = toNumber(entry?.aporte);
+      const patVal = toNumber(entry?.patrimonio);
+      return Number.isFinite(aporteVal) || Number.isFinite(patVal);
+    });
+    if (!hasAtLeastOne) errors.push("Los meses no contienen aportes o patrimonio numéricos.");
+  }
+
+  if (data.historico && typeof data.historico !== "object") {
+    errors.push("El histórico tiene un formato inválido.");
+  }
+
+  return { valid: errors.length === 0, errors };
+};
+
 const tarifaHonorarios = (utilidad) => {
   if (utilidad <= 40) return { nombre: "BRONCE / PLATA", comision: "Fijo $10", valor: 10 };
   if (utilidad <= 100) return { nombre: "ORO", comision: "25%", valor: utilidad * 0.25 };
@@ -188,6 +215,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const rateValue = document.getElementById("rateValue");
   const rateTime = document.getElementById("rateTime");
   const yearSelect = document.getElementById("yearSelect");
+  const downloadReportBtn = document.getElementById("downloadReportBtn");
+  const SESSION_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutos
+  const SESSION_ACTIVITY_KEY = "sessionLastActivity";
+  let sessionExpired = false;
   let currentRate = null;
   let baseRate = null;
   let applyPesos = () => {};
@@ -199,17 +230,83 @@ document.addEventListener("DOMContentLoaded", async () => {
   let aporteBaseL = null;
   let lastPatOsc = 0;
   let lastMonthCells = null;
+  let reportYearText = "";
+  let trimestresData = [];
+  let movimientosFiltrados = [];
+  let honorariosTotalUsd = 0;
+  let derivedData = null;
+  let selectedUserData = null;
+  let reportUpdatedLabel = "";
+  let logoDataUrl = null;
 
-  // Verificar sesión activa
-  const currentUserFile = localStorage.getItem("currentUserFile");
-  if (!currentUserFile) {
-    alert("No hay sesión activa. Inicia sesión.");
-    window.location.href = "login.html";
-    return;
-  }
+  const getLogoDataUrl = async () => {
+    if (logoDataUrl) return logoDataUrl;
+    const logoPath = "img/logo.png";
+    try {
+      const resp = await fetch(logoPath);
+      if (!resp.ok) throw new Error("No se pudo obtener el logo");
+      const blob = await resp.blob();
+      logoDataUrl = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+      return logoDataUrl;
+    } catch (e) {
+      console.warn("No se pudo cargar el logo para el PDF:", e);
+      return null;
+    }
+  };
+
+  const performLogout = ({ clearPrefs = false, silent = false } = {}) => {
+    sessionExpired = true;
+    const keys = ["currentUserFile", SESSION_ACTIVITY_KEY, "sessionStart"];
+    if (clearPrefs) keys.push("dashboardYear");
+    keys.forEach((k) => localStorage.removeItem(k));
+    const target = "login.html";
+    if (silent) window.location.replace(target);
+    else window.location.href = target;
+  };
+
+  const refreshActivity = () => {
+    localStorage.setItem(SESSION_ACTIVITY_KEY, String(Date.now()));
+  };
+
+  const sessionStillValid = () => {
+    if (sessionExpired) return false;
+    const last = Number(localStorage.getItem(SESSION_ACTIVITY_KEY));
+    if (Number.isFinite(last) && Date.now() - last > SESSION_TIMEOUT_MS) {
+      alert("Tu sesión expiró por inactividad. Vuelve a iniciar sesión.");
+      performLogout({ clearPrefs: false, silent: true });
+      return false;
+    }
+    return true;
+  };
+
+  const guardActiveSession = () => {
+    const currentUserFile = localStorage.getItem("currentUserFile");
+    if (!currentUserFile) {
+      alert("No hay sesión activa. Inicia sesión.");
+      window.location.href = "login.html";
+      return null;
+    }
+    if (!sessionStillValid()) return null;
+    refreshActivity();
+    return currentUserFile;
+  };
+
+  const currentUserFile = guardActiveSession();
+  if (!currentUserFile) return;
 
   try {
     const baseData = await loadUserData(currentUserFile);
+    const validation = validateUserData(baseData);
+    if (!validation.valid) {
+      alert(`Datos del usuario incompletos: ${validation.errors.join(" ")}`);
+      performLogout({ clearPrefs: false, silent: true });
+      return;
+    }
 
     const years = ["actual", ...Object.keys(baseData.historico || {})];
     let selectedYear = localStorage.getItem("dashboardYear") || "actual";
@@ -218,6 +315,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const isActualYear = selectedYear === "actual";
     const yearLabel = selectedYear !== "actual" ? selectedYear : new Date().getFullYear();
     const displayYear = isActualYear ? 2025 : yearLabel; // año congelado para el reloj/etiqueta
+    reportYearText = isActualYear ? `${displayYear} (Actual)` : `${selectedYear}`;
+    selectedUserData = baseData;
 
     const pad = (n) => n.toString().padStart(2, "0");
     const formatLive = () => {
@@ -278,7 +377,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     const userData = getDataForYear(selectedYear);
+    const yearValidation = validateUserData(userData);
+    if (!yearValidation.valid) {
+      alert(`Datos del usuario incompletos para ${selectedYear === "actual" ? "este año" : selectedYear}: ${yearValidation.errors.join(" ")}`);
+      performLogout({ clearPrefs: false, silent: true });
+      return;
+    }
     const derived = computeDerived(userData.meses || {});
+    derivedData = derived;
+    selectedUserData = userData;
 
     // Mostrar datos del usuario
     nombreCliente.textContent = userData.nombre || userData.socio || "Usuario";
@@ -325,6 +432,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const label = isActualYear ? "31/12/2025 23:59" : `31/12/${yearLabel} 23:59`;
         rateTime.textContent = `Actualizada a ${label}`;
       }
+      reportUpdatedLabel = rateTime?.textContent || "";
     };
 
     // Datos en COP (cálculo dinámico)
@@ -460,19 +568,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (menuTelefono) menuTelefono.textContent = userData.telefono || "";
 
     // Cargar tabla de meses (derivando margen y g/p)
-    if (tablaMeses && derived.monthly.length) {
+    if (tablaMeses) {
       tablaMeses.innerHTML = "";
-      derived.monthly.forEach(({ mes, aporte, patrimonio: patrVal, margen, g_p }) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${mes}</td>
-          <td>${formatNumber(aporte)}</td>
-          <td>${formatNumber(patrVal)}</td>
-          <td class="${trendClass(margen)}">${formatPercent(margen)}</td>
-          <td class="${trendClass(g_p)}">${formatNumber(g_p)}</td>
-        `;
-        tablaMeses.appendChild(row);
-      });
+      if (derived.monthly.length) {
+        derived.monthly.forEach(({ mes, aporte, patrimonio: patrVal, margen, g_p }) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${mes}</td>
+            <td>${formatNumber(aporte)}</td>
+            <td>${formatNumber(patrVal)}</td>
+            <td class="${trendClass(margen)}">${formatPercent(margen)}</td>
+            <td class="${trendClass(g_p)}">${formatNumber(g_p)}</td>
+          `;
+          tablaMeses.appendChild(row);
+        });
+      } else {
+        const emptyRow = document.createElement("tr");
+        emptyRow.className = "empty-row";
+        emptyRow.innerHTML = `<td colspan="5">Sin datos de meses</td>`;
+        tablaMeses.appendChild(emptyRow);
+      }
     }
 
     // Honorarios
@@ -484,6 +599,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       tablaHonorarios.innerHTML = "";
       const utilPorMes = derived.monthly.reduce((acc, m) => ({ ...acc, [m.mes]: m.g_p }), {});
       let totalHonorarios = 0;
+      trimestresData = [];
 
       trimestres.forEach((tri) => {
         const utilTrim = (tri.meses || []).reduce((sum, mes) => sum + (toNumber(utilPorMes[mes]) || 0), 0);
@@ -498,8 +614,15 @@ document.addEventListener("DOMContentLoaded", async () => {
           <td>${formatNumber(tarifa.valor || 0)}</td>
         `;
         tablaHonorarios.appendChild(row);
+        trimestresData.push({
+          nombre: tri.nombre,
+          tarifa: tarifa.nombre,
+          comision: tarifa.comision,
+          valor: tarifa.valor || 0
+        });
       });
 
+      honorariosTotalUsd = totalHonorarios;
       honorariosTotal.textContent = formatNumber(totalHonorarios);
     }
 
@@ -571,53 +694,288 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Movimientos
-    if (tablaMovimientos && typeof movimientosData !== "undefined") {
+    if (tablaMovimientos) {
       const clave = (userData.username || "").toLowerCase();
-      const registros = Array.isArray(movimientosData)
+      const registros = typeof movimientosData !== "undefined" && Array.isArray(movimientosData)
         ? movimientosData.filter(m => (m.username || "").toLowerCase() === clave)
         : [];
+      movimientosFiltrados = registros;
       tablaMovimientos.innerHTML = "";
 
-      registros.forEach(mov => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${mov.recibo || ""}</td>
-          <td>${mov.fecha || ""}</td>
-          <td>${formatNumber(mov.cantidad)}</td>
-          <td>${mov.tipo || ""}</td>
-          <td>${mov.tasa ? formatNumber(mov.tasa) : ""}</td>
-          <td>${formatNumber(mov.cambio)}</td>
-        `;
-        tablaMovimientos.appendChild(row);
+      if (registros.length) {
+        registros.forEach(mov => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${mov.recibo || ""}</td>
+            <td>${mov.fecha || ""}</td>
+            <td>${formatNumber(mov.cantidad)}</td>
+            <td>${mov.tipo || ""}</td>
+            <td>${mov.tasa ? formatNumber(mov.tasa) : ""}</td>
+            <td>${formatNumber(mov.cambio)}</td>
+          `;
+          tablaMovimientos.appendChild(row);
+        });
+      } else {
+        const emptyRow = document.createElement("tr");
+        emptyRow.className = "empty-row";
+        emptyRow.innerHTML = `<td colspan="6">Sin movimientos registrados</td>`;
+        tablaMovimientos.appendChild(emptyRow);
+      }
+    }
+
+    const safeText = (el) => (el?.textContent || "").trim() || "N/D";
+
+    if (downloadReportBtn) {
+      downloadReportBtn.addEventListener("click", async () => {
+        if (!window.jspdf || !window.jspdf.jsPDF) {
+          alert("No se pudo generar el PDF en este momento.");
+          return;
+        }
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const marginX = 14;
+        const lineGap = 6;
+        let y = 16;
+        const tablePaddingY = 6;
+
+        const ensureSpace = (needed = 12) => {
+          if (y + needed > pageHeight - 10) {
+            doc.addPage();
+            y = 16;
+          }
+        };
+
+        const addLine = (text, size = 11, gap = lineGap) => {
+          ensureSpace(gap);
+          doc.setFontSize(size);
+          doc.text(text, marginX, y);
+          y += gap;
+        };
+
+        const addTable = (title, description, headers, rows) => {
+          ensureSpace(12);
+          doc.setFontSize(12);
+          doc.text(title, marginX, y);
+          y += 5;
+          if (description) {
+            doc.setFontSize(9);
+            doc.text(description, marginX, y);
+            y += 6;
+          }
+          doc.setFontSize(9);
+          const colWidth = (pageWidth - marginX * 2) / headers.length;
+          const tableWidth = colWidth * headers.length;
+          const headerHeight = 8;
+          ensureSpace(headerHeight + tablePaddingY);
+          doc.setFillColor(17, 17, 17);
+          doc.rect(marginX, y - 5, tableWidth, headerHeight, "F");
+          doc.setTextColor(255);
+          headers.forEach((h, i) => {
+            doc.text(String(h), marginX + i * colWidth + 2, y + 1);
+          });
+          y += headerHeight + 1;
+          doc.setTextColor(0);
+          rows.forEach((row, idx) => {
+            const rowHeight = 7;
+            ensureSpace(rowHeight + tablePaddingY);
+            const isEven = idx % 2 === 0;
+            if (isEven) {
+              doc.setFillColor(245, 245, 245);
+              doc.rect(marginX, y - 5, tableWidth, rowHeight, "F");
+            }
+            headers.forEach((_, i) => {
+              const val = row[i] !== undefined && row[i] !== null ? String(row[i]) : "";
+              doc.text(val, marginX + i * colWidth + 2, y);
+            });
+            y += rowHeight;
+          });
+          y += tablePaddingY;
+        };
+
+        const updatedLabel = reportUpdatedLabel || safeText(rateTime) || safeText(datetimeEl);
+        const fileName = `estado-cuenta-${(reportYearText || selectedYear || "actual").replace(/[^0-9a-zA-Z-]/g, "") || "actual"}.pdf`;
+
+        // Cabecera corporativa
+        const logoUrl = await getLogoDataUrl();
+        if (logoUrl) {
+          doc.addImage(logoUrl, "PNG", pageWidth - marginX - 26, y - 4, 24, 24);
+        }
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(18);
+        doc.text("Castle Black", marginX, y);
+        doc.setFont("helvetica", "normal");
+        y += 8;
+        doc.setFontSize(12);
+        doc.text("Estado de cuenta del periodo seleccionado", marginX, y);
+        y += 6;
+        doc.setFontSize(9);
+        doc.text("Contacto: castleblack.inc@gmail.com | Tel: (+57) 320 901 7438", marginX, y);
+        y += 4.5;
+        doc.text("Sede: Bogotá, Colombia | Atención: L-V 8:00 - 18:00 (GMT-5)", marginX, y);
+        y += 7;
+        doc.setFontSize(10);
+        doc.text("Este informe refleja los datos visibles en tu tablero en la fecha indicada. Incluye aportes, patrimonio, utilidades,", marginX, y);
+        y += 4.5;
+        doc.text("movimientos y honorarios registrados para el año actual/seleccionado.", marginX, y);
+        y += 8;
+
+        addLine(`Cliente: ${safeText(nombreCliente)}`);
+        const cleanId = safeText(idClienteHeader).replace(/^ID:\s*/i, "") || "N/D";
+        addLine(`ID: ${cleanId}`);
+        addLine(`Año: ${reportYearText}`);
+        addLine(`Actualizado: ${updatedLabel}`);
+
+        y += 4;
+        addLine("Resumen USD", 12, 8);
+        addLine(`Aporte: ${safeText(aporte)}`);
+        addLine(`Patrimonio: ${safeText(patrimonio)}`);
+        addLine(`Utilidad: ${safeText(utilidad)}`);
+        addLine(`Crecimiento: ${safeText(crcmnt)}`);
+
+        y += 4;
+        addLine("Resumen COP", 12, 8);
+        addLine(`Aporte: ${safeText(aporteL)}`);
+        addLine(`Patrimonio: ${safeText(patrimonioL)}`);
+        addLine(`Utilidad: ${safeText(utilidadL)}`);
+        addLine(`Crecimiento: ${safeText(crcmntL)}`);
+
+        y += 4;
+        addLine("Tasa aplicada", 12, 8);
+        addLine(`USD/COP: ${safeText(rateValue)}`);
+        addLine(`${safeText(rateTime)}`);
+
+        y += 4;
+        const monthlySrc = Array.isArray(derivedData?.monthly) ? derivedData.monthly : [];
+        const monthlyRows = monthlySrc.length
+          ? monthlySrc.map((m) => [
+            m.mes,
+            formatNumber(m.aporte),
+            formatNumber(m.patrimonio),
+            formatPercent(m.margen),
+            formatNumber(m.g_p)
+          ])
+          : [["Sin datos", "—", "—", "—", "—"]];
+        addTable(
+          "Utilidades y rentabilidades por mes (USD)",
+          "Aporte, patrimonio al cierre de cada mes, margen porcentual sobre el patrimonio previo y ganancia/pérdida mensual.",
+          ["Mes", "Aporte", "Patrimonio", "Margen %", "Gan/Pérd"],
+          monthlyRows
+        );
+
+        const honorariosRows = trimestresData.length
+          ? trimestresData.map((t) => [t.nombre, t.tarifa, t.comision, formatNumber(t.valor)])
+          : [["Sin datos", "—", "—", "—"]];
+        addTable(
+          "Honorarios del año (USD)",
+          "Cálculo trimestral según utilidad acumulada en cada tramo y tarifa aplicable.",
+          ["Trimestre", "Tarifa", "Comisión", "Valor"],
+          honorariosRows
+        );
+        addLine(`Total honorarios: ${formatNumber(honorariosTotalUsd)}`, 10, 6);
+
+        const movimientosRows = movimientosFiltrados.length
+          ? movimientosFiltrados.map((m) => [
+            m.recibo || "",
+            m.fecha || "",
+            formatNumber(m.cantidad),
+            m.tipo || "",
+            m.tasa ? formatNumber(m.tasa) : "",
+            formatNumber(m.cambio)
+          ])
+          : [["Sin movimientos", "—", "—", "—", "—", "—"]];
+        addTable(
+          "Movimientos",
+          "Consignaciones y retiros registrados en el año seleccionado, con su tasa de cambio y valor en COP.",
+          ["Recibo", "Fecha", "Cantidad", "Tipo", "Tasa", "Cambio"],
+          movimientosRows
+        );
+
+        y += 2;
+        addLine("Contacto", 12, 8);
+        addLine(`Cédula/NIT: ${safeText(menuCedula)}`);
+        addLine(`Teléfono: ${safeText(menuTelefono)}`);
+        addLine("Soporte: castleblack.inc@gmail.com");
+
+        doc.save(fileName);
       });
     }
 
   } catch (error) {
     console.error("Error al cargar datos del cliente:", error);
     alert("No se pudieron cargar los datos del cliente.");
-    localStorage.removeItem("currentUserFile");
-    window.location.href = "login.html";
+    performLogout({ clearPrefs: false, silent: true });
+    return;
   }
 
   // Botón de cerrar sesión
   if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("currentUserFile");
-      window.location.href = "login.html";
-    });
+    logoutBtn.addEventListener("click", () => performLogout({ clearPrefs: false }));
   }
 
   // Menú desplegable
   if (menuBtn && menuDropdown) {
+    const getMenuItems = () =>
+      Array.from(menuDropdown.querySelectorAll(".menu-focusable, .menu-item"))
+        .filter((el) => el && el.offsetParent !== null && !el.disabled);
+    const setMenuOpen = (isOpen) => {
+      menuDropdown.classList.toggle("open", isOpen);
+      menuBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      if (isOpen) {
+        menuDropdown.focus();
+      }
+    };
+    const isMenuOpen = () => menuDropdown.classList.contains("open");
+
+    const handleMenuKeydown = (event) => {
+      if (!isMenuOpen()) return;
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setMenuOpen(false);
+        menuBtn.focus();
+        return;
+      }
+      if (event.key === "Tab") {
+        const focusables = getMenuItems();
+        if (!focusables.length) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
     menuBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      menuDropdown.classList.toggle("open");
+      const shouldOpen = !isMenuOpen();
+      setMenuOpen(shouldOpen);
+      if (shouldOpen) {
+        const focusables = getMenuItems();
+        if (focusables.length) focusables[0].focus();
+      }
     });
 
-    document.addEventListener("click", () => {
-      menuDropdown.classList.remove("open");
-    });
+    menuDropdown.addEventListener("click", (e) => e.stopPropagation());
+    menuDropdown.addEventListener("keydown", handleMenuKeydown);
+    document.addEventListener("keydown", handleMenuKeydown);
+    document.addEventListener("click", () => setMenuOpen(false));
   }
+
+  // Refrescar actividad y vigilar expiración
+  const activityHandler = () => {
+    if (sessionStillValid()) refreshActivity();
+  };
+  ["click", "keydown", "mousemove", "scroll", "touchstart"].forEach((evt) => {
+    document.addEventListener(evt, activityHandler, { passive: true });
+  });
+  setInterval(() => sessionStillValid(), 60000);
 
   // Fecha y hora actualizadas
   if (datetimeEl) {

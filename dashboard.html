@@ -8,6 +8,7 @@
   <link rel="icon" href="img/logo.png" type="image/png">
   <link rel="apple-touch-icon" href="img/logo.png">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </head>
 <body>
   <!-- Header -->
@@ -25,12 +26,12 @@
     </div>
     <div class="header-right">
       <div class="menu-container">
-        <button id="menuBtn" class="menu-btn" aria-label="Abrir menú">
+        <button id="menuBtn" class="menu-btn" aria-label="Abrir menú" aria-haspopup="true" aria-expanded="false" aria-controls="menuDropdown">
           <span class="menu-line"></span>
           <span class="menu-line"></span>
           <span class="sr-only">Menú</span>
         </button>
-        <div id="menuDropdown" class="menu-dropdown">
+        <div id="menuDropdown" class="menu-dropdown" role="menu" aria-label="Opciones de cuenta" tabindex="-1">
           <div class="menu-info">
             <p class="menu-title">Cuenta</p>
             <p class="menu-label">Cédula / NIT: <span id="menuCedula"></span></p>
@@ -38,20 +39,21 @@
           </div>
           <div class="menu-info">
             <p class="menu-title">Año</p>
-            <select id="yearSelect" class="year-select" aria-label="Seleccionar año"></select>
+            <select id="yearSelect" class="year-select menu-focusable" aria-label="Seleccionar año"></select>
           </div>
+          <button type="button" class="menu-item menu-focusable download-btn" id="downloadReportBtn" role="menuitem">Descargar PDF</button>
           <div class="menu-info menu-support">
             <p class="menu-title">Soporte</p>
             <p class="menu-label">
               Correo:
-              <a href="mailto:castleblack.inc@gmail.com" class="menu-link">castleblack.inc@gmail.com</a>
+              <a href="mailto:castleblack.inc@gmail.com" class="menu-link menu-focusable">castleblack.inc@gmail.com</a>
             </p>
             <p class="menu-label">
               Teléfono:
-              <a href="tel:+573209017438" class="menu-link">(+57) 320 901 7438</a>
+              <a href="tel:+573209017438" class="menu-link menu-focusable">(+57) 320 901 7438</a>
             </p>
           </div>
-          <button type="button" class="menu-item" id="logoutBtn">Cerrar sesión</button>
+          <button type="button" class="menu-item menu-focusable" id="logoutBtn" role="menuitem">Cerrar sesión</button>
         </div>
       </div>
     </div>
@@ -61,7 +63,7 @@
   <main>
     <!-- Datos principales comparativos -->
     <section class="resumen">
-      <h3>Resumen</h3>
+      <h3>Estado de cuenta</h3>
       <p class="tabla-tip">Aquí ves tu aporte, patrimonio, crecimiento y utilidades en USD y COP con tendencia en vivo; este resumen aplica desde el 01/01/2025 y años anteriores se consultan en la sección histórica.</p>
       <table class="tabla-resumen">
         <thead>

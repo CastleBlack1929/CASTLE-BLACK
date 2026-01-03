@@ -24,6 +24,9 @@ function login(event) {
   }
 
   // Guardamos la ruta del archivo de datos asociado a ese usuario
+  const now = Date.now();
+  localStorage.setItem("sessionStart", String(now));
+  localStorage.setItem("sessionLastActivity", String(now));
   localStorage.setItem("currentUserFile", user.dataFile);
 
   // Redirigimos al dashboard
