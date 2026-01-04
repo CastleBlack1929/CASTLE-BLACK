@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard</title>
   <link rel="stylesheet" href="css/style-dashboard.css">
-  <link rel="icon" href="img/logo.png" type="image/png">
-  <link rel="apple-touch-icon" href="img/logo.png">
+  <link rel="icon" href="img/logo-black.png" type="image/png">
+  <link rel="apple-touch-icon" href="img/logo-black.png">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </head>
@@ -14,7 +14,7 @@
   <!-- Header -->
   <header>
     <div class="header-left">
-      <img src="img/logo.png" alt="Logo Castle Black" class="logo">
+      <img src="img/logo-black.png" alt="Logo Castle Black" class="logo">
       <div class="user-info">
         <h2 id="nombreCliente"></h2>
         <div class="user-meta">
@@ -41,7 +41,9 @@
             <p class="menu-title">Año</p>
             <select id="yearSelect" class="year-select menu-focusable" aria-label="Seleccionar año"></select>
           </div>
-          <button type="button" class="menu-item menu-focusable download-btn" id="downloadReportBtn" role="menuitem">Descargar PDF</button>
+          <div class="menu-info">
+            <button type="button" class="menu-item menu-focusable download-btn" id="downloadReportBtn" role="menuitem">Descargar PDF</button>
+          </div>
           <div class="menu-info menu-support">
             <p class="menu-title">Soporte</p>
             <p class="menu-label">
