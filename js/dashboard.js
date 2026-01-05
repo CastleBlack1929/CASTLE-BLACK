@@ -72,6 +72,7 @@ const computeDerived = (meses = {}) => {
   let totalAporte = 0;
   let prevPatrimonio = 0;
   let lastIdx = -1;
+  let firstHandled = false;
 
   const monthly = monthOrder
     .filter(m => meses[m])
@@ -80,14 +81,23 @@ const computeDerived = (meses = {}) => {
       const aporte = toNumber(raw.aporte) || 0;
       const patrimonio = toNumber(raw.patrimonio) || 0;
 
-      const basePrev = prevPatrimonio;
-      const g_p = patrimonio - basePrev - aporte;
-      const margen = basePrev !== 0 ? (g_p / Math.abs(basePrev)) * 100 : 0;
+      const hasData = aporte !== 0 || patrimonio !== 0;
+      let basePrev = prevPatrimonio;
+      let g_p = patrimonio - basePrev - aporte;
+      let margen = basePrev !== 0 ? (g_p / Math.abs(basePrev)) * 100 : 0;
+
+      // Caso enero: si no hay patrimonio previo, usa el aporte como base provisional
+      if (!firstHandled && basePrev === 0 && aporte !== 0 && patrimonio !== 0) {
+        basePrev = aporte;
+        g_p = patrimonio - aporte; // utilidad respecto al aporte de cierre anterior
+        margen = aporte !== 0 ? (g_p / Math.abs(aporte)) * 100 : 0;
+      }
 
       totalAporte += aporte;
       if (aporte !== 0 || patrimonio !== 0 || g_p !== 0) lastIdx = idx;
 
       if (patrimonio !== 0) prevPatrimonio = patrimonio;
+      if (hasData) firstHandled = true;
 
       return { mes, aporte, patrimonio, g_p, margen };
     });
@@ -298,14 +308,25 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       return;
     }
 
-    const years = ["actual", ...Object.keys(baseData.historico || {})];
+    const claveUsuario = (baseData.username || "").toLowerCase();
+    const historicos = Object.keys(baseData.historico || {});
+    const movYears = (typeof movimientosData !== "undefined" && Array.isArray(movimientosData))
+      ? Array.from(new Set(
+          movimientosData
+            .filter(m => (m.username || "").toLowerCase() === claveUsuario && m.year)
+            .map(m => String(m.year))
+        ))
+      : [];
+    const allYears = Array.from(new Set([...historicos, ...movYears])).sort((a, b) => Number(b) - Number(a));
+    const years = ["actual", ...allYears];
     histBase = computeDerived(baseData.meses || {});
     let selectedYear = localStorage.getItem("dashboardYear") || "actual";
     if (!years.includes(selectedYear)) selectedYear = "actual";
 
     const isActualYear = selectedYear === "actual";
-    const yearLabel = selectedYear !== "actual" ? selectedYear : new Date().getFullYear();
-    const displayYear = isActualYear ? 2025 : yearLabel; // año congelado para el reloj/etiqueta
+    const currentYearNumber = new Date().getFullYear();
+    const yearLabel = selectedYear !== "actual" ? selectedYear : currentYearNumber;
+    const displayYear = yearLabel;
     reportYearText = isActualYear ? `${displayYear} (Actual)` : `${selectedYear}`;
     selectedUserData = baseData;
 
@@ -320,26 +341,33 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const ss = pad(now.getSeconds());
       return `${hh}:${min}:${ss} ${dd}/${mm}/${yyyy}`;
     };
-    const fixedPastLabel = "23:59 31/12/2025";
-    const highlightYear = (text, year) => {
-      return text.replace(year.toString(), `<span class="year-pill">${year}</span>`);
+    const highlightYear = (text, year, useBlue = false) => {
+      const cls = useBlue ? "year-pill-blue" : "year-pill-green";
+      return text.replace(year.toString(), `<span class="year-pill ${cls}">${year}</span>`);
     };
 
     // Reloj visible inmediato
     if (datetimeEl) {
       if (isActualYear) {
-        // Congelado al cierre del año pasado
-        const txt = fixedPastLabel;
-        datetimeEl.innerHTML = highlightYear(txt, displayYear);
+        const renderClock = () => {
+          const useBlue = displayYear === 2026;
+          const txt = highlightYear(formatLive(), displayYear, useBlue);
+          datetimeEl.innerHTML = txt;
+        };
+        renderClock();
+        setInterval(() => {
+          renderClock();
+        }, 1000);
       } else {
         const txt = `23:59 31/12/${yearLabel}`;
-        datetimeEl.innerHTML = highlightYear(txt, displayYear);
+        const useBlue = Number(displayYear) === 2026;
+        datetimeEl.innerHTML = highlightYear(txt, displayYear, useBlue);
       }
     }
 
     if (yearSelect && years.length > 1) {
       yearSelect.innerHTML = years.map(y => {
-        const label = y === "actual" ? "Actual" : y;
+        const label = y === "actual" ? String(currentYearNumber) : y;
         const selected = y === selectedYear ? "selected" : "";
         return `<option value="${y}" ${selected}>${label}</option>`;
       }).join("");
@@ -421,17 +449,22 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         rateValue.textContent = formatNumber(rate, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       }
       if (rateTime) {
-        const label = isActualYear ? "31/12/2025 23:59" : `31/12/${yearLabel} 23:59`;
-        rateTime.textContent = `Actualizada a ${label}`;
+        if (isActualYear) {
+          rateTime.textContent = `Actualizada a ${formatLive()}`;
+        } else {
+          const label = `31/12/${yearLabel} 23:59`;
+          rateTime.textContent = `Actualizada a ${label}`;
+        }
       }
       reportUpdatedLabel = rateTime?.textContent || "";
     };
 
     // Datos en COP (cálculo dinámico)
     const DEFAULT_RATE_BY_YEAR = {
-      actual: 3773.6, // cierre 2025
+      actual: 3767, // tasa vigente 2026
       "2025": 3773.6,
-      "2026": 3767.47
+      "2026": 3767,
+      "2024": 4373.5
     };
 
     if (isActualYear) {
@@ -493,7 +526,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     applyPesos(currentRate);
 
     // Override histórico en COP con la tasa más reciente (siempre la misma para todos los años)
-    const LATEST_HISTORICAL_RATE = 3767.47;
+    const LATEST_HISTORICAL_RATE = 3767;
     if (histBase && aporteHistL && patrimonioHistL && utilidadRHistL && utilidadHistL && crcmntHistL) {
       const aporteCopHist = histBase.totalAporte * LATEST_HISTORICAL_RATE;
       const patrCopHist = (histBase.patrimonioActual || 0) * LATEST_HISTORICAL_RATE;
@@ -549,7 +582,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const aporteBaseHist = histBase.totalAporte || 0;
           const patrHistOsc = aporteBaseHist * (1 + nuevoCrcmnt / 100);
           const utilHistOsc = patrHistOsc - aporteBaseHist;
-          const latestRate = 3767.47;
+          const latestRate = 3767;
           if (patrimonioHist) patrimonioHist.textContent = formatNumber(patrHistOsc);
           if (utilidadRHist) {
             const prevUR = toNumber(utilidadRHist.textContent) ?? utilCalcBase;
@@ -733,8 +766,13 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     // Movimientos
     if (tablaMovimientos) {
       const clave = (userData.username || "").toLowerCase();
+      const targetYear = Number(displayYear);
       const registros = typeof movimientosData !== "undefined" && Array.isArray(movimientosData)
-        ? movimientosData.filter(m => (m.username || "").toLowerCase() === clave)
+        ? movimientosData.filter(m => {
+            const sameUser = (m.username || "").toLowerCase() === clave;
+            const sameYear = Number(m.year) === targetYear;
+            return sameUser && sameYear;
+          })
         : [];
       movimientosFiltrados = registros;
       tablaMovimientos.innerHTML = "";
@@ -1154,7 +1192,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           addLine("Estado de cuenta total (histórico)", 12, 8, "bold");
           addLine(`Fecha de unión: ${safeText(fechaUnionHist)}`);
           addParagraph("Como consecuencia de los aportes y movimientos realizados durante el tiempo que ha mantenido su relación con nosotros, aquí se muestra el margen de utilidad acumulado histórico y el crecimiento real del capital, considerando utilidades, retiros y comisiones. Este análisis refleja el desempeño desde su fecha de ingreso, incluso si fue en años anteriores.");
-          const latestHistoricalRate = 3767.47;
+          const latestHistoricalRate = 3767;
           const histAporteUsd = toNumber(safeText(aporteHist)) || 0;
           const histPatrUsd = toNumber(safeText(patrimonioHist)) || 0;
           const histUtilRUsd = toNumber(safeText(utilidadRHist)) || 0;
