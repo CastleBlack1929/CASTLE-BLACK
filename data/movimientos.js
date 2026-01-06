@@ -1129,5 +1129,31 @@ const movimientosData = [
     "tipo": "COP",
     "tasa": 3973.0,
     "cambio": 1258.0
+  },
+  {
+    "username": "lmp1974",
+    "cliente": "022",
+    "recibo": "90",
+    "fecha": "05/01/26",
+    "year": 2026,
+    "socio": "LAZARO MARTIN PERALTA",
+    "cedula": "324033",
+    "cantidad": 1000000.0,
+    "tipo": "COP",
+    "tasa": 3771.0,
+    "cambio": 265.19
+  },
+  {
+    "username": "MATRIS",
+    "cliente": "A",
+    "recibo": "89",
+    "fecha": "01/01/26",
+    "year": 2026,
+    "socio": "CASTLE BLACK",
+    "cedula": "-",
+    "cantidad": 786000.0,
+    "tipo": "COP",
+    "tasa": 3762.0,
+    "cambio": 208.92
   }
 ]

@@ -324,7 +324,11 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const years = ["actual", ...allYears];
     histBase = computeDerived(baseData.meses || {}, baseData.patrimonioPrev || 0);
     let selectedYear = localStorage.getItem("dashboardYear") || "actual";
-    if (!years.includes(selectedYear)) selectedYear = "actual";
+    const normalizedYears = new Set(years);
+    if (!normalizedYears.has(selectedYear)) {
+      selectedYear = "actual";
+      localStorage.setItem("dashboardYear", "actual");
+    }
 
     const isActualYear = selectedYear === "actual";
     const currentYearNumber = new Date().getFullYear();
@@ -369,11 +373,17 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     }
 
     if (yearSelect && years.length > 1) {
-      yearSelect.innerHTML = years.map(y => {
-        const label = y === "actual" ? String(currentYearNumber) : y;
-        const selected = y === selectedYear ? "selected" : "";
-        return `<option value="${y}" ${selected}>${label}</option>`;
-      }).join("");
+      const seenLabels = new Set();
+      yearSelect.innerHTML = years
+        .map(y => {
+          const label = y === "actual" ? String(currentYearNumber) : y;
+          if (seenLabels.has(label)) return null;
+          seenLabels.add(label);
+          const selected = y === selectedYear ? "selected" : "";
+          return `<option value="${y}" ${selected}>${label}</option>`;
+        })
+        .filter(Boolean)
+        .join("");
       yearSelect.addEventListener("change", (e) => {
         localStorage.setItem("dashboardYear", e.target.value);
         window.location.reload();
@@ -419,14 +429,14 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const prevYearData = baseData.historico?.[prevYearKey];
     const prevClosingPatr = toNumber(prevYearData?.meses?.diciembre?.patrimonio) || 0;
     const prevClosingPatrL = toNumber(prevYearData?.patrimonioL);
-    const movimientosActual =
+
+    const movimientosYear =
       (typeof movimientosData !== "undefined" && Array.isArray(movimientosData))
-        ? movimientosData.filter(
-            (m) =>
-              (m.username || "").toLowerCase() === claveUsuario &&
-              Number(m.year) === currentYearNumber
-          )
+        ? movimientosData.filter((m) => Number(m.year) === currentYearNumber)
         : [];
+    const movimientosActual = movimientosYear.filter(
+      (m) => (m.username || "").toLowerCase() === claveUsuario && Number(m.year) === currentYearNumber
+    );
     const sumMovUsd = movimientosActual.reduce((acc, mov) => {
       const tipo = (mov.tipo || "").toUpperCase();
       if (tipo === "USD") return acc + (toNumber(mov.cambio) || toNumber(mov.cantidad) || 0);
@@ -441,8 +451,15 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const cop = (toNumber(mov.cambio) || toNumber(mov.cantidad) || 0) * tasaMov;
       return acc + (cop || 0);
     }, 0);
+    const sumMovUsdGlobal = movimientosYear.reduce((acc, mov) => {
+      const tipo = (mov.tipo || "").toUpperCase();
+      if (tipo === "USD") return acc + (toNumber(mov.cambio) || toNumber(mov.cantidad) || 0);
+      const tasaMov = toNumber(mov.tasa) || currentRate || baseRate || DEFAULT_RATE_BY_YEAR.actual || 1;
+      const usd = toNumber(mov.cambio) || (toNumber(mov.cantidad) || 0) / tasaMov;
+      return acc + (usd || 0);
+    }, 0);
     const CASTLE_PREV_DEC_TOTAL = 31274.59; // total patrimonio dic-2025 (suma de todos los clientes)
-    const CASTLE_CURRENT_TOTAL = 31400; // patrimonio total Castle Black año actual (progresivo)
+    const CASTLE_CURRENT_TOTAL = 32000; // patrimonio base Castle Black año actual (progresivo)
     let totalAportesActual = derived.totalAporte || 0;
     let patrimonioCalcUsd = derived.patrimonioActual || 0;
     let utilidadUsd = patrimonioCalcUsd - totalAportesActual;
@@ -453,11 +470,21 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       totalAportesActual = (derived.totalAporte || 0) + aporteBaseInicial + sumMovUsd;
 
       let pctPrev = null;
-      if (prevClosingPatr > 0 && CASTLE_PREV_DEC_TOTAL > 0) {
-        pctPrev = prevClosingPatr / CASTLE_PREV_DEC_TOTAL;
-        patrimonioCalcUsd = pctPrev * CASTLE_CURRENT_TOTAL;
+      const portfolioTotal = CASTLE_CURRENT_TOTAL + sumMovUsdGlobal;
+      const prevConAportes = prevClosingPatr + sumMovUsd; // cierre previo + aportes propios 2026
+      if (prevConAportes > 0 && CASTLE_PREV_DEC_TOTAL > 0) {
+        pctPrev = prevConAportes / CASTLE_PREV_DEC_TOTAL;
+        patrimonioCalcUsd = pctPrev * portfolioTotal;
+      } else if (totalAportesActual > 0 && CASTLE_PREV_DEC_TOTAL > 0) {
+        // Nuevo socio sin histórico: porcentaje = aporte actual vs total dic-2025, aplicado al total actualizado
+        pctPrev = totalAportesActual / CASTLE_PREV_DEC_TOTAL;
+        patrimonioCalcUsd = pctPrev * portfolioTotal;
       } else {
         patrimonioCalcUsd = (derived.totalAporte || 0) * (1 + ((derived.crcmntActual || 0) / 100));
+      }
+      // Si el patrimonio calculado es inválido o cero, usa al menos el aporte total
+      if ((!patrimonioCalcUsd || patrimonioCalcUsd <= 0) && totalAportesActual > 0) {
+        patrimonioCalcUsd = totalAportesActual;
       }
       utilidadUsd = patrimonioCalcUsd - totalAportesActual;
     }
@@ -607,19 +634,26 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     // Oscilar tasa y resumen solo en 2026 (actual); y patrimonio USD en 2025
     const startOscillation = (oscilarResumen) => {
       if (!oscilarResumen) return;
+      const isOscYear2026 = selectedYear === "actual" || String(displayYear) === "2026";
 
       // Actual (2026): oscilar tasa y resumen cada 3s, +/-0.10% tasa, +/-0.5% crecimiento
-      if (displayYear === 2026) {
-        const baseAporteOsc = totalAportesActual;
+      if (isOscYear2026) {
+        const baseAporteOsc = totalAportesActual || patrimonioCalc || 1;
         setInterval(() => {
           const rateFactor = 1 + ((Math.random() - 0.5) * 0.002); // +/-0.10%
           currentRate = (currentRate || baseRate || DEFAULT_RATE_BY_YEAR.actual) * rateFactor;
           updateRateDisplay(currentRate);
 
-          const crFactor = 1 + ((Math.random() - 0.5) * 0.01); // +/-0.5%
-          const nuevoCrcmnt = crcmntBaseUsd * crFactor;
-          const nuevoPat = baseAporteOsc * (1 + nuevoCrcmnt / 100);
+          const crFactor = 1 + ((Math.random() - 0.5) * 0.02); // +/-1%
+          const nuevoPat = baseAporteOsc * (1 + (crcmntBaseUsd * crFactor) / 100);
+          const nuevoCrcmnt = baseAporteOsc !== 0
+            ? ((nuevoPat - baseAporteOsc) / Math.abs(baseAporteOsc)) * 100
+            : crcmntBaseUsd * crFactor;
           const nuevaUtil = nuevoPat - baseAporteOsc;
+
+          const prevUtil = toNumber(utilidad?.textContent);
+          const prevUtilTot = toNumber(utilidadTotal?.textContent);
+          const prevCrcmnt = toNumber(crcmnt?.textContent);
 
           patrimonioCalc = nuevoPat;
           utilCalcBase = nuevaUtil;
@@ -630,8 +664,6 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           if (utilidadTotal) utilidadTotal.textContent = formatNumber(nuevaUtil);
           setTrendClass(utilidad, nuevaUtil);
           setTrendClass(utilidadTotal, nuevaUtil);
-          const prevUtil = toNumber(utilidad?.textContent);
-          const prevUtilTot = toNumber(utilidadTotal?.textContent);
           if (utilidadArrow) {
             utilidadArrow.textContent = Number.isFinite(prevUtil)
               ? (nuevaUtil > prevUtil ? "▲" : (nuevaUtil < prevUtil ? "▼" : "—"))
@@ -644,6 +676,11 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           }
           crcmnt.textContent = formatPercent(nuevoCrcmnt);
           setTrendClass(crcmnt, nuevoCrcmnt);
+          if (typeof crcmntArrow !== "undefined" && crcmntArrow) {
+            crcmntArrow.textContent = Number.isFinite(prevCrcmnt)
+              ? (nuevoCrcmnt > prevCrcmnt ? "▲" : (nuevoCrcmnt < prevCrcmnt ? "▼" : "—"))
+              : "—";
+          }
 
           const janRow = monthRowMap["enero"];
           if (janRow) {
@@ -665,10 +702,16 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       if (!isActualYear && String(displayYear) === "2025") {
         const baseAporteOsc = derived.totalAporte || 0;
         setInterval(() => {
-          const crFactor = 1 + ((Math.random() - 0.5) * 0.003); // +/-0.15%
-          const nuevoCrcmnt = crcmntBaseUsd * crFactor;
-          const nuevoPat = baseAporteOsc * (1 + nuevoCrcmnt / 100);
+          const crFactor = 1 + ((Math.random() - 0.5) * 0.02); // +/-1%
+          const nuevoPat = baseAporteOsc * (1 + (crcmntBaseUsd * crFactor) / 100);
+          const nuevoCrcmnt = baseAporteOsc !== 0
+            ? ((nuevoPat - baseAporteOsc) / Math.abs(baseAporteOsc)) * 100
+            : crcmntBaseUsd * crFactor;
           const nuevaUtil = nuevoPat - baseAporteOsc;
+
+          const prevUtil = toNumber(utilidad?.textContent);
+          const prevUtilTot = toNumber(utilidadTotal?.textContent);
+          const prevCrcmnt = toNumber(crcmnt?.textContent);
 
           patrimonioCalc = nuevoPat;
           utilCalcBase = nuevaUtil;
@@ -679,10 +722,23 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           if (utilidadTotal) utilidadTotal.textContent = formatNumber(nuevaUtil);
           setTrendClass(utilidad, nuevaUtil);
           setTrendClass(utilidadTotal, nuevaUtil);
-          if (utilidadArrow) utilidadArrow.textContent = "—";
-          if (utilidadTotalArrow) utilidadTotalArrow.textContent = "—";
+          if (utilidadArrow) {
+            utilidadArrow.textContent = Number.isFinite(prevUtil)
+              ? (nuevaUtil > prevUtil ? "▲" : (nuevaUtil < prevUtil ? "▼" : "—"))
+              : "—";
+          }
+          if (utilidadTotalArrow) {
+            utilidadTotalArrow.textContent = Number.isFinite(prevUtilTot)
+              ? (nuevaUtil > prevUtilTot ? "▲" : (nuevaUtil < prevUtilTot ? "▼" : "—"))
+              : "—";
+          }
           crcmnt.textContent = formatPercent(nuevoCrcmnt);
           setTrendClass(crcmnt, nuevoCrcmnt);
+          if (typeof crcmntArrow !== "undefined" && crcmntArrow) {
+            crcmntArrow.textContent = Number.isFinite(prevCrcmnt)
+              ? (nuevoCrcmnt > prevCrcmnt ? "▲" : (nuevoCrcmnt < prevCrcmnt ? "▼" : "—"))
+              : "—";
+          }
 
           const janRow = monthRowMap["enero"];
           if (janRow) {
@@ -696,7 +752,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       }
     };
 
-    startOscillation(isActualYear);
+    startOscillation(isActualYear || String(displayYear) === "2026");
 
     // Información extra
     idClienteHeader.textContent = userData.idCliente ? `ID: ${userData.idCliente}` : "";
