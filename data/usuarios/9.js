@@ -155,7 +155,53 @@ window.userData = {
         }
       },
       "aporte": 5721.08,
-      "patrimonio": 6841.44
+      "patrimonio": 6841.44,
+      "honorariosTrimestres": [
+        {
+          "nombre": "TRIMESTRE 1",
+          "meses": [
+            "enero",
+            "febrero",
+            "marzo"
+          ],
+          "tipo": "PLATINO",
+          "cobro": 26.75,
+          "comisionTxt": "20%"
+        },
+        {
+          "nombre": "TRIMESTRE 2",
+          "meses": [
+            "abril",
+            "mayo",
+            "junio"
+          ],
+          "tipo": "PLATINO",
+          "cobro": 20.61,
+          "comisionTxt": "20%"
+        },
+        {
+          "nombre": "TRIMESTRE 3",
+          "meses": [
+            "julio",
+            "agosto",
+            "septiembre"
+          ],
+          "tipo": "PLATINO",
+          "cobro": 66.81,
+          "comisionTxt": "20%"
+        },
+        {
+          "nombre": "TRIMESTRE 4",
+          "meses": [
+            "octubre",
+            "noviembre",
+            "diciembre"
+          ],
+          "tipo": "PLATINO",
+          "cobro": 59.83,
+          "comisionTxt": "20%"
+        }
+      ]
     },
     "2024": {
       "aporteL": 11000000.0,
@@ -213,7 +259,40 @@ window.userData = {
           "aporte": 456.78,
           "patrimonio": 2825.73
         }
-      }
+      },
+      "patrimonioPrev": 1749.3,
+      "honorariosTrimestres": [
+        {
+          "nombre": "TRIMESTRE 1",
+          "meses": []
+        },
+        {
+          "nombre": "TRIMESTRE 2",
+          "meses": []
+        },
+        {
+          "nombre": "TRIMESTRE 3",
+          "meses": [
+            "julio",
+            "agosto",
+            "septiembre"
+          ],
+          "tipo": "BRONCE",
+          "cobro": 0.0,
+          "comisionTxt": "$0"
+        },
+        {
+          "nombre": "TRIMESTRE 4",
+          "meses": [
+            "octubre",
+            "noviembre",
+            "diciembre"
+          ],
+          "tipo": "PLATINO",
+          "cobro": 0.0,
+          "comisionTxt": "$0"
+        }
+      ]
     }
   },
   "idCliente": "009",

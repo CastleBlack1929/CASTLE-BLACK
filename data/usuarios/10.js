@@ -155,7 +155,53 @@ window.userData = {
         }
       },
       "aporte": 1125.08,
-      "patrimonio": 1410.68
+      "patrimonio": 1410.68,
+      "honorariosTrimestres": [
+        {
+          "nombre": "TRIMESTRE 1",
+          "meses": [
+            "enero",
+            "febrero",
+            "marzo"
+          ],
+          "tipo": "ORO",
+          "cobro": 13.65,
+          "comisionTxt": "25%"
+        },
+        {
+          "nombre": "TRIMESTRE 2",
+          "meses": [
+            "abril",
+            "mayo",
+            "junio"
+          ],
+          "tipo": "ORO",
+          "cobro": 16.53,
+          "comisionTxt": "25%"
+        },
+        {
+          "nombre": "TRIMESTRE 3",
+          "meses": [
+            "julio",
+            "agosto",
+            "septiembre"
+          ],
+          "tipo": "ORO",
+          "cobro": 20.34,
+          "comisionTxt": "25%"
+        },
+        {
+          "nombre": "TRIMESTRE 4",
+          "meses": [
+            "octubre",
+            "noviembre",
+            "diciembre"
+          ],
+          "tipo": "ORO",
+          "cobro": 20.89,
+          "comisionTxt": "25%"
+        }
+      ]
     },
     "2024": {
       "aporteL": 5000000.0,
@@ -213,7 +259,40 @@ window.userData = {
           "aporte": 1149.8,
           "patrimonio": 1125.08
         }
-      }
+      },
+      "patrimonioPrev": 0.0,
+      "honorariosTrimestres": [
+        {
+          "nombre": "TRIMESTRE 1",
+          "meses": []
+        },
+        {
+          "nombre": "TRIMESTRE 2",
+          "meses": []
+        },
+        {
+          "nombre": "TRIMESTRE 3",
+          "meses": [
+            "julio",
+            "agosto",
+            "septiembre"
+          ],
+          "tipo": "BRONCE",
+          "cobro": 0.0,
+          "comisionTxt": "$0"
+        },
+        {
+          "nombre": "TRIMESTRE 4",
+          "meses": [
+            "octubre",
+            "noviembre",
+            "diciembre"
+          ],
+          "tipo": "BRONCE",
+          "cobro": 0.0,
+          "comisionTxt": "$0"
+        }
+      ]
     }
   },
   "idCliente": "010",

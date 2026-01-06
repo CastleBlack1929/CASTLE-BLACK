@@ -155,7 +155,53 @@ window.userData = {
         }
       },
       "aporte": 542.52,
-      "patrimonio": 677.7
+      "patrimonio": 677.7,
+      "honorariosTrimestres": [
+        {
+          "nombre": "TRIMESTRE 1",
+          "meses": [
+            "enero",
+            "febrero",
+            "marzo"
+          ],
+          "tipo": "PLATA",
+          "cobro": 10.0,
+          "comisionTxt": "$10"
+        },
+        {
+          "nombre": "TRIMESTRE 2",
+          "meses": [
+            "abril",
+            "mayo",
+            "junio"
+          ],
+          "tipo": "PLATA",
+          "cobro": 10.0,
+          "comisionTxt": "$10"
+        },
+        {
+          "nombre": "TRIMESTRE 3",
+          "meses": [
+            "julio",
+            "agosto",
+            "septiembre"
+          ],
+          "tipo": "ORO",
+          "cobro": 10.98,
+          "comisionTxt": "25%"
+        },
+        {
+          "nombre": "TRIMESTRE 4",
+          "meses": [
+            "octubre",
+            "noviembre",
+            "diciembre"
+          ],
+          "tipo": "ORO",
+          "cobro": 11.5,
+          "comisionTxt": "25%"
+        }
+      ]
     },
     "2024": {
       "aporteL": 2000000.0,
@@ -213,7 +259,40 @@ window.userData = {
           "aporte": 0.0,
           "patrimonio": 542.52
         }
-      }
+      },
+      "patrimonioPrev": 0.0,
+      "honorariosTrimestres": [
+        {
+          "nombre": "TRIMESTRE 1",
+          "meses": []
+        },
+        {
+          "nombre": "TRIMESTRE 2",
+          "meses": []
+        },
+        {
+          "nombre": "TRIMESTRE 3",
+          "meses": [
+            "julio",
+            "agosto",
+            "septiembre"
+          ],
+          "tipo": "ORO",
+          "cobro": 13.25,
+          "comisionTxt": "25%"
+        },
+        {
+          "nombre": "TRIMESTRE 4",
+          "meses": [
+            "octubre",
+            "noviembre",
+            "diciembre"
+          ],
+          "tipo": "BRONCE",
+          "cobro": 10.0,
+          "comisionTxt": "$10"
+        }
+      ]
     }
   },
   "idCliente": "007",

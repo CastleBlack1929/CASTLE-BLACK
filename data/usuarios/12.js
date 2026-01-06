@@ -155,7 +155,53 @@ window.userData = {
         }
       },
       "aporte": 3836.84,
-      "patrimonio": 4120.62
+      "patrimonio": 4120.62,
+      "honorariosTrimestres": [
+        {
+          "nombre": "TRIMESTRE 1",
+          "meses": [
+            "enero",
+            "febrero",
+            "marzo"
+          ],
+          "tipo": "PLATA",
+          "cobro": 0.0,
+          "comisionTxt": "$0"
+        },
+        {
+          "nombre": "TRIMESTRE 2",
+          "meses": [
+            "abril",
+            "mayo",
+            "junio"
+          ],
+          "tipo": "PLATA",
+          "cobro": 10.0,
+          "comisionTxt": "$10"
+        },
+        {
+          "nombre": "TRIMESTRE 3",
+          "meses": [
+            "julio",
+            "agosto",
+            "septiembre"
+          ],
+          "tipo": "PLATA",
+          "cobro": 10.0,
+          "comisionTxt": "$10"
+        },
+        {
+          "nombre": "TRIMESTRE 4",
+          "meses": [
+            "octubre",
+            "noviembre",
+            "diciembre"
+          ],
+          "tipo": "PLATA",
+          "cobro": 10.0,
+          "comisionTxt": "$10"
+        }
+      ]
     }
   },
   "idCliente": "012",

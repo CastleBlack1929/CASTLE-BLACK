@@ -155,7 +155,53 @@ window.userData = {
         }
       },
       "aporte": 3853.4,
-      "patrimonio": 4348.02
+      "patrimonio": 4348.02,
+      "honorariosTrimestres": [
+        {
+          "nombre": "TRIMESTRE 1",
+          "meses": [
+            "enero",
+            "febrero",
+            "marzo"
+          ],
+          "tipo": "ORO",
+          "cobro": 0.0,
+          "comisionTxt": "$0"
+        },
+        {
+          "nombre": "TRIMESTRE 2",
+          "meses": [
+            "abril",
+            "mayo",
+            "junio"
+          ],
+          "tipo": "ORO",
+          "cobro": 19.89,
+          "comisionTxt": "25%"
+        },
+        {
+          "nombre": "TRIMESTRE 3",
+          "meses": [
+            "julio",
+            "agosto",
+            "septiembre"
+          ],
+          "tipo": "ORO",
+          "cobro": 17.14,
+          "comisionTxt": "25%"
+        },
+        {
+          "nombre": "TRIMESTRE 4",
+          "meses": [
+            "octubre",
+            "noviembre",
+            "diciembre"
+          ],
+          "tipo": "PLATINO",
+          "cobro": 26.45,
+          "comisionTxt": "20%"
+        }
+      ]
     }
   },
   "idCliente": "013",
