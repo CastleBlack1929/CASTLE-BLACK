@@ -12,7 +12,7 @@ window.userData = {
     "patrimonioUsd": 0,
     "aporteCop": 0
   },
-  "tasaBase": 3767.0,
+  "tasaBase": 3710.5,
   "aporteL": 0,
   "honorariosTrimestres": [
     {
@@ -50,8 +50,8 @@ window.userData = {
   ],
   "meses": {
     "enero": {
-      "aporte": 0,
-      "patrimonio": 0
+      "aporte": 0.0,
+      "patrimonio": 576.31
     },
     "febrero": {
       "aporte": 0,
@@ -151,11 +151,11 @@ window.userData = {
         },
         "diciembre": {
           "aporte": 0.0,
-          "patrimonio": 582.0
+          "patrimonio": 576.31
         }
       },
       "aporte": 525.27,
-      "patrimonio": 582.0,
+      "patrimonio": 576.31,
       "honorariosTrimestres": [
         {
           "nombre": "TRIMESTRE 1",

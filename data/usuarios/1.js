@@ -12,7 +12,7 @@ window.userData = {
     "patrimonioUsd": 0,
     "aporteCop": 0
   },
-  "tasaBase": 3767.0,
+  "tasaBase": 3710.5,
   "aporteL": 0,
   "honorariosTrimestres": [
     {
@@ -50,8 +50,8 @@ window.userData = {
   ],
   "meses": {
     "enero": {
-      "aporte": 0,
-      "patrimonio": 0
+      "aporte": 0.0,
+      "patrimonio": 1524.15
     },
     "febrero": {
       "aporte": 0,
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "A",
       "meses": {
         "enero": {
-          "aporte": 734.79,
+          "aporte": 193.61,
           "patrimonio": 756.12
         },
         "febrero": {
@@ -164,7 +164,7 @@ window.userData = {
             "febrero",
             "marzo"
           ],
-          "tipo": "—",
+          "tipo": "\u2014",
           "cobro": 0.0,
           "comisionTxt": "$0"
         },
@@ -175,7 +175,7 @@ window.userData = {
             "mayo",
             "junio"
           ],
-          "tipo": "—",
+          "tipo": "\u2014",
           "cobro": 0.0,
           "comisionTxt": "$0"
         },
@@ -186,7 +186,7 @@ window.userData = {
             "agosto",
             "septiembre"
           ],
-          "tipo": "—",
+          "tipo": "\u2014",
           "cobro": 0.0,
           "comisionTxt": "$0"
         },
@@ -197,7 +197,7 @@ window.userData = {
             "noviembre",
             "diciembre"
           ],
-          "tipo": "—",
+          "tipo": "\u2014",
           "cobro": 0.0,
           "comisionTxt": "$0"
         }

@@ -12,57 +12,185 @@ window.userData = {
     "patrimonioUsd": 0,
     "aporteCop": 0
   },
-  "tasaBase": 3767.0,
+  "tasaBase": 3710.5,
   "aporteL": 0,
   "honorariosTrimestres": [
-    { "nombre": "TRIMESTRE 1", "meses": ["enero", "febrero", "marzo"] },
-    { "nombre": "TRIMESTRE 2", "meses": ["abril", "mayo", "junio"] },
-    { "nombre": "TRIMESTRE 3", "meses": ["julio", "agosto", "septiembre"] },
-    { "nombre": "TRIMESTRE 4", "meses": ["octubre", "noviembre", "diciembre"] }
+    {
+      "nombre": "TRIMESTRE 1",
+      "meses": [
+        "enero",
+        "febrero",
+        "marzo"
+      ]
+    },
+    {
+      "nombre": "TRIMESTRE 2",
+      "meses": [
+        "abril",
+        "mayo",
+        "junio"
+      ]
+    },
+    {
+      "nombre": "TRIMESTRE 3",
+      "meses": [
+        "julio",
+        "agosto",
+        "septiembre"
+      ]
+    },
+    {
+      "nombre": "TRIMESTRE 4",
+      "meses": [
+        "octubre",
+        "noviembre",
+        "diciembre"
+      ]
+    }
   ],
   "meses": {
-    "enero": { "aporte": 0, "patrimonio": 0 },
-    "febrero": { "aporte": 0, "patrimonio": 0 },
-    "marzo": { "aporte": 0, "patrimonio": 0 },
-    "abril": { "aporte": 0, "patrimonio": 0 },
-    "mayo": { "aporte": 0, "patrimonio": 0 },
-    "junio": { "aporte": 0, "patrimonio": 0 },
-    "julio": { "aporte": 0, "patrimonio": 0 },
-    "agosto": { "aporte": 0, "patrimonio": 0 },
-    "septiembre": { "aporte": 0, "patrimonio": 0 },
-    "octubre": { "aporte": 0, "patrimonio": 0 },
-    "noviembre": { "aporte": 0, "patrimonio": 0 },
-    "diciembre": { "aporte": 0, "patrimonio": 0 }
+    "enero": {
+      "aporte": 265.19,
+      "patrimonio": 269.06
+    },
+    "febrero": {
+      "aporte": 0,
+      "patrimonio": 0
+    },
+    "marzo": {
+      "aporte": 0,
+      "patrimonio": 0
+    },
+    "abril": {
+      "aporte": 0,
+      "patrimonio": 0
+    },
+    "mayo": {
+      "aporte": 0,
+      "patrimonio": 0
+    },
+    "junio": {
+      "aporte": 0,
+      "patrimonio": 0
+    },
+    "julio": {
+      "aporte": 0,
+      "patrimonio": 0
+    },
+    "agosto": {
+      "aporte": 0,
+      "patrimonio": 0
+    },
+    "septiembre": {
+      "aporte": 0,
+      "patrimonio": 0
+    },
+    "octubre": {
+      "aporte": 0,
+      "patrimonio": 0
+    },
+    "noviembre": {
+      "aporte": 0,
+      "patrimonio": 0
+    },
+    "diciembre": {
+      "aporte": 0,
+      "patrimonio": 0
+    }
   },
   "historico": {
     "2026": {
       "aporteL": 0,
       "patrimonioL": 0,
-      "tasaBase": 3767.0,
+      "tasaBase": 3710.5,
       "nivel": "N/A",
       "meses": {
-        "enero": { "aporte": 0, "patrimonio": 0 },
-        "febrero": { "aporte": 0, "patrimonio": 0 },
-        "marzo": { "aporte": 0, "patrimonio": 0 },
-        "abril": { "aporte": 0, "patrimonio": 0 },
-        "mayo": { "aporte": 0, "patrimonio": 0 },
-        "junio": { "aporte": 0, "patrimonio": 0 },
-        "julio": { "aporte": 0, "patrimonio": 0 },
-        "agosto": { "aporte": 0, "patrimonio": 0 },
-        "septiembre": { "aporte": 0, "patrimonio": 0 },
-        "octubre": { "aporte": 0, "patrimonio": 0 },
-        "noviembre": { "aporte": 0, "patrimonio": 0 },
-        "diciembre": { "aporte": 0, "patrimonio": 0 }
+        "enero": {
+          "aporte": 265.19,
+          "patrimonio": 269.06
+        },
+        "febrero": {
+          "aporte": 0,
+          "patrimonio": 0
+        },
+        "marzo": {
+          "aporte": 0,
+          "patrimonio": 0
+        },
+        "abril": {
+          "aporte": 0,
+          "patrimonio": 0
+        },
+        "mayo": {
+          "aporte": 0,
+          "patrimonio": 0
+        },
+        "junio": {
+          "aporte": 0,
+          "patrimonio": 0
+        },
+        "julio": {
+          "aporte": 0,
+          "patrimonio": 0
+        },
+        "agosto": {
+          "aporte": 0,
+          "patrimonio": 0
+        },
+        "septiembre": {
+          "aporte": 0,
+          "patrimonio": 0
+        },
+        "octubre": {
+          "aporte": 0,
+          "patrimonio": 0
+        },
+        "noviembre": {
+          "aporte": 0,
+          "patrimonio": 0
+        },
+        "diciembre": {
+          "aporte": 0,
+          "patrimonio": 0
+        }
       },
       "patrimonioPrev": 0,
       "honorariosTrimestres": [
-        { "nombre": "TRIMESTRE 1", "meses": ["enero", "febrero", "marzo"] },
-        { "nombre": "TRIMESTRE 2", "meses": ["abril", "mayo", "junio"] },
-        { "nombre": "TRIMESTRE 3", "meses": ["julio", "agosto", "septiembre"] },
-        { "nombre": "TRIMESTRE 4", "meses": ["octubre", "noviembre", "diciembre"] }
+        {
+          "nombre": "TRIMESTRE 1",
+          "meses": [
+            "enero",
+            "febrero",
+            "marzo"
+          ]
+        },
+        {
+          "nombre": "TRIMESTRE 2",
+          "meses": [
+            "abril",
+            "mayo",
+            "junio"
+          ]
+        },
+        {
+          "nombre": "TRIMESTRE 3",
+          "meses": [
+            "julio",
+            "agosto",
+            "septiembre"
+          ]
+        },
+        {
+          "nombre": "TRIMESTRE 4",
+          "meses": [
+            "octubre",
+            "noviembre",
+            "diciembre"
+          ]
+        }
       ]
     }
   },
   "idCliente": "022",
   "socio": "LAZARO MARTIN PERALTA"
-};
+}

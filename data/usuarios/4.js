@@ -12,7 +12,7 @@ window.userData = {
     "patrimonioUsd": 0,
     "aporteCop": 0
   },
-  "tasaBase": 3767.0,
+  "tasaBase": 3710.5,
   "aporteL": 0,
   "honorariosTrimestres": [
     {
@@ -50,8 +50,8 @@ window.userData = {
   ],
   "meses": {
     "enero": {
-      "aporte": 0,
-      "patrimonio": 0
+      "aporte": 0.0,
+      "patrimonio": 456.72
     },
     "febrero": {
       "aporte": 0,
