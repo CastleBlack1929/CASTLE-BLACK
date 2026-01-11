@@ -51,7 +51,7 @@ window.userData = {
   "meses": {
     "enero": {
       "aporte": 0.0,
-      "patrimonio": 130.45
+      "patrimonio": 132.09
     },
     "febrero": {
       "aporte": 0,

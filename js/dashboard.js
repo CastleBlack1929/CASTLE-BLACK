@@ -91,38 +91,58 @@ const mesesMatch = (a = {}, b = {}) =>
     return aporteA === aporteB && patrA === patrB;
   });
 
-const computeTotalAportesAllYears = (data, currentYearKey) => {
-  const historico = data?.historico || {};
-  let total = 0;
-
-  Object.keys(historico).forEach((year) => {
-    total += sumAportesFromMeses(historico?.[year]?.meses);
+const hasNonZeroMeses = (meses = {}) =>
+  monthOrder.some((mes) => {
+    const aporte = toNumber(meses?.[mes]?.aporte);
+    const patrimonio = toNumber(meses?.[mes]?.patrimonio);
+    return (Number.isFinite(aporte) && aporte !== 0) || (Number.isFinite(patrimonio) && patrimonio !== 0);
   });
 
-  const hasCurrentYearHist = currentYearKey && historico?.[currentYearKey];
-  const hasDuplicateMeses = Object.values(historico).some((hist) =>
-    mesesMatch(hist?.meses, data?.meses)
-  );
+const computeTotalAportesAllYears = (data, currentYearKey) => {
+  const historico = data?.historico || {};
+  const currentMeses = data?.meses || {};
+  const totalHistorico = Object.keys(historico).reduce((acc, year) => {
+    if (currentYearKey && year === currentYearKey) return acc;
+    return acc + sumAportesFromMeses(historico?.[year]?.meses);
+  }, 0);
 
-  if (!hasCurrentYearHist && !hasDuplicateMeses) {
-    total += sumAportesFromMeses(data?.meses);
+  const histCurrent = currentYearKey ? historico?.[currentYearKey] : null;
+  if (histCurrent) {
+    const useCurrent = hasNonZeroMeses(currentMeses) && !mesesMatch(histCurrent?.meses, currentMeses);
+    return totalHistorico + sumAportesFromMeses(useCurrent ? currentMeses : histCurrent?.meses);
   }
 
-  return total;
+  const hasDuplicateMeses = Object.values(historico).some((hist) =>
+    mesesMatch(hist?.meses, currentMeses)
+  );
+  return totalHistorico + (!hasDuplicateMeses ? sumAportesFromMeses(currentMeses) : 0);
 };
 
 const computeTotalPatrimonioAllYears = (data, currentYearNumber) => {
   const historico = data?.historico || {};
-  const entries = Object.keys(historico).map((year) => ({
-    year: Number(year),
-    meses: historico?.[year]?.meses || {}
-  }));
-  const hasDuplicateMeses = Object.values(historico).some((hist) =>
-    mesesMatch(hist?.meses, data?.meses)
-  );
+  const currentYearKey = String(currentYearNumber);
+  const currentMeses = data?.meses || {};
+  const entries = Object.keys(historico)
+    .filter((year) => year !== currentYearKey)
+    .map((year) => ({
+      year: Number(year),
+      meses: historico?.[year]?.meses || {}
+    }));
 
-  if (!hasDuplicateMeses) {
-    entries.push({ year: Number(currentYearNumber), meses: data?.meses || {} });
+  const histCurrent = historico?.[currentYearKey];
+  if (histCurrent) {
+    const useCurrent = hasNonZeroMeses(currentMeses) && !mesesMatch(histCurrent?.meses, currentMeses);
+    entries.push({
+      year: Number(currentYearNumber),
+      meses: useCurrent ? currentMeses : (histCurrent?.meses || {})
+    });
+  } else {
+    const hasDuplicateMeses = Object.values(historico).some((hist) =>
+      mesesMatch(hist?.meses, currentMeses)
+    );
+    if (!hasDuplicateMeses) {
+      entries.push({ year: Number(currentYearNumber), meses: currentMeses });
+    }
   }
 
   entries.sort((a, b) => b.year - a.year);
@@ -389,11 +409,24 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     }
 
     const claveUsuario = (baseData.username || "").toLowerCase();
+    const idCliente = String(baseData.idCliente || "").trim().toLowerCase();
+    const cedula = String(baseData.cedula || "").trim().toLowerCase();
+    const matchMovimientoForUser = (mov) => {
+      const movUser = String(mov.username || "").trim().toLowerCase();
+      const movCliente = String(mov.cliente || "").trim().toLowerCase();
+      if (movUser || movCliente) {
+        const userMatch = movUser && movUser === claveUsuario;
+        const clienteMatch = movCliente && idCliente && movCliente === idCliente;
+        return userMatch || clienteMatch;
+      }
+      const movCedula = String(mov.cedula || "").trim().toLowerCase();
+      return cedula && movCedula === cedula;
+    };
     const historicos = Object.keys(baseData.historico || {});
     const movYears = (typeof movimientosData !== "undefined" && Array.isArray(movimientosData))
       ? Array.from(new Set(
           movimientosData
-            .filter(m => (m.username || "").toLowerCase() === claveUsuario && m.year)
+            .filter(m => matchMovimientoForUser(m) && m.year)
             .map(m => String(m.year))
         ))
       : [];
@@ -415,10 +448,6 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     selectedUserData = baseData;
     const totalAporteHistAll = computeTotalAportesAllYears(baseData, String(currentYearNumber));
     const totalPatrimonioHistAll = computeTotalPatrimonioAllYears(baseData, currentYearNumber);
-    const totalUtilHistAll = totalPatrimonioHistAll - totalAporteHistAll;
-    const totalCrcmntHistAll = totalAporteHistAll !== 0
-      ? (totalUtilHistAll / Math.abs(totalAporteHistAll)) * 100
-      : 0;
 
     const pad = (n) => n.toString().padStart(2, "0");
     const formatLive = () => {
@@ -519,19 +548,83 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     derived = computeDerived(userData.meses || {}, prevPatrInicial);
     derivedData = derived;
 
+    const getMovUsdValue = (mov, fallbackRate = null) => {
+      const tipo = (mov.tipo || "").toUpperCase();
+      if (tipo === "USD") {
+        const cambioUsd = toNumber(mov.cambio);
+        if (Number.isFinite(cambioUsd)) return cambioUsd;
+        const cantidadUsd = toNumber(mov.cantidad);
+        return Number.isFinite(cantidadUsd) ? cantidadUsd : 0;
+      }
+      const cambioCop = toNumber(mov.cambio);
+      if (Number.isFinite(cambioCop)) return cambioCop;
+      const tasaMov = toNumber(mov.tasa);
+      const tasaFinal = (Number.isFinite(tasaMov) && tasaMov > 0)
+        ? tasaMov
+        : (Number.isFinite(fallbackRate) && fallbackRate > 0 ? fallbackRate : null);
+      if (!tasaFinal) return 0;
+      const cantidadCop = toNumber(mov.cantidad);
+      return Number.isFinite(cantidadCop) ? cantidadCop / tasaFinal : 0;
+    };
+
+    const sumMovCopAllYears = () => {
+      if (typeof movimientosData === "undefined" || !Array.isArray(movimientosData)) return 0;
+      return movimientosData
+        .filter(matchMovimientoForUser)
+        .reduce((acc, mov) => {
+          const tipo = (mov.tipo || "").toUpperCase();
+          if (tipo !== "COP") return acc;
+          return acc + (toNumber(mov.cantidad) || 0);
+        }, 0);
+    };
+    const sumMovUsdAllYears = () => {
+      if (typeof movimientosData === "undefined" || !Array.isArray(movimientosData)) return 0;
+      return movimientosData
+        .filter(matchMovimientoForUser)
+        .reduce((acc, mov) => acc + getMovUsdValue(mov), 0);
+    };
+    const totalMovCopAll = sumMovCopAllYears();
+    const totalMovUsdAll = sumMovUsdAllYears();
+    const totalAporteHistMovAll = totalMovUsdAll;
+    const totalUtilHistAll = totalPatrimonioHistAll - totalAporteHistMovAll;
+    const totalCrcmntHistAll = totalAporteHistMovAll !== 0
+      ? (totalUtilHistAll / Math.abs(totalAporteHistMovAll)) * 100
+      : 0;
+
+    const safeTasaFallback = toNumber(userData.tasaBase) || toNumber(prevYearData?.tasaBase) || 1;
+    const sumMovUsdByYear = (year) => {
+      if (typeof movimientosData === "undefined" || !Array.isArray(movimientosData)) return 0;
+      return movimientosData
+        .filter((m) => matchMovimientoForUser(m) && Number(m.year) === year)
+        .reduce((acc, mov) => acc + getMovUsdValue(mov), 0);
+    };
+    const sumMovCopByYear = (year) => {
+      if (typeof movimientosData === "undefined" || !Array.isArray(movimientosData)) return 0;
+      return movimientosData
+        .filter((m) => matchMovimientoForUser(m) && Number(m.year) === year)
+        .reduce((acc, mov) => {
+          const tipo = (mov.tipo || "").toUpperCase();
+          const tasaMov = toNumber(mov.tasa) || safeTasaFallback || 1;
+          if (tipo === "COP") return acc + (toNumber(mov.cantidad) || 0);
+          const usd = toNumber(mov.cambio) || toNumber(mov.cantidad) || 0;
+          return acc + (usd || 0) * tasaMov;
+        }, 0);
+    };
+    const sumMovUsd2023 = sumMovUsdByYear(2023);
+    const sumMovUsd2024 = sumMovUsdByYear(2024);
+    const sumMovUsd2025 = sumMovUsdByYear(2025);
+    const sumMovCop2025 = sumMovCopByYear(2025);
+
     const movimientosYear =
       (typeof movimientosData !== "undefined" && Array.isArray(movimientosData))
         ? movimientosData.filter((m) => Number(m.year) === currentYearNumber)
         : [];
     const movimientosActual = movimientosYear.filter(
-      (m) => (m.username || "").toLowerCase() === claveUsuario && Number(m.year) === currentYearNumber
+      (m) => matchMovimientoForUser(m) && Number(m.year) === currentYearNumber
     );
     const sumMovUsd = movimientosActual.reduce((acc, mov) => {
-      const tipo = (mov.tipo || "").toUpperCase();
-      if (tipo === "USD") return acc + (toNumber(mov.cambio) || toNumber(mov.cantidad) || 0);
-      const tasaMov = toNumber(mov.tasa) || currentRate || baseRate || DEFAULT_RATE_BY_YEAR.actual || 1;
-      const usd = toNumber(mov.cambio) || (toNumber(mov.cantidad) || 0) / tasaMov;
-      return acc + (usd || 0);
+      const rateFallback = currentRate || baseRate || safeTasaFallback || 0;
+      return acc + getMovUsdValue(mov, rateFallback);
     }, 0);
     const sumMovCop = movimientosActual.reduce((acc, mov) => {
       const tipo = (mov.tipo || "").toUpperCase();
@@ -541,11 +634,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       return acc + (cop || 0);
     }, 0);
     const sumMovUsdGlobal = movimientosYear.reduce((acc, mov) => {
-      const tipo = (mov.tipo || "").toUpperCase();
-      if (tipo === "USD") return acc + (toNumber(mov.cambio) || toNumber(mov.cantidad) || 0);
-      const tasaMov = toNumber(mov.tasa) || currentRate || baseRate || DEFAULT_RATE_BY_YEAR.actual || 1;
-      const usd = toNumber(mov.cambio) || (toNumber(mov.cantidad) || 0) / tasaMov;
-      return acc + (usd || 0);
+      const rateFallback = currentRate || baseRate || safeTasaFallback || 0;
+      return acc + getMovUsdValue(mov, rateFallback);
     }, 0);
     const CASTLE_PREV_DEC_TOTAL = 31274.59; // total patrimonio dic-2025 (suma de todos los clientes)
     const CASTLE_CURRENT_TOTAL = 32000; // patrimonio base Castle Black año actual (progresivo)
@@ -560,7 +650,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       totalAportesActual = prevClosingPatr + aportes2026;
     }
     if (!isActualYear && String(displayYear) === "2025") {
-      totalAportesActual = prevClosingPatr + (derived.totalAporte || 0);
+      totalAportesActual = prevClosingPatr + (sumMovUsd2025 || 0);
+    }
+    if (!isActualYear && String(displayYear) === "2024") {
+      totalAportesActual = (sumMovUsd2024 || 0) + (sumMovUsd2023 || 0);
     }
 
     // Forzar patrimonio 2026 desde datos (enero) sin alteración
@@ -619,7 +712,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
     // Estado de cuenta total (provisionalmente igual al resumen actual)
     if (histBase) {
-      if (aporteHist) aporteHist.textContent = formatMoney(totalAporteHistAll);
+      if (aporteHist) aporteHist.textContent = formatMoney(totalAporteHistMovAll);
       if (patrimonioHist) patrimonioHist.textContent = formatMoney(totalPatrimonioHistAll);
       if (utilidadRHist) utilidadRHist.textContent = formatMoney(totalUtilHistAll);
       if (utilidadHist) utilidadHist.textContent = formatMoney(totalUtilHistAll);
@@ -650,9 +743,9 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
     // Datos en COP (cálculo dinámico)
     const DEFAULT_RATE_BY_YEAR = {
-      actual: 3710.5, // tasa vigente 2026
+      actual: 3713.38, // tasa vigente 2026
       "2025": 3773.6,
-      "2026": 3710.5,
+      "2026": 3713.38,
       "2024": 4373.5
     };
 
@@ -693,7 +786,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           : (String(displayYear) === "2025"
               ? ((Number.isFinite(prevClosingPatrL)
                   ? prevClosingPatrL
-                  : (prevClosingPatr || 0) * baseRate) + ((derived.totalAporte || 0) * baseRate))
+                  : (prevClosingPatr || 0) * baseRate) + (sumMovCop2025 || 0))
               : (totalAportesActual || 0) * baseRate));
     aporteL.textContent = formatMoney(aporteLBase);
 
@@ -716,7 +809,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             : (String(displayYear) === "2025"
                 ? ((Number.isFinite(prevClosingPatrL)
                     ? prevClosingPatrL
-                    : (prevClosingPatr || 0) * rate) + ((derived.totalAporte || 0) * rate))
+                    : (prevClosingPatr || 0) * rate) + (sumMovCop2025 || 0))
                 : usdAporte * rate));
       const patrimonioCop = usdPatrimonio * rate;
       const utilidadCop = patrimonioCop - aporteCop;
@@ -742,14 +835,14 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     // Override histórico en COP con la tasa más reciente (siempre la misma para todos los años)
     const LATEST_HISTORICAL_RATE = 3710.5;
     if (histBase && aporteHistL && patrimonioHistL && utilidadRHistL && utilidadHistL && crcmntHistL) {
-      const aporteCopHist = totalAporteHistAll * LATEST_HISTORICAL_RATE;
+      const aporteCopHist = totalMovCopAll;
       const patrCopHist = totalPatrimonioHistAll * LATEST_HISTORICAL_RATE;
       const utilUsdHist = totalUtilHistAll;
       const utilCopHist = patrCopHist - aporteCopHist;
       const utilRCopHist = utilCopHist;
       const utilTotalCopHist = utilUsdHist * LATEST_HISTORICAL_RATE;
       const crcmntHistLCur = aporteCopHist !== 0 ? (utilCopHist / Math.abs(aporteCopHist)) * 100 : 0;
-      if (aporteHist) aporteHist.textContent = formatMoney(totalAporteHistAll);
+      if (aporteHist) aporteHist.textContent = formatMoney(totalAporteHistMovAll);
       if (patrimonioHist) patrimonioHist.textContent = formatMoney(totalPatrimonioHistAll);
       if (utilidadRHist) utilidadRHist.textContent = formatMoney(totalUtilHistAll);
       if (utilidadHist) utilidadHist.textContent = formatMoney(totalUtilHistAll);
@@ -779,9 +872,9 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           patrimonioHistL.textContent = formatMoney(nuevoPat * rateToUse);
         }
 
-        const histUtilUsd = nuevoPat - (totalAporteHistAll || 0);
-        const histCrcmntUsd = totalAporteHistAll
-          ? (histUtilUsd / Math.abs(totalAporteHistAll)) * 100
+        const histUtilUsd = nuevoPat - (totalAporteHistMovAll || 0);
+        const histCrcmntUsd = totalAporteHistMovAll
+          ? (histUtilUsd / Math.abs(totalAporteHistMovAll)) * 100
           : 0;
         if (utilidadRHist) {
           utilidadRHist.textContent = formatMoney(histUtilUsd);
@@ -795,15 +888,15 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           crcmntHist.textContent = formatPercent(histCrcmntUsd);
           setTrendClass(crcmntHist, histCrcmntUsd);
         }
-        if (Number.isFinite(rateToUse)) {
-          const aporteCopHistTick = (totalAporteHistAll || 0) * rateToUse;
-          const patrCopHistTick = nuevoPat * rateToUse;
-          const utilRCopHistTick = patrCopHistTick - aporteCopHistTick;
-          const utilCopHistTick = histUtilUsd * rateToUse;
-          const crcmntHistLCur = aporteCopHistTick !== 0
-            ? (utilRCopHistTick / Math.abs(aporteCopHistTick)) * 100
-            : 0;
-          if (aporteHistL) aporteHistL.textContent = formatMoney(aporteCopHistTick);
+          if (Number.isFinite(rateToUse)) {
+            const aporteCopHistTick = totalMovCopAll || 0;
+            const patrCopHistTick = nuevoPat * rateToUse;
+            const utilRCopHistTick = patrCopHistTick - aporteCopHistTick;
+            const utilCopHistTick = histUtilUsd * rateToUse;
+            const crcmntHistLCur = aporteCopHistTick !== 0
+              ? (utilRCopHistTick / Math.abs(aporteCopHistTick)) * 100
+              : 0;
+            if (aporteHistL) aporteHistL.textContent = formatMoney(aporteCopHistTick);
           if (patrimonioHistL) patrimonioHistL.textContent = formatMoney(patrCopHistTick);
           if (utilidadRHistL) {
             utilidadRHistL.textContent = formatMoney(utilRCopHistTick);
@@ -830,11 +923,11 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         }
       };
 
-      // Actual (2026): oscilar tasa y resumen cada 3s, +/-0.10% tasa, +/-0.5% crecimiento
+      // Actual (2026): oscilar tasa y resumen cada 3s, +/-0.05% tasa, +/-1% crecimiento
       if (isOscYear2026) {
         const baseAporteOsc = totalAportesActual || patrimonioCalc || 1;
         setInterval(() => {
-          const rateFactor = 1 + ((Math.random() - 0.5) * 0.002); // +/-0.10%
+          const rateFactor = 1 + ((Math.random() - 0.5) * 0.001); // +/-0.05%
           currentRate = (currentRate || baseRate || DEFAULT_RATE_BY_YEAR.actual) * rateFactor;
           updateRateDisplay(currentRate);
 
@@ -924,7 +1017,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
       // Histórico total: oscilar siempre en temporalidades pasadas
       if (!isOscYear2026) {
-        const baseAporteHist = totalAporteHistAll || 0;
+        const baseAporteHist = totalAporteHistMovAll || 0;
         const basePatrHist = totalPatrimonioHistAll || baseAporteHist || 1;
         const baseCrcmntHist = baseAporteHist
           ? ((basePatrHist - baseAporteHist) / Math.abs(baseAporteHist)) * 100
@@ -1637,12 +1730,13 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const histPatrUsd = toNumber(safeText(patrimonioHist)) || 0;
           const histUtilRUsd = toNumber(safeText(utilidadRHist)) || 0;
           const histUtilUsd = toNumber(safeText(utilidadHist)) || 0;
+          const histAporteCop = totalMovCopAll || 0;
           addTable(
             "Totales históricos",
             "Cifras acumuladas desde tu fecha de ingreso. El crecimiento refleja el rendimiento sobre el total aportado.",
             ["Concepto", "USD", "COP"],
             [
-              ["Aporte", fmtMoney(histAporteUsd), fmtMoney(histAporteUsd * latestHistoricalRate)],
+              ["Aporte", fmtMoney(histAporteUsd), fmtMoney(histAporteCop)],
               ["Patrimonio", fmtMoney(histPatrUsd), fmtMoney(histPatrUsd * latestHistoricalRate)],
               ["Crecimiento", safeText(crcmntHist), safeText(crcmntHistL)],
               ["Utilidad R", fmtMoney(histUtilRUsd), fmtMoney(histUtilRUsd * latestHistoricalRate)],

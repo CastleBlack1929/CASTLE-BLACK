@@ -50,8 +50,8 @@ window.userData = {
   ],
   "meses": {
     "enero": {
-      "aporte": 265.19,
-      "patrimonio": 269.06
+      "aporte": 397.64,
+      "patrimonio": 408.16
     },
     "febrero": {
       "aporte": 0,
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "N/A",
       "meses": {
         "enero": {
-          "aporte": 265.19,
+          "aporte": 397.64,
           "patrimonio": 269.06
         },
         "febrero": {

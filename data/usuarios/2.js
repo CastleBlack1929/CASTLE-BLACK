@@ -51,7 +51,7 @@ window.userData = {
   "meses": {
     "enero": {
       "aporte": 0.0,
-      "patrimonio": 4561.16
+      "patrimonio": 4615.25
     },
     "febrero": {
       "aporte": 0,
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "AA",
       "meses": {
         "enero": {
-          "aporte": 2475.1,
+          "aporte": 459.0,
           "patrimonio": 2548.93
         },
         "febrero": {
@@ -154,7 +154,7 @@ window.userData = {
           "patrimonio": 4555.44
         }
       },
-      "aporte": 3774.53,
+      "aporte": 1758.43,
       "patrimonio": 4555.44,
       "honorariosTrimestres": [
         {

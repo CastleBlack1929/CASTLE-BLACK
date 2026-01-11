@@ -36,7 +36,7 @@ const movimientosData = [
     "cantidad": 500000.0,
     "tipo": "COP",
     "tasa": 3801.0,
-    "cambio": 131.0
+    "cambio": 131.5
   },
   {
     "username": "srb2006",
@@ -608,7 +608,7 @@ const movimientosData = [
     "cantidad": -548229.0,
     "tipo": "COP",
     "tasa": 4640.0,
-    "cambio": -118.0
+    "cambio": -118.15
   },
   {
     "username": "",
@@ -660,7 +660,7 @@ const movimientosData = [
     "cantidad": 500000.0,
     "tipo": "COP",
     "tasa": 4232.0,
-    "cambio": 118.0
+    "cambio": 118.15
   },
   {
     "username": "jaen1971",
@@ -674,6 +674,19 @@ const movimientosData = [
     "tipo": "COP",
     "tasa": 4252.0,
     "cambio": 117.0
+  },
+  {
+    "username": "jfpg2006",
+    "cliente": "001",
+    "recibo": "43",
+    "fecha": "08/03/25",
+    "year": 2025,
+    "socio": "JUAN FEDERICO PERALTA GONZALEZ",
+    "cedula": "1141514508",
+    "cantidad": 503000.0,
+    "tipo": "COP",
+    "tasa": 4143.0,
+    "cambio": 121.41
   },
   {
     "username": "jgb1975",
