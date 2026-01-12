@@ -1,11 +1,47 @@
 /* General */
+:root {
+  --bg: #000;
+  --ink: #f3f3f3;
+  --muted: #b5b8bd;
+  --accent: #c4c9d1;
+  --accent-2: #8f98a3;
+  --card: #0b0b0b;
+  --line: rgba(255, 255, 255, 0.08);
+  --shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background-color: #000;
-  color: #fff;
+  font-family: "IBM Plex Sans", "Fira Sans", sans-serif;
+  background-color: var(--bg);
+  color: var(--ink);
   margin: 0;
   padding: 0;
   font-size: clamp(14px, 1.6vw, 16px);
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(196, 201, 209, 0.18), transparent 65%);
+  top: -140px;
+  right: -120px;
+  z-index: -1;
+}
+
+body::after {
+  width: 520px;
+  height: 520px;
+  left: -160px;
+  bottom: -200px;
+  top: auto;
+  background: radial-gradient(circle, rgba(143, 152, 163, 0.18), transparent 60%);
+}
+
+h2, h3, h4 {
+  font-family: "IBM Plex Serif", "Cormorant Garamond", serif;
 }
 
 /* Header */
@@ -15,11 +51,11 @@ header {
   align-items: center;
   padding: 15px 30px;
   background-color: #000;
-  border-bottom: 2px solid #333;
+  border-bottom: 1px solid var(--line);
   position: sticky;
   top: 0;
   z-index: 10;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
 }
 
 .header-left {
@@ -59,12 +95,12 @@ header {
 .user-id {
   margin: 0;
   font-size: 13px;
-  color: #ccc;
+  color: var(--muted);
 }
 
 .datetime-text {
   font-size: 13px;
-  color: #ccc;
+  color: var(--muted);
   white-space: nowrap;
   display: inline-block;
   margin-left: 6px;
@@ -92,9 +128,9 @@ header {
 }
 
 .year-select {
-  background: #111;
-  color: #fff;
-  border: 1px solid #444;
+  background: #0b0b0b;
+  color: var(--ink);
+  border: 1px solid var(--line);
   border-radius: 6px;
   padding: 6px 8px;
   font-size: 13px;
@@ -102,17 +138,17 @@ header {
 }
 
 #logoutBtn {
-  background-color: #fff;
-  color: #000;
+  background: linear-gradient(135deg, #d7dbe2, #a6adb8);
+  color: #0b0b0b;
   border: none;
   padding: 8px 16px;
-  font-weight: bold;
-  border-radius: 5px;
+  font-weight: 700;
+  border-radius: 8px;
   cursor: pointer;
+  box-shadow: 0 10px 20px rgba(196, 201, 209, 0.25);
 }
 #logoutBtn:hover {
-  background-color: #444;
-  color: #fff;
+  filter: brightness(0.95);
 }
 
 /* Main */
@@ -129,9 +165,11 @@ h2 {
 
 /* Data */
 .resumen {
-  background-color: transparent;
+  background-color: var(--card);
   padding: 18px;
-  border-radius: 0;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
   margin-bottom: 28px;
   max-width: 720px;
   margin-left: auto;
@@ -158,20 +196,20 @@ h2 {
 
 .tabla-resumen th,
 .tabla-resumen td {
-  border: 1px solid #444;
+  border: 1px solid var(--line);
   padding: 10px;
   text-align: center;
 }
 
 .tabla-resumen thead th {
-  background-color: #1a1a1a;
+  background-color: #14161b;
   font-weight: bold;
 }
 
 .tabla-tip {
   margin: 6px 0 12px 0;
   font-size: 13px;
-  color: #b3b3b3;
+  color: var(--muted);
   text-align: center;
 }
 
@@ -179,12 +217,17 @@ h2 {
   margin: 0 auto 28px auto;
   text-align: center;
   max-width: 720px;
+  background: var(--card);
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  padding: 16px;
 }
 
 .rate-title {
   margin: 0;
   font-size: 14px;
-  color: #ccc;
+  color: var(--muted);
 }
 
 .rate-value {
@@ -197,13 +240,18 @@ h2 {
 .rate-time {
   margin: 0;
   font-size: 12px;
-  color: #888;
+  color: var(--muted);
 }
 
 /* Honorarios */
 .honorarios {
   margin: 24px auto;
   max-width: 720px;
+  background: var(--card);
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  padding: 18px;
 }
 
 .honorarios h3 {
@@ -212,7 +260,7 @@ h2 {
 
 .honorarios-desc {
   margin: 0 0 12px 0;
-  color: #aaa;
+  color: var(--muted);
   font-size: 13px;
 }
 
@@ -221,18 +269,18 @@ h2 {
   max-width: 100%;
   border-collapse: collapse;
   margin: 16px auto 12px auto;
-  background: #000;
-  color: #fff;
+  background: #0b0b0b;
+  color: var(--ink);
 }
 
 #tablaHonorarios th, #tablaHonorarios td {
-  border: 1px solid #444;
+  border: 1px solid var(--line);
   padding: 8px;
   text-align: center;
 }
 
 #tablaHonorarios th {
-  background: #1a1a1a;
+  background: #14161b;
   font-weight: bold;
 }
 
@@ -248,14 +296,14 @@ h2 {
 .resumen-desc {
   margin: 0 0 10px 0;
   font-size: 13px;
-  color: #aaa;
+  color: var(--muted);
   line-height: 1.5;
 }
 
 .resumen-fecha {
   margin: 0 0 10px 0;
   font-size: 13px;
-  color: #ccc;
+  color: var(--muted);
 }
 
 /* Footer */
@@ -263,54 +311,61 @@ footer {
   text-align: center;
   padding: 15px;
   font-size: 12px;
-  color: #777;
+  color: rgba(255, 255, 255, 0.55);
   background-color: #000;
-  border-top: 1px solid #222;
+  border-top: 1px solid var(--line);
 }
 
 /* Reportes */
 .reportes {
   margin-top: 30px;
-  background: transparent;
-  padding: 0;
-  border-radius: 0;
+  background: var(--card);
+  padding: 18px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
   box-sizing: border-box;
 }
 
 /* Tablas */
 table {
-  background-color: #000;
-  color: #fff;
+  background-color: #0b0b0b;
+  color: var(--ink);
   border-collapse: collapse;
   width: auto;
   max-width: 100%;
   margin: 16px auto;
   font-size: 14px;
-  border: 1px solid #444;
+  border: 1px solid var(--line);
   table-layout: auto;
 }
 
 table th, table td {
-  border: 1px solid #444;
+  border: 1px solid var(--line);
   padding: 8px;
   text-align: center;
 }
 
 table th {
-  background-color: #1a1a1a;
+  background-color: #14161b;
   font-weight: bold;
 }
 
 table tr:nth-child(even) {
-  background-color: #111;
+  background-color: #0f0f0f;
 }
 
 table tr:hover {
-  background-color: #222;
+  background-color: #161616;
 }
 
 .movimientos {
   margin: 0 auto 30px;
+  background: var(--card);
+  padding: 18px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
 }
 
 /* Gráficos */
@@ -321,13 +376,14 @@ table tr:hover {
 }
 
 .grafico {
-  border: none;
-  border-radius: 0;
-  padding: 0;
-  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px;
+  background: #0b0b0b;
   max-width: 640px;
   width: 100%;
   margin: 0 auto;
+  box-shadow: var(--shadow);
 }
 
 .grafico h4 {
@@ -336,7 +392,7 @@ table tr:hover {
 }
 
 .graficos canvas {
-  background: #000;
+  background: #050505;
   border-radius: 8px;
   padding: 10px;
   width: 100%;
@@ -351,8 +407,8 @@ table tr:hover {
 }
 
 .menu-btn {
-  background: #000;
-  border: 1px solid #fff;
+  background: #0b0b0b;
+  border: 1px solid var(--line);
   padding: 8px 12px;
   border-radius: 5px;
   cursor: pointer;
@@ -367,14 +423,14 @@ table tr:hover {
 }
 
 .menu-btn:hover {
-  background: #111;
+  background: #141414;
 }
 
 .menu-line {
   display: block;
   width: 18px;
   height: 2px;
-  background: #fff;
+  background: var(--ink);
   border-radius: 2px;
 }
 
@@ -382,15 +438,16 @@ table tr:hover {
   position: absolute;
   right: 0;
   top: calc(100% + 8px);
-  background: #fff;
-  color: #000;
+  background: #0f0f0f;
+  color: var(--ink);
   border-radius: 6px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.45);
   display: none;
   min-width: 200px;
   overflow: hidden;
   z-index: 20;
   outline: none;
+  border: 1px solid var(--line);
 }
 
 .menu-dropdown.open {
@@ -399,22 +456,22 @@ table tr:hover {
 
 .menu-info {
   padding: 12px 14px 8px 14px;
-  border-bottom: 1px solid #ddd;
-  color: #000;
-  background: #f9f9f9;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  background: #0b0b0b;
 }
 
 .menu-title {
   margin: 0 0 6px 0;
   font-weight: 700;
   font-size: 13px;
-  color: #000;
+  color: var(--ink);
 }
 
 .menu-label {
   margin: 2px 0;
   font-size: 13px;
-  color: #111;
+  color: var(--muted);
 }
 
 .menu-info select.year-select {
@@ -424,9 +481,9 @@ table tr:hover {
 }
 
 .menu-item.download-btn {
-  background: #111;
-  color: #fff;
-  border: 1px solid #444;
+  background: #14161b;
+  color: var(--ink);
+  border: 1px solid var(--line);
   border-radius: 6px;
   padding: 6px 8px;
   font-size: 13px;
@@ -435,30 +492,30 @@ table tr:hover {
 }
 
 .menu-item.download-btn:hover {
-  background: #000;
-  color: #fff;
-  border-color: #666;
+  background: #1b1f26;
+  color: var(--ink);
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .menu-support {
-  background: #f3f6f4;
+  background: #0b0b0b;
 }
 
 .menu-focusable:focus-visible,
 .menu-dropdown:focus-visible {
-  outline: 2px solid #0f5132;
+  outline: 2px solid rgba(196, 201, 209, 0.7);
   outline-offset: 2px;
 }
 
 .menu-link {
-  color: #0f5132;
+  color: var(--accent);
   font-weight: 700;
   text-decoration: none;
 }
 
 .menu-link:hover {
   text-decoration: underline;
-  color: #000;
+  color: #fff;
 }
 
 .menu-item {
@@ -466,21 +523,21 @@ table tr:hover {
   width: 100%;
   padding: 10px 14px;
   border: 1px solid transparent;
-  background: #fff;
-  color: #000;
+  background: #0f0f0f;
+  color: var(--ink);
   text-align: left;
   cursor: pointer;
   font-weight: 600;
 }
 
 .menu-item:hover {
-  background: #000;
+  background: #171717;
   color: #fff;
-  border-color: #fff;
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 .empty-row {
-  color: #777;
+  color: #8a8f96;
   font-style: italic;
   text-align: center;
 }

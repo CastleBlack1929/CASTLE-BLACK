@@ -151,11 +151,11 @@ window.userData = {
         },
         "diciembre": {
           "aporte": 0.0,
-          "patrimonio": 1391.35
+          "patrimonio": 1395.02
         }
       },
       "aporte": 1130.0,
-      "patrimonio": 1391.35,
+      "patrimonio": 1395.02,
       "honorariosTrimestres": [
         {
           "nombre": "TRIMESTRE 1",

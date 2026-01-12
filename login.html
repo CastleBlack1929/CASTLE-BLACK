@@ -3,22 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
+  <title>Acceso | Castle Black</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Serif:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style-login.css">
 </head>
 <body>
   <a class="back-btn" href="index.html">Inicio</a>
-  <div class="wrapper">
-    <div class="login-container">
-      <img src="img/logo-black.png" alt="Logo" class="logo">
+
+  <main class="login-hero login-hero--single">
+    <section class="login-card">
+      <div class="brand brand--solo">
+        <img src="img/logo-black.png" alt="Logo Castle Black" class="logo logo--xl">
+      </div>
+
       <form onsubmit="login(event)">
-        <input type="text" id="username" placeholder="Usuario" required>
-        <input type="password" id="password" placeholder="Contraseña" required>
-        <button type="submit">Entrar</button>
+        <label class="field">
+          <input type="text" id="username" placeholder="Tu usuario" required>
+        </label>
+        <label class="field">
+          <input type="password" id="password" placeholder="Tu contraseña" required>
+        </label>
+        <button type="submit">Entrar al panel</button>
       </form>
-      <p id="error-msg"></p>
-    </div>
-  </div>
+      <p id="error-msg" aria-live="polite"></p>
+
+      <div class="login-footer">
+        <p>¿Necesitas ayuda? Escríbenos a <strong>castleblack.inc@gmail.com</strong></p>
+      </div>
+    </section>
+  </main>
 
   <footer>
     <p>© Castle Black 2026</p>
