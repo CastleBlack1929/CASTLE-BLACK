@@ -376,14 +376,14 @@ table tr:hover {
 }
 
 .grafico {
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 14px;
-  background: #0b0b0b;
-  max-width: 640px;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  max-width: 520px;
   width: 100%;
   margin: 0 auto;
-  box-shadow: var(--shadow);
+  box-shadow: none;
 }
 
 .grafico h4 {
@@ -396,7 +396,7 @@ table tr:hover {
   border-radius: 8px;
   padding: 10px;
   width: 100%;
-  max-width: 640px;
+  max-width: 520px;
   max-height: 360px;
   margin: 0 auto;
 }
