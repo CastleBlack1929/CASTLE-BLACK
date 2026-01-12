@@ -611,8 +611,11 @@ table tr:hover {
   }
 
   table {
-    font-size: 13px;
+    font-size: 12px;
     margin: 12px auto;
+    width: 100%;
+    max-width: 100%;
+    table-layout: fixed;
   }
 
   .reportes h3,
@@ -631,7 +634,9 @@ table tr:hover {
   .reportes table th, .reportes table td,
   .movimientos table th, .movimientos table td,
   #tablaHonorarios th, #tablaHonorarios td {
-    padding: 7px;
+    padding: 6px 4px;
+    font-size: 11px;
+    word-break: break-word;
   }
 
   .graficos {
@@ -643,7 +648,23 @@ table tr:hover {
     padding: 8px;
   }
 
+  .tabla-resumen {
+    width: 100%;
+  }
+
+  .grafico {
+    max-width: 100%;
+    width: 100%;
+    padding: 10px;
+    overflow: hidden;
+  }
+
   .graficos canvas {
-    max-height: 300px;
+    max-height: 280px;
+    max-width: 100%;
+    width: 100% !important;
+    height: auto !important;
+    display: block;
+    box-sizing: border-box;
   }
 }
