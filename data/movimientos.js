@@ -587,6 +587,19 @@ const movimientosData = [
   {
     "username": "vspg2008",
     "cliente": "006",
+    "recibo": "42",
+    "fecha": "08/03/25",
+    "year": 2025,
+    "socio": "VALERIA SOFIA PERALTA (MARTIN PERALTA)",
+    "cedula": "324033",
+    "cantidad": 560000.0,
+    "tipo": "COP",
+    "tasa": 4137.0,
+    "cambio": 135.37
+  },
+  {
+    "username": "vspg2008",
+    "cliente": "006",
     "recibo": "52",
     "fecha": "16/05/25",
     "year": 2025,
