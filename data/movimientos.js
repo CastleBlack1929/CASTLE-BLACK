@@ -10,7 +10,7 @@ const movimientosData = [
     "cantidad": 1200000.0,
     "tipo": "COP",
     "tasa": 3722.0,
-    "cambio": 322.0
+    "cambio": 322.38
   },
   {
     "username": "fmra1955",
@@ -23,7 +23,7 @@ const movimientosData = [
     "cantidad": 500000.0,
     "tipo": "COP",
     "tasa": 3749.0,
-    "cambio": 133.0
+    "cambio": 133.36
   },
   {
     "username": "srb2006",
@@ -36,7 +36,7 @@ const movimientosData = [
     "cantidad": 500000.0,
     "tipo": "COP",
     "tasa": 3801.0,
-    "cambio": 131.5
+    "cambio": 131.56
   },
   {
     "username": "srb2006",
@@ -62,7 +62,7 @@ const movimientosData = [
     "cantidad": 600000.0,
     "tipo": "COP",
     "tasa": 3795.0,
-    "cambio": 158.0
+    "cambio": 158.11
   },
   {
     "username": "jgb1975",
@@ -75,7 +75,7 @@ const movimientosData = [
     "cantidad": 2000000.0,
     "tipo": "COP",
     "tasa": 3821.0,
-    "cambio": 523.0
+    "cambio": 523.48
   },
   {
     "username": "aygr1975",
@@ -88,7 +88,7 @@ const movimientosData = [
     "cantidad": 1000000.0,
     "tipo": "COP",
     "tasa": 3914.0,
-    "cambio": 255.0
+    "cambio": 255.5
   },
   {
     "username": "ylgr1973",
@@ -101,7 +101,7 @@ const movimientosData = [
     "cantidad": 5000000.0,
     "tipo": "COP",
     "tasa": 3825.0,
-    "cambio": 1307.0
+    "cambio": 1307.17
   },
   {
     "username": "MATRIS",
@@ -114,7 +114,7 @@ const movimientosData = [
     "cantidad": 305000.0,
     "tipo": "COP",
     "tasa": 3821.0,
-    "cambio": 79.0
+    "cambio": 79.83
   },
   {
     "username": "memj1981",
@@ -127,7 +127,7 @@ const movimientosData = [
     "cantidad": 1000000.0,
     "tipo": "COP",
     "tasa": 3749.0,
-    "cambio": 266.0
+    "cambio": 266.72
   },
   {
     "username": "ylgr1973",
@@ -140,7 +140,7 @@ const movimientosData = [
     "cantidad": 10000000.0,
     "tipo": "COP",
     "tasa": 3923.0,
-    "cambio": 2548.0
+    "cambio": 2548.98
   },
   {
     "username": "vspg2008",
@@ -153,7 +153,7 @@ const movimientosData = [
     "cantidad": 300000.0,
     "tipo": "COP",
     "tasa": 3752.0,
-    "cambio": 79.0
+    "cambio": 79.95
   },
   {
     "username": "MATRIS",
@@ -166,7 +166,7 @@ const movimientosData = [
     "cantidad": 179500.0,
     "tipo": "COP",
     "tasa": 3864.0,
-    "cambio": 46.0
+    "cambio": 46.45
   },
   {
     "username": "memj1981",
@@ -179,7 +179,7 @@ const movimientosData = [
     "cantidad": 1000000.0,
     "tipo": "COP",
     "tasa": 3868.0,
-    "cambio": 258.0
+    "cambio": 258.55
   },
   {
     "username": "cerg1980",
@@ -192,7 +192,7 @@ const movimientosData = [
     "cantidad": 500000.0,
     "tipo": "COP",
     "tasa": 3870.0,
-    "cambio": 129.0
+    "cambio": 129.21
   },
   {
     "username": "jfpg2006",
@@ -205,7 +205,7 @@ const movimientosData = [
     "cantidad": 1289000.0,
     "tipo": "COP",
     "tasa": 3849.0,
-    "cambio": 334.0
+    "cambio": 334.93
   },
   {
     "username": "jgb1975",
@@ -218,7 +218,7 @@ const movimientosData = [
     "cantidad": 1500000.0,
     "tipo": "COP",
     "tasa": 3878.0,
-    "cambio": 386.0
+    "cambio": 386.82
   },
   {
     "username": "aygr1975",
@@ -231,7 +231,7 @@ const movimientosData = [
     "cantidad": 1000000.0,
     "tipo": "COP",
     "tasa": 3878.0,
-    "cambio": 257.0
+    "cambio": 257.88
   },
   {
     "username": "maeg2009",
@@ -257,7 +257,7 @@ const movimientosData = [
     "cantidad": 5000000.0,
     "tipo": "COP",
     "tasa": 3907.0,
-    "cambio": 1279.0
+    "cambio": 1279.82
   },
   {
     "username": "clra1960",
@@ -270,7 +270,7 @@ const movimientosData = [
     "cantidad": 500000.0,
     "tipo": "COP",
     "tasa": 3922.0,
-    "cambio": 127.0
+    "cambio": 127.49
   },
   {
     "username": "vspg2008",
@@ -296,7 +296,7 @@ const movimientosData = [
     "cantidad": 474000.0,
     "tipo": "COP",
     "tasa": 3888.0,
-    "cambio": 121.0
+    "cambio": 121.91
   },
   {
     "username": "MATRIS",
@@ -335,7 +335,7 @@ const movimientosData = [
     "cantidad": 68200.0,
     "tipo": "COP",
     "tasa": 3877.0,
-    "cambio": 17.0
+    "cambio": 17.59
   },
   {
     "username": "fgm1965",
@@ -400,7 +400,7 @@ const movimientosData = [
     "cantidad": 694810.0,
     "tipo": "COP",
     "tasa": 3921.0,
-    "cambio": 177.0
+    "cambio": 177.18
   },
   {
     "username": "jgb1975",
@@ -426,7 +426,7 @@ const movimientosData = [
     "cantidad": 146500.0,
     "tipo": "COP",
     "tasa": 3956.0,
-    "cambio": 37.65
+    "cambio": 37.03
   },
   {
     "username": "aygr1975",
@@ -465,7 +465,7 @@ const movimientosData = [
     "cantidad": 487000.0,
     "tipo": "COP",
     "tasa": 4005.0,
-    "cambio": 121.0
+    "cambio": 121.6
   },
   {
     "username": "MATRIS",
@@ -478,7 +478,7 @@ const movimientosData = [
     "cantidad": 99480.0,
     "tipo": "COP",
     "tasa": 4016.0,
-    "cambio": 24.0
+    "cambio": 24.77
   },
   {
     "username": "MATRIS",
@@ -491,7 +491,7 @@ const movimientosData = [
     "cantidad": 91400.0,
     "tipo": "COP",
     "tasa": 4026.0,
-    "cambio": 22.0
+    "cambio": 22.7
   },
   {
     "username": "MATRIS",
@@ -686,7 +686,7 @@ const movimientosData = [
     "cantidad": 4900000.0,
     "tipo": "COP",
     "tasa": 4336.0,
-    "cambio": 1130.00
+    "cambio": 1130.0
   },
   {
     "username": "maeg2009",
@@ -1221,4 +1221,4 @@ const movimientosData = [
     "tasa": 3762.0,
     "cambio": 208.92
   }
-]
+];
