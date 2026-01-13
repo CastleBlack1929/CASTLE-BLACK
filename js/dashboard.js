@@ -210,6 +210,27 @@ const defaultTrimestres = [
   { nombre: "TRIMESTRE 4", meses: ["octubre", "noviembre", "diciembre"] }
 ];
 
+const getTrimestresByCorte = (corte) => {
+  const normalized = String(corte || "").trim().toUpperCase();
+  if (normalized === "ENE-ABR-JUL-OCT") {
+    return [
+      { nombre: "TRIMESTRE 1", meses: ["noviembre", "diciembre", "enero"] },
+      { nombre: "TRIMESTRE 2", meses: ["febrero", "marzo", "abril"] },
+      { nombre: "TRIMESTRE 3", meses: ["mayo", "junio", "julio"] },
+      { nombre: "TRIMESTRE 4", meses: ["agosto", "septiembre", "octubre"] }
+    ];
+  }
+  if (normalized === "FEB-MAY-AGO-NOV") {
+    return [
+      { nombre: "TRIMESTRE 1", meses: ["diciembre", "enero", "febrero"] },
+      { nombre: "TRIMESTRE 2", meses: ["marzo", "abril", "mayo"] },
+      { nombre: "TRIMESTRE 3", meses: ["junio", "julio", "agosto"] },
+      { nombre: "TRIMESTRE 4", meses: ["septiembre", "octubre", "noviembre"] }
+    ];
+  }
+  return defaultTrimestres;
+};
+
 const validateUserData = (data) => {
   const errors = [];
   if (!data || typeof data !== "object") {
@@ -539,6 +560,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     // Datos principales (USD) con base en cierre previo
     const prevYearKey = (Number(yearLabel) - 1).toString();
     const prevYearData = baseData.historico?.[prevYearKey];
+    const prevPrevYearKey = (Number(yearLabel) - 2).toString();
+    const prevPrevYearData = baseData.historico?.[prevPrevYearKey];
     const prevClosingPatr = toNumber(prevYearData?.meses?.diciembre?.patrimonio) || 0;
     const prevClosingPatrL = toNumber(prevYearData?.patrimonioL);
     const prevPatrInicial = (Number.isFinite(prevClosingPatr) && prevClosingPatr > 0)
@@ -547,6 +570,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
     derived = computeDerived(userData.meses || {}, prevPatrInicial);
     derivedData = derived;
+    const prevPrevClosingPatr = toNumber(prevPrevYearData?.meses?.diciembre?.patrimonio) || 0;
+    const derivedPrevYear = prevYearData?.meses
+      ? computeDerived(prevYearData.meses || {}, prevPrevClosingPatr || toNumber(prevYearData.patrimonioPrev) || 0)
+      : null;
 
     const getMovUsdValue = (mov, fallbackRate = null) => {
       const tipo = (mov.tipo || "").toUpperCase();
@@ -1141,17 +1168,27 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
     // Honorarios
     if (tablaHonorarios && honorariosTotal) {
-      const trimestres = Array.isArray(userData.honorariosTrimestres) && userData.honorariosTrimestres.length
-        ? userData.honorariosTrimestres
-        : defaultTrimestres;
+      const corteAplicado = (userData.corte || baseData.corte || "MAR-JUN-SEP-DIC").trim().toUpperCase();
+      if (corteHonorariosText) corteHonorariosText.textContent = corteAplicado;
+      const autoHonorarios2026 = isActualYear;
+      const trimestres = autoHonorarios2026
+        ? getTrimestresByCorte(corteAplicado)
+        : (Array.isArray(userData.honorariosTrimestres) && userData.honorariosTrimestres.length
+          ? userData.honorariosTrimestres
+          : defaultTrimestres);
 
       tablaHonorarios.innerHTML = "";
       const utilPorMes = derived.monthly.reduce((acc, m) => ({ ...acc, [m.mes]: m.g_p }), {});
+      const utilPorMesPrev = derivedPrevYear
+        ? derivedPrevYear.monthly.reduce((acc, m) => ({ ...acc, [m.mes]: m.g_p }), {})
+        : {};
       let totalHonorarios = 0;
       trimestresData = [];
 
-      trimestres.forEach((tri) => {
+      trimestres.forEach((tri, triIndex) => {
         const mesesTri = tri.meses || [];
+        const triHasEnero = mesesTri.includes("enero");
+        const triHasPrevWrap = triHasEnero && (mesesTri.includes("noviembre") || mesesTri.includes("diciembre"));
 
         // Trimestre sin meses: fila vacía
         if (!mesesTri.length) {
@@ -1173,7 +1210,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         }
 
         // Si viene cobro/tipo manual, usarlo (mostrar comisión explícita si se proporciona)
-        if (tri.hasOwnProperty("cobro") || tri.hasOwnProperty("tipo")) {
+        if (!autoHonorarios2026 && (tri.hasOwnProperty("cobro") || tri.hasOwnProperty("tipo"))) {
           const cobro = toNumber(tri.cobro) || 0;
           const tipo = tri.tipo || "—";
           const comisionTxt = tri.comisionTxt || tipo;
@@ -1198,7 +1235,17 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         }
 
         // Caso cálculo automático
-        const utilTrim = mesesTri.reduce((sum, mes) => sum + (toNumber(utilPorMes[mes]) || 0), 0);
+        const utilTrim = mesesTri.reduce((sum, mes) => {
+          if (autoHonorarios2026 && Number(displayYear) === 2026 && triIndex === 3 && mes === "enero") {
+            return sum;
+          }
+          const currentVal = toNumber(utilPorMes[mes]);
+          if (autoHonorarios2026 && triHasPrevWrap && (mes === "noviembre" || mes === "diciembre")) {
+            const prevVal = toNumber(utilPorMesPrev[mes]);
+            if (Number.isFinite(prevVal)) return sum + prevVal;
+          }
+          return sum + (Number.isFinite(currentVal) ? currentVal : 0);
+        }, 0);
         const tarifa = tarifaHonorarios(utilTrim);
         totalHonorarios += tarifa.valor || 0;
 
