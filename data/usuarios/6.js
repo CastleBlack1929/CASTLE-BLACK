@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "AA",
       "meses": {
         "enero": {
-          "aporte": 708.67,
+          "aporte": 0.00,
           "patrimonio": 721.97
         },
         "febrero": {

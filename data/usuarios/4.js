@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "CCC",
       "meses": {
         "enero": {
-          "aporte": 127.36,
+          "aporte": 0.00,
           "patrimonio": 120.19
         },
         "febrero": {

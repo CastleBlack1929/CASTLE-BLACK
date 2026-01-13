@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "BB",
       "meses": {
         "enero": {
-          "aporte": 0.0,
+          "aporte": 0.00,
           "patrimonio": 0.0
         },
         "febrero": {

@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "BBB",
       "meses": {
         "enero": {
-          "aporte": 1125.08,
+          "aporte": 0.00,
           "patrimonio": 1164.76
         },
         "febrero": {
