@@ -833,7 +833,11 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     applyPesos(currentRate);
 
     // Override histórico en COP con la tasa más reciente (siempre la misma para todos los años)
-    const LATEST_HISTORICAL_RATE = 3710.5;
+    const getHistoricalRate = () => {
+      if (isActualYear && Number.isFinite(currentRate)) return currentRate;
+      return DEFAULT_RATE_BY_YEAR.actual || 3710.5;
+    };
+    const LATEST_HISTORICAL_RATE = getHistoricalRate();
     if (histBase && aporteHistL && patrimonioHistL && utilidadRHistL && utilidadHistL && crcmntHistL) {
       const aporteCopHist = totalMovCopAll;
       const patrCopHist = totalPatrimonioHistAll * LATEST_HISTORICAL_RATE;
@@ -862,14 +866,15 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       if (!oscilarResumen) return;
       const isOscYear2026 = selectedYear === "actual" || String(displayYear) === "2026";
       const updateHistOscillation = (nuevoPat, rateToUse) => {
+        const histRate = getHistoricalRate();
         const prevHistUtil = toNumber(utilidadRHist?.textContent);
         const prevHistUtilTot = toNumber(utilidadHist?.textContent);
 
         if (patrimonioHist) {
           patrimonioHist.textContent = formatMoney(nuevoPat);
         }
-        if (patrimonioHistL && Number.isFinite(rateToUse)) {
-          patrimonioHistL.textContent = formatMoney(nuevoPat * rateToUse);
+        if (patrimonioHistL && Number.isFinite(histRate)) {
+          patrimonioHistL.textContent = formatMoney(nuevoPat * histRate);
         }
 
         const histUtilUsd = nuevoPat - (totalAporteHistMovAll || 0);
@@ -888,11 +893,11 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           crcmntHist.textContent = formatPercent(histCrcmntUsd);
           setTrendClass(crcmntHist, histCrcmntUsd);
         }
-          if (Number.isFinite(rateToUse)) {
+          if (Number.isFinite(histRate)) {
             const aporteCopHistTick = totalMovCopAll || 0;
-            const patrCopHistTick = nuevoPat * rateToUse;
+            const patrCopHistTick = nuevoPat * histRate;
             const utilRCopHistTick = patrCopHistTick - aporteCopHistTick;
-            const utilCopHistTick = histUtilUsd * rateToUse;
+            const utilCopHistTick = histUtilUsd * histRate;
             const crcmntHistLCur = aporteCopHistTick !== 0
               ? (utilRCopHistTick / Math.abs(aporteCopHistTick)) * 100
               : 0;
