@@ -1168,6 +1168,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
     // Honorarios
     if (tablaHonorarios && honorariosTotal) {
+      const disableHonorarios =
+        claveUsuario === "jfpg2006" ||
+        claveUsuario === "matris" ||
+        String(userData.socio || "").trim().toUpperCase() === "CASTLE BLACK";
       const corteAplicado = (userData.corte || baseData.corte || "MAR-JUN-SEP-DIC").trim().toUpperCase();
       if (corteHonorariosText) corteHonorariosText.textContent = corteAplicado;
       const autoHonorarios2026 = isActualYear;
@@ -1184,6 +1188,37 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         : {};
       let totalHonorarios = 0;
       trimestresData = [];
+
+      if (disableHonorarios) {
+        trimestres.forEach((tri) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${tri.nombre}</td>
+            <td>—</td>
+            <td>—</td>
+            <td>$ ${formatNumber(0)}</td>
+          `;
+          tablaHonorarios.appendChild(row);
+          trimestresData.push({
+            nombre: tri.nombre,
+            tarifa: "—",
+            comision: "—",
+            valor: 0
+          });
+        });
+
+        honorariosTotalUsd = 0;
+        honorariosTotal.textContent = formatNumber(0);
+        if (utilidadTotal) {
+          const totalUsd = utilCalcBase || 0;
+          utilidadTotal.textContent = formatMoney(totalUsd);
+          setTrendClass(utilidadTotal, totalUsd);
+          if (Number.isFinite(currentRate)) {
+            applyPesos(currentRate, patrimonioCalc, totalUsd);
+          }
+        }
+        // No calcular honorarios para estos perfiles
+      } else {
 
       trimestres.forEach((tri, triIndex) => {
         const mesesTri = tri.meses || [];
@@ -1274,6 +1309,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         if (Number.isFinite(currentRate)) {
           applyPesos(currentRate, patrimonioCalc, totalUsd);
         }
+      }
       }
     }
 
