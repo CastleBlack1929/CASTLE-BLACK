@@ -1730,13 +1730,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           addLine("Estado de cuenta total (histórico)", 12, 8, "bold");
           addLine(`Fecha de unión: ${safeText(fechaUnionHist)}`);
           addParagraph("Como consecuencia de los aportes y movimientos realizados durante el tiempo que ha mantenido su relación con nosotros, aquí se muestra el margen de utilidad acumulado histórico y el crecimiento real del capital, considerando utilidades, retiros y comisiones. Este análisis refleja el desempeño desde su fecha de ingreso, incluso si fue en años anteriores.");
-          const latestHistoricalRate = (() => {
-            const liveRate = toNumber(safeText(rateValue));
-            if (Number.isFinite(liveRate)) return liveRate;
-            if (Number.isFinite(currentRate)) return currentRate;
-            if (Number.isFinite(baseRate)) return baseRate;
-            return 3710.5;
-          })();
+          const latestHistoricalRate = getHistoricalRate();
           const histAporteUsd = toNumber(safeText(aporteHist)) || 0;
           const histPatrUsd = toNumber(safeText(patrimonioHist)) || 0;
           const histUtilRUsd = toNumber(safeText(utilidadRHist)) || 0;
