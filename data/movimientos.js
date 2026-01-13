@@ -348,7 +348,7 @@ const movimientosData = [
     "cantidad": 1500000.0,
     "tipo": "COP",
     "tasa": 3896.0,
-    "cambio": 384.0
+    "cambio": 384.99
   },
   {
     "username": "vspg2008",
