@@ -296,5 +296,5 @@ window.userData = {
     }
   },
   "idCliente": "009",
-  "socio": "CARROCERIAS JGB (ALEIDA YANIRA GONZALEZ)"
+  "socio": "CARROCERIAS JGB"
 }

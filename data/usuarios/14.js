@@ -205,5 +205,5 @@ window.userData = {
     }
   },
   "idCliente": "014",
-  "socio": "MARIA PAULA GOMEZ GONZALEZ(CHRISTOPER GOMEZ GONZALEZ)"
+  "socio": "MARIA PAULA GOMEZ GONZALEZ"
 }

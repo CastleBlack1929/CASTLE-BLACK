@@ -296,5 +296,5 @@ window.userData = {
     }
   },
   "idCliente": "006",
-  "socio": "VALERIA SOFIA PERALTA (MARTIN PERALTA)"
+  "socio": "VALERIA SOFIA PERALTA GONZALEZ"
 }

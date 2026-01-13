@@ -244,7 +244,7 @@ const movimientosData = [
     "cantidad": 100000.0,
     "tipo": "COP",
     "tasa": 3912.0,
-    "cambio": 25.0
+    "cambio": 25.56
   },
   {
     "username": "fmra1955",
@@ -426,7 +426,7 @@ const movimientosData = [
     "cantidad": 146500.0,
     "tipo": "COP",
     "tasa": 3956.0,
-    "cambio": 37.0
+    "cambio": 37.65
   },
   {
     "username": "aygr1975",
@@ -452,7 +452,7 @@ const movimientosData = [
     "cantidad": 150000.0,
     "tipo": "COP",
     "tasa": 3984.0,
-    "cambio": 37.0
+    "cambio": 37.65
   },
   {
     "username": "MATRIS",
@@ -676,6 +676,32 @@ const movimientosData = [
     "cambio": 118.15
   },
   {
+    "username": "bsgm1987",
+    "cliente": "016",
+    "recibo": "45",
+    "fecha": "27/03/25",
+    "year": 2025,
+    "socio": "BRYAN SEBASTIAN GONZALEZ MEDINA",
+    "cedula": "1032399479",
+    "cantidad": 4900000.0,
+    "tipo": "COP",
+    "tasa": 4336.0,
+    "cambio": 1130.00
+  },
+  {
+    "username": "maeg2009",
+    "cliente": "015",
+    "recibo": "46",
+    "fecha": "31/03/25",
+    "year": 2025,
+    "socio": "MIGUEL ANGEL ENCINAS GONZALEZ (JOSE ANTONIO ENCINAS)",
+    "cedula": "318674",
+    "cantidad": 505000.0,
+    "tipo": "COP",
+    "tasa": 4149.0,
+    "cambio": 121.72
+  },
+  {
     "username": "jaen1971",
     "cliente": "005",
     "recibo": "41",
@@ -777,7 +803,7 @@ const movimientosData = [
     "cantidad": 600000.0,
     "tipo": "COP",
     "tasa": 4225.0,
-    "cambio": 142.0
+    "cambio": 142.02
   },
   {
     "username": "mpgg2008",

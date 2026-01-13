@@ -110,7 +110,7 @@ window.userData = {
           "patrimonio": 0.0
         },
         "febrero": {
-          "aporte": 245.42,
+          "aporte": 142.02,
           "patrimonio": 250.03
         },
         "marzo": {
@@ -205,5 +205,5 @@ window.userData = {
     }
   },
   "idCliente": "015",
-  "socio": "MIGUEL ANGEL ENCINAS GONZALEZ (JOSE ANTONIO ENCINAS)"
+  "socio": "MIGUEL ANGEL ENCINAS GONZALEZ"
 }
