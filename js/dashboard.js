@@ -398,7 +398,6 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     if (sessionExpired) return false;
     const last = Number(localStorage.getItem(SESSION_ACTIVITY_KEY));
     if (Number.isFinite(last) && Date.now() - last > SESSION_TIMEOUT_MS) {
-      alert("Tu sesión expiró por inactividad. Vuelve a iniciar sesión.");
       performLogout({ clearPrefs: false, silent: true });
       return false;
     }
@@ -408,7 +407,6 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
   const guardActiveSession = () => {
     const currentUserFile = localStorage.getItem("currentUserFile");
     if (!currentUserFile) {
-      alert("No hay sesión activa. Inicia sesión.");
       window.location.href = "login.html";
       return null;
     }
@@ -770,9 +768,9 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
     // Datos en COP (cálculo dinámico)
     const DEFAULT_RATE_BY_YEAR = {
-      actual: 3640.0, // tasa vigente 2026
+      actual: 3684.0, // tasa vigente 2026
       "2025": 3773.6,
-      "2026": 3640.0,
+      "2026": 3684.0,
       "2024": 4373.5
     };
 

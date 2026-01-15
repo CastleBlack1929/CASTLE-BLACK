@@ -387,7 +387,7 @@ const movimientosData = [
     "cantidad": 5000000.0,
     "tipo": "COP",
     "tasa": 3906.0,
-    "cambio": 1280.0
+    "cambio": 1280.14
   },
   {
     "username": "MATRIS",
@@ -894,7 +894,7 @@ const movimientosData = [
     "cantidad": 5000000.0,
     "tipo": "COP",
     "tasa": 4310.0,
-    "cambio": 1160.0
+    "cambio": 1160.08
   },
   {
     "username": "ylgr1973",
@@ -1181,6 +1181,19 @@ const movimientosData = [
     "tipo": "COP",
     "tasa": 3973.0,
     "cambio": 1258.0
+  },
+  {
+    "username": "fmra1955",
+    "cliente": "013",
+    "recibo": "92",
+    "fecha": "15/01/26",
+    "year": 2026,
+    "socio": "FLOR MARINA RODRIGUEZ AREVALO",
+    "cedula": "35461538",
+    "cantidad": 1000000.0,
+    "tipo": "COP",
+    "tasa": 3676.0,
+    "cambio": 272.03
   },
   {
     "username": "lmp1974",
