@@ -558,6 +558,51 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     nivelText.textContent = userData.nivel ? `Nivel: ${userData.nivel}` : "Nivel: N/A";
     idClienteHeader.textContent = userData.idCliente ? `ID: ${userData.idCliente}` : "";
 
+    const monthKeyFromFecha = (fecha) => {
+      const parts = String(fecha || "").split("/");
+      if (parts.length < 2) return null;
+      const month = Number(parts[1]);
+      if (!Number.isFinite(month) || month < 1 || month > 12) return null;
+      return monthOrder[month - 1];
+    };
+    const getMovUsdValueLocal = (mov) => {
+      const tipo = (mov.tipo || "").toUpperCase();
+      if (tipo === "USD") {
+        const cambioUsd = toNumber(mov.cambio);
+        if (Number.isFinite(cambioUsd)) return cambioUsd;
+        const cantidadUsd = toNumber(mov.cantidad);
+        return Number.isFinite(cantidadUsd) ? cantidadUsd : 0;
+      }
+      const cambioCop = toNumber(mov.cambio);
+      if (Number.isFinite(cambioCop)) return cambioCop;
+      const tasaMov = toNumber(mov.tasa);
+      const cantidadCop = toNumber(mov.cantidad);
+      if (!Number.isFinite(tasaMov) || tasaMov === 0) return 0;
+      return Number.isFinite(cantidadCop) ? cantidadCop / tasaMov : 0;
+    };
+    const buildMesesWithMovAportes = (meses = {}, year) => {
+      if (typeof movimientosData === "undefined" || !Array.isArray(movimientosData)) return meses;
+      const sums = {};
+      const counts = {};
+      movimientosData
+        .filter((m) => matchMovimientoForUser(m) && Number(m.year) === Number(year))
+        .forEach((m) => {
+          const mesKey = monthKeyFromFecha(m.fecha);
+          if (!mesKey) return;
+          const usdVal = getMovUsdValueLocal(m);
+          sums[mesKey] = (sums[mesKey] || 0) + (Number.isFinite(usdVal) ? usdVal : 0);
+          counts[mesKey] = (counts[mesKey] || 0) + 1;
+        });
+      const keys = Object.keys(counts);
+      if (!keys.length) return meses;
+      const merged = { ...meses };
+      keys.forEach((mesKey) => {
+        const base = meses?.[mesKey] || {};
+        merged[mesKey] = { ...base, aporte: sums[mesKey] };
+      });
+      return merged;
+    };
+
     // Datos principales (USD) con base en cierre previo
     const prevYearKey = (Number(yearLabel) - 1).toString();
     const prevYearData = baseData.historico?.[prevYearKey];
@@ -569,7 +614,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       ? prevClosingPatr
       : (toNumber(userData.patrimonioPrev) || 0);
 
-    derived = computeDerived(userData.meses || {}, prevPatrInicial, useAporteAsPrev);
+    const mesesForCalc = buildMesesWithMovAportes(userData.meses || {}, displayYear);
+    derived = computeDerived(mesesForCalc, prevPatrInicial, useAporteAsPrev);
     derivedData = derived;
     const prevPrevClosingPatr = toNumber(prevPrevYearData?.meses?.diciembre?.patrimonio) || 0;
     const derivedPrevYear = prevYearData?.meses
