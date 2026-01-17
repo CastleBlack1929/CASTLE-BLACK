@@ -155,7 +155,7 @@ const computeTotalPatrimonioAllYears = (data, currentYearNumber) => {
   return 0;
 };
 
-const computeDerived = (meses = {}, prevPatrInicial = 0) => {
+const computeDerived = (meses = {}, prevPatrInicial = 0, useAporteAsPrev = false) => {
   let totalAporte = 0;
   let prevPatrimonio = Number(prevPatrInicial) || 0;
   let lastIdx = -1;
@@ -180,7 +180,7 @@ const computeDerived = (meses = {}, prevPatrInicial = 0) => {
       let margen = basePrev !== 0 ? (g_p / Math.abs(basePrev)) * 100 : 0;
 
       // Caso enero: si no hay patrimonio previo, usa el aporte como base provisional
-      if (!firstHandled && basePrev === 0 && aporte !== 0 && patrimonio !== 0) {
+      if (useAporteAsPrev && !firstHandled && basePrev === 0 && aporte !== 0 && patrimonio !== 0) {
         basePrev = aporte;
         g_p = patrimonio - aporte; // utilidad respecto al aporte de cierre anterior
         margen = aporte !== 0 ? (g_p / Math.abs(aporte)) * 100 : 0;
@@ -451,7 +451,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       : [];
     const allYears = Array.from(new Set([...historicos, ...movYears])).sort((a, b) => Number(b) - Number(a));
     const years = ["actual", ...allYears];
-    histBase = computeDerived(baseData.meses || {}, baseData.patrimonioPrev || 0);
+    const useAporteAsPrev = baseData.usarAporteComoPrev === true;
+    histBase = computeDerived(baseData.meses || {}, baseData.patrimonioPrev || 0, useAporteAsPrev);
     let selectedYear = localStorage.getItem("dashboardYear") || "actual";
     const normalizedYears = new Set(years);
     if (!normalizedYears.has(selectedYear)) {
@@ -566,11 +567,15 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       ? prevClosingPatr
       : (toNumber(userData.patrimonioPrev) || 0);
 
-    derived = computeDerived(userData.meses || {}, prevPatrInicial);
+    derived = computeDerived(userData.meses || {}, prevPatrInicial, useAporteAsPrev);
     derivedData = derived;
     const prevPrevClosingPatr = toNumber(prevPrevYearData?.meses?.diciembre?.patrimonio) || 0;
     const derivedPrevYear = prevYearData?.meses
-      ? computeDerived(prevYearData.meses || {}, prevPrevClosingPatr || toNumber(prevYearData.patrimonioPrev) || 0)
+      ? computeDerived(
+        prevYearData.meses || {},
+        prevPrevClosingPatr || toNumber(prevYearData.patrimonioPrev) || 0,
+        baseData.usarAporteComoPrev === true
+      )
       : null;
 
     const getMovUsdValue = (mov, fallbackRate = null) => {

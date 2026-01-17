@@ -7,6 +7,7 @@ window.userData = {
   "password": "Lmp1974.",
   "nivel": "N/A",
   "corte": "MAR-JUN-SEP-DIC",
+  "usarAporteComoPrev": true,
   "oscilacionBase": {
     "aporteUsd": 0,
     "patrimonioUsd": 0,
