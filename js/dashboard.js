@@ -38,6 +38,8 @@ const formatPercent = (value) => {
 };
 
 const formatMoney = (value) => `$ ${formatNumber(value)}`;
+const formatMoneyCop = (value) =>
+  `$ ${formatNumber(value, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 
 const setTrendClass = (el, value) => {
   if (!el) return;
@@ -818,7 +820,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
                   ? prevClosingPatrL
                   : (prevClosingPatr || 0) * baseRate) + (sumMovCop2025 || 0))
               : (totalAportesActual || 0) * baseRate));
-    aporteL.textContent = formatMoney(aporteLBase);
+    aporteL.textContent = formatMoneyCop(aporteLBase);
 
     applyPesos = (rate, patrUsdOverride = null, utilUsdOverride = null) => {
       if (!Number.isFinite(rate)) return;
@@ -846,10 +848,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const utilidadTotalCop = usdUtilidad * rate;
       utilOsc = usdUtilidad; // mantener utilidad oscilada para próximos cálculos
 
-      aporteL.textContent = formatMoney(aporteCop);
-      patrimonioL.textContent = formatMoney(patrimonioCop);
-      utilidadL.textContent = formatMoney(utilidadCop);
-      if (utilidadTotalL) utilidadTotalL.textContent = formatMoney(utilidadTotalCop);
+      aporteL.textContent = formatMoneyCop(aporteCop);
+      patrimonioL.textContent = formatMoneyCop(patrimonioCop);
+      utilidadL.textContent = formatMoneyCop(utilidadCop);
+      if (utilidadTotalL) utilidadTotalL.textContent = formatMoneyCop(utilidadTotalCop);
       const crcmntLCur = aporteCop !== 0 ? (utilidadCop / Math.abs(aporteCop)) * 100 : crcmntBaseL;
       crcmntL.textContent = formatPercent(crcmntLCur);
 
@@ -880,10 +882,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       if (patrimonioHist) patrimonioHist.textContent = formatMoney(totalPatrimonioHistAll);
       if (utilidadRHist) utilidadRHist.textContent = formatMoney(totalUtilHistAll);
       if (utilidadHist) utilidadHist.textContent = formatMoney(totalUtilHistAll);
-      aporteHistL.textContent = formatMoney(aporteCopHist);
-      patrimonioHistL.textContent = formatMoney(patrCopHist);
-      utilidadHistL.textContent = formatMoney(utilTotalCopHist);
-      utilidadRHistL.textContent = formatMoney(utilRCopHist);
+      aporteHistL.textContent = formatMoneyCop(aporteCopHist);
+      patrimonioHistL.textContent = formatMoneyCop(patrCopHist);
+      utilidadHistL.textContent = formatMoneyCop(utilTotalCopHist);
+      utilidadRHistL.textContent = formatMoneyCop(utilRCopHist);
       crcmntHistL.textContent = formatPercent(crcmntHistLCur);
       setTrendClass(utilidadHistL, utilTotalCopHist);
       setTrendClass(utilidadRHistL, utilRCopHist);
@@ -904,7 +906,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           patrimonioHist.textContent = formatMoney(nuevoPat);
         }
         if (patrimonioHistL && Number.isFinite(histRate)) {
-          patrimonioHistL.textContent = formatMoney(nuevoPat * histRate);
+          patrimonioHistL.textContent = formatMoneyCop(nuevoPat * histRate);
         }
 
         const histUtilUsd = nuevoPat - (totalAporteHistMovAll || 0);
@@ -923,22 +925,22 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           crcmntHist.textContent = formatPercent(histCrcmntUsd);
           setTrendClass(crcmntHist, histCrcmntUsd);
         }
-          if (Number.isFinite(histRate)) {
-            const aporteCopHistTick = totalMovCopAll || 0;
-            const patrCopHistTick = nuevoPat * histRate;
-            const utilRCopHistTick = patrCopHistTick - aporteCopHistTick;
-            const utilCopHistTick = histUtilUsd * histRate;
-            const crcmntHistLCur = aporteCopHistTick !== 0
-              ? (utilRCopHistTick / Math.abs(aporteCopHistTick)) * 100
-              : 0;
-            if (aporteHistL) aporteHistL.textContent = formatMoney(aporteCopHistTick);
-          if (patrimonioHistL) patrimonioHistL.textContent = formatMoney(patrCopHistTick);
+        if (Number.isFinite(histRate)) {
+          const aporteCopHistTick = totalMovCopAll || 0;
+          const patrCopHistTick = nuevoPat * histRate;
+          const utilRCopHistTick = patrCopHistTick - aporteCopHistTick;
+          const utilCopHistTick = histUtilUsd * histRate;
+          const crcmntHistLCur = aporteCopHistTick !== 0
+            ? (utilRCopHistTick / Math.abs(aporteCopHistTick)) * 100
+            : 0;
+          if (aporteHistL) aporteHistL.textContent = formatMoneyCop(aporteCopHistTick);
+          if (patrimonioHistL) patrimonioHistL.textContent = formatMoneyCop(patrCopHistTick);
           if (utilidadRHistL) {
-            utilidadRHistL.textContent = formatMoney(utilRCopHistTick);
+            utilidadRHistL.textContent = formatMoneyCop(utilRCopHistTick);
             setTrendClass(utilidadRHistL, utilRCopHistTick);
           }
           if (utilidadHistL) {
-            utilidadHistL.textContent = formatMoney(utilCopHistTick);
+            utilidadHistL.textContent = formatMoneyCop(utilCopHistTick);
             setTrendClass(utilidadHistL, utilCopHistTick);
           }
           if (crcmntHistL) {
@@ -1404,12 +1406,16 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       if (registros.length) {
         registros.forEach(mov => {
           const row = document.createElement("tr");
+          const isCop = String(mov.tipo || "").toUpperCase() === "COP";
+          const formatCop = (val) => formatNumber(val, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+          const cantidadTxt = isCop ? formatCop(mov.cantidad) : formatNumber(mov.cantidad);
+          const tasaTxt = mov.tasa ? (isCop ? formatCop(mov.tasa) : formatNumber(mov.tasa)) : "";
           row.innerHTML = `
             <td>${mov.recibo || ""}</td>
             <td>${mov.fecha || ""}</td>
-            <td>${formatNumber(mov.cantidad)}</td>
+            <td>${cantidadTxt}</td>
             <td>${mov.tipo || ""}</td>
-            <td>${mov.tasa ? formatNumber(mov.tasa) : ""}</td>
+            <td>${tasaTxt}</td>
             <td>${formatNumber(mov.cambio)}</td>
           `;
           tablaMovimientos.appendChild(row);

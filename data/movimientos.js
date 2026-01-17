@@ -2,7 +2,7 @@ const movimientosData = [
   {
     "username": "vspg2008",
     "cliente": "006",
-    "recibo": "97",
+    "recibo": "98",
     "fecha": "28/12/25",
     "year": 2025,
     "socio": "VALERIA SOFIA PERALTA (MARTIN PERALTA)",
@@ -15,7 +15,7 @@ const movimientosData = [
   {
     "username": "fmra1955",
     "cliente": "013",
-    "recibo": "96",
+    "recibo": "97",
     "fecha": "24/12/25",
     "year": 2025,
     "socio": "FLOR MARINA RODRIGUEZ AREVALO",
@@ -28,7 +28,7 @@ const movimientosData = [
   {
     "username": "srb2006",
     "cliente": "017",
-    "recibo": "95",
+    "recibo": "96",
     "fecha": "22/12/25",
     "year": 2025,
     "socio": "SEBASTIAN RODRIGUEZ BALLEN",
@@ -41,7 +41,7 @@ const movimientosData = [
   {
     "username": "srb2006",
     "cliente": "017",
-    "recibo": "94",
+    "recibo": "95",
     "fecha": "12/05/25",
     "year": 2025,
     "socio": "SEBASTIAN RODRIGUEZ BALLEN",
@@ -54,7 +54,7 @@ const movimientosData = [
   {
     "username": "vspg2008",
     "cliente": "006",
-    "recibo": "93",
+    "recibo": "94",
     "fecha": "22/12/25",
     "year": 2025,
     "socio": "VALERIA SOFIA PERALTA (MARTIN PERALTA)",
@@ -67,7 +67,7 @@ const movimientosData = [
   {
     "username": "jgb1975",
     "cliente": "009",
-    "recibo": "92",
+    "recibo": "93",
     "fecha": "19/12/25",
     "year": 2025,
     "socio": "CARROCERIAS JGB (ALEIDA YANIRA GONZALEZ)",
@@ -80,7 +80,7 @@ const movimientosData = [
   {
     "username": "aygr1975",
     "cliente": "002",
-    "recibo": "91",
+    "recibo": "92",
     "fecha": "18/12/25",
     "year": 2025,
     "socio": "ALEIDA YANIRA GONZALEZ",
@@ -93,7 +93,7 @@ const movimientosData = [
   {
     "username": "ylgr1973",
     "cliente": "012",
-    "recibo": "90",
+    "recibo": "91",
     "fecha": "09/12/25",
     "year": 2025,
     "socio": "YAMILE LEONOR GONZALEZ RODRIGUEZ",
@@ -106,7 +106,7 @@ const movimientosData = [
   {
     "username": "MATRIS",
     "cliente": "A",
-    "recibo": "89",
+    "recibo": "90",
     "fecha": "02/12/25",
     "year": 2025,
     "socio": "CASTLE BLACK",
@@ -119,7 +119,7 @@ const movimientosData = [
   {
     "username": "memj1981",
     "cliente": "021",
-    "recibo": "88",
+    "recibo": "89",
     "fecha": "10/11/25",
     "year": 2025,
     "socio": "MARTHA ELIZABETH MARULANDA JARAMILLO",
@@ -132,7 +132,7 @@ const movimientosData = [
   {
     "username": "ylgr1973",
     "cliente": "012",
-    "recibo": "87",
+    "recibo": "88",
     "fecha": "10/11/25",
     "year": 2025,
     "socio": "YAMILE LEONOR GONZALEZ RODRIGUEZ",
@@ -145,7 +145,7 @@ const movimientosData = [
   {
     "username": "vspg2008",
     "cliente": "006",
-    "recibo": "86",
+    "recibo": "87",
     "fecha": "08/10/25",
     "year": 2025,
     "socio": "VALERIA SOFIA PERALTA (MARTIN PERALTA)",
@@ -158,7 +158,7 @@ const movimientosData = [
   {
     "username": "MATRIS",
     "cliente": "A",
-    "recibo": "85",
+    "recibo": "86",
     "fecha": "02/11/25",
     "year": 2025,
     "socio": "CASTLE BLACK",
@@ -171,7 +171,7 @@ const movimientosData = [
   {
     "username": "memj1981",
     "cliente": "021",
-    "recibo": "84",
+    "recibo": "85",
     "fecha": "28/10/25",
     "year": 2025,
     "socio": "MARTHA ELIZABETH MARULANDA JARAMILLO",
@@ -184,7 +184,7 @@ const movimientosData = [
   {
     "username": "cerg1980",
     "cliente": "020",
-    "recibo": "83",
+    "recibo": "84",
     "fecha": "26/10/25",
     "year": 2025,
     "socio": "CARLOS EDUARDO RODRIGUEZ GONGARA",
@@ -197,7 +197,7 @@ const movimientosData = [
   {
     "username": "jfpg2006",
     "cliente": "001",
-    "recibo": "82",
+    "recibo": "83",
     "fecha": "16/10/25",
     "year": 2025,
     "socio": "JUAN FEDERICO PERALTA GONZALEZ",
@@ -210,7 +210,7 @@ const movimientosData = [
   {
     "username": "jgb1975",
     "cliente": "009",
-    "recibo": "81",
+    "recibo": "82",
     "fecha": "15/10/25",
     "year": 2025,
     "socio": "CARROCERIAS JGB (ALEIDA YANIRA GONZALEZ)",
@@ -223,7 +223,7 @@ const movimientosData = [
   {
     "username": "aygr1975",
     "cliente": "002",
-    "recibo": "80",
+    "recibo": "81",
     "fecha": "15/10/25",
     "year": 2025,
     "socio": "ALEIDA YANIRA GONZALEZ",
@@ -236,7 +236,7 @@ const movimientosData = [
   {
     "username": "maeg2009",
     "cliente": "015",
-    "recibo": "79",
+    "recibo": "80",
     "fecha": "11/10/25",
     "year": 2025,
     "socio": "MIGUEL ANGEL ENCINAS GONZALEZ (JOSE ANTONIO ENCINAS)",
@@ -249,7 +249,7 @@ const movimientosData = [
   {
     "username": "fmra1955",
     "cliente": "013",
-    "recibo": "78",
+    "recibo": "79",
     "fecha": "11/10/25",
     "year": 2025,
     "socio": "FLOR MARINA RODRIGUEZ AREVALO",
@@ -262,7 +262,7 @@ const movimientosData = [
   {
     "username": "clra1960",
     "cliente": "019",
-    "recibo": "77",
+    "recibo": "78",
     "fecha": "10/10/25",
     "year": 2025,
     "socio": "CARMEN LIGIA RODRIGUEZ AREVALO",
@@ -275,7 +275,7 @@ const movimientosData = [
   {
     "username": "vspg2008",
     "cliente": "006",
-    "recibo": "76",
+    "recibo": "77",
     "fecha": "10/10/25",
     "year": 2025,
     "socio": "VALERIA SOFIA PERALTA (MARTIN PERALTA)",
@@ -288,7 +288,7 @@ const movimientosData = [
   {
     "username": "MATRIS",
     "cliente": "A",
-    "recibo": "75",
+    "recibo": "76",
     "fecha": "03/10/25",
     "year": 2025,
     "socio": "CASTLE BLACK",
@@ -301,7 +301,7 @@ const movimientosData = [
   {
     "username": "MATRIS",
     "cliente": "A",
-    "recibo": "74",
+    "recibo": "75",
     "fecha": "30/09/25",
     "year": 2025,
     "socio": "CASTLE BLACK",
@@ -314,7 +314,7 @@ const movimientosData = [
   {
     "username": "",
     "cliente": "",
-    "recibo": "73",
+    "recibo": "74",
     "fecha": "17/09/25",
     "year": 2025,
     "socio": "ANGIE NATALIA RUIZ GUAVITA",
@@ -327,7 +327,7 @@ const movimientosData = [
   {
     "username": "MATRIS",
     "cliente": "A",
-    "recibo": "72",
+    "recibo": "73",
     "fecha": "17/09/25",
     "year": 2025,
     "socio": "CASTLE BLACK",
@@ -340,7 +340,7 @@ const movimientosData = [
   {
     "username": "fgm1965",
     "cliente": "018",
-    "recibo": "71",
+    "recibo": "72",
     "fecha": "15/09/25",
     "year": 2025,
     "socio": "FERNANDO GONZALEZ MORA",
@@ -353,7 +353,7 @@ const movimientosData = [
   {
     "username": "vspg2008",
     "cliente": "006",
-    "recibo": "70",
+    "recibo": "71",
     "fecha": "14/09/25",
     "year": 2025,
     "socio": "VALERIA SOFIA PERALTA (MARTIN PERALTA)",
@@ -366,7 +366,7 @@ const movimientosData = [
   {
     "username": "cgg2004",
     "cliente": "008",
-    "recibo": "69",
+    "recibo": "70",
     "fecha": "10/09/25",
     "year": 2025,
     "socio": "CHRISTOPER GOMEZ GONZALEZ",
@@ -379,7 +379,7 @@ const movimientosData = [
   {
     "username": "fmra1955",
     "cliente": "013",
-    "recibo": "68",
+    "recibo": "69",
     "fecha": "10/09/25",
     "year": 2025,
     "socio": "FLOR MARINA RODRIGUEZ AREVALO",
@@ -392,7 +392,7 @@ const movimientosData = [
   {
     "username": "MATRIS",
     "cliente": "A",
-    "recibo": "67",
+    "recibo": "68",
     "fecha": "09/09/25",
     "year": 2025,
     "socio": "CASTLE BLACK",
@@ -405,7 +405,7 @@ const movimientosData = [
   {
     "username": "jgb1975",
     "cliente": "009",
-    "recibo": "66",
+    "recibo": "67",
     "fecha": "09/09/25",
     "year": 2025,
     "socio": "CARROCERIAS JGB (ALEIDA YANIRA GONZALEZ)",
@@ -418,7 +418,7 @@ const movimientosData = [
   {
     "username": "MATRIS",
     "cliente": "A",
-    "recibo": "65",
+    "recibo": "66",
     "fecha": "07/09/25",
     "year": 2025,
     "socio": "CASTLE BLACK",
@@ -431,7 +431,7 @@ const movimientosData = [
   {
     "username": "aygr1975",
     "cliente": "002",
-    "recibo": "64",
+    "recibo": "65",
     "fecha": "07/09/25",
     "year": 2025,
     "socio": "ALEIDA YANIRA GONZALEZ",
@@ -444,7 +444,7 @@ const movimientosData = [
   {
     "username": "maeg2009",
     "cliente": "015",
-    "recibo": "63",
+    "recibo": "64",
     "fecha": "07/09/25",
     "year": 2025,
     "socio": "MIGUEL ANGEL ENCINAS GONZALEZ (JOSE ANTONIO ENCINAS)",
@@ -457,7 +457,7 @@ const movimientosData = [
   {
     "username": "MATRIS",
     "cliente": "A",
-    "recibo": "62",
+    "recibo": "63",
     "fecha": "02/09/25",
     "year": 2025,
     "socio": "CASTLE BLACK",
@@ -470,7 +470,7 @@ const movimientosData = [
   {
     "username": "MATRIS",
     "cliente": "A",
-    "recibo": "61",
+    "recibo": "62",
     "fecha": "01/09/25",
     "year": 2025,
     "socio": "CASTLE BLACK",
@@ -483,7 +483,7 @@ const movimientosData = [
   {
     "username": "MATRIS",
     "cliente": "A",
-    "recibo": "60",
+    "recibo": "61",
     "fecha": "28/08/25",
     "year": 2025,
     "socio": "CASTLE BLACK",
@@ -496,7 +496,7 @@ const movimientosData = [
   {
     "username": "MATRIS",
     "cliente": "A",
-    "recibo": "59",
+    "recibo": "60",
     "fecha": "28/08/25",
     "year": 2025,
     "socio": "CASTLE BLACK",
@@ -509,7 +509,7 @@ const movimientosData = [
   {
     "username": "ylgr1973",
     "cliente": "012",
-    "recibo": "58",
+    "recibo": "59",
     "fecha": "28/08/25",
     "year": 2025,
     "socio": "YAMILE LEONOR GONZALEZ RODRIGUEZ",
@@ -522,7 +522,7 @@ const movimientosData = [
   {
     "username": "ylgr1973",
     "cliente": "012",
-    "recibo": "57",
+    "recibo": "58",
     "fecha": "24/07/25",
     "year": 2025,
     "socio": "YAMILE LEONOR GONZALEZ RODRIGUEZ",
@@ -535,7 +535,7 @@ const movimientosData = [
   {
     "username": "jgb1975",
     "cliente": "009",
-    "recibo": "56",
+    "recibo": "57",
     "fecha": "18/07/25",
     "year": 2025,
     "socio": "CARROCERIAS JGB (ALEIDA YANIRA GONZALEZ)",
@@ -548,7 +548,7 @@ const movimientosData = [
   {
     "username": "ylgr1973",
     "cliente": "012",
-    "recibo": "55",
+    "recibo": "56",
     "fecha": "07/07/25",
     "year": 2025,
     "socio": "YAMILE LEONOR GONZALEZ RODRIGUEZ",
@@ -561,7 +561,7 @@ const movimientosData = [
   {
     "username": "jgb1975",
     "cliente": "009",
-    "recibo": "54",
+    "recibo": "55",
     "fecha": "13/06/25",
     "year": 2025,
     "socio": "CARROCERIAS JGB (ALEIDA YANIRA GONZALEZ)",
@@ -574,7 +574,7 @@ const movimientosData = [
   {
     "username": "",
     "cliente": "",
-    "recibo": "53",
+    "recibo": "54",
     "fecha": "11/07/25",
     "year": 2025,
     "socio": "ANGIE NATALIA RUIZ GUAVITA",
@@ -587,7 +587,7 @@ const movimientosData = [
   {
     "username": "vspg2008",
     "cliente": "006",
-    "recibo": "42",
+    "recibo": "43",
     "fecha": "08/03/25",
     "year": 2025,
     "socio": "VALERIA SOFIA PERALTA (MARTIN PERALTA)",
@@ -600,7 +600,7 @@ const movimientosData = [
   {
     "username": "vspg2008",
     "cliente": "006",
-    "recibo": "52",
+    "recibo": "53",
     "fecha": "16/05/25",
     "year": 2025,
     "socio": "VALERIA SOFIA PERALTA (MARTIN PERALTA)",
@@ -613,7 +613,7 @@ const movimientosData = [
   {
     "username": "srb2006",
     "cliente": "017",
-    "recibo": "51",
+    "recibo": "52",
     "fecha": "12/05/25",
     "year": 2025,
     "socio": "SEBASTIAN RODRIGUEZ BALLEN",
@@ -626,7 +626,7 @@ const movimientosData = [
   {
     "username": "",
     "cliente": "",
-    "recibo": "50",
+    "recibo": "51",
     "fecha": "02/05/25",
     "year": 2025,
     "socio": "ANGIE NATALIA RUIZ GUAVITA",
@@ -639,7 +639,7 @@ const movimientosData = [
   {
     "username": "ylgr1973",
     "cliente": "012",
-    "recibo": "49",
+    "recibo": "50",
     "fecha": "24/04/25",
     "year": 2025,
     "socio": "YAMILE LEONOR GONZALEZ RODRIGUEZ",
@@ -652,7 +652,7 @@ const movimientosData = [
   {
     "username": "ylgr1973",
     "cliente": "012",
-    "recibo": "48",
+    "recibo": "49",
     "fecha": "15/04/25",
     "year": 2025,
     "socio": "YAMILE LEONOR GONZALEZ RODRIGUEZ",
@@ -665,7 +665,7 @@ const movimientosData = [
   {
     "username": "srb2006",
     "cliente": "017",
-    "recibo": "47",
+    "recibo": "48",
     "fecha": "01/04/25",
     "year": 2025,
     "socio": "SEBASTIAN RODRIGUEZ BALLEN",
@@ -678,7 +678,7 @@ const movimientosData = [
   {
     "username": "bsgm1987",
     "cliente": "016",
-    "recibo": "45",
+    "recibo": "46",
     "fecha": "27/03/25",
     "year": 2025,
     "socio": "BRYAN SEBASTIAN GONZALEZ MEDINA",
@@ -691,7 +691,7 @@ const movimientosData = [
   {
     "username": "maeg2009",
     "cliente": "015",
-    "recibo": "46",
+    "recibo": "47",
     "fecha": "31/03/25",
     "year": 2025,
     "socio": "MIGUEL ANGEL ENCINAS GONZALEZ (JOSE ANTONIO ENCINAS)",
@@ -704,7 +704,7 @@ const movimientosData = [
   {
     "username": "jaen1971",
     "cliente": "005",
-    "recibo": "41",
+    "recibo": "42",
     "fecha": "06/03/25",
     "year": 2025,
     "socio": "JOSE ANTONIO ENCINAS",
@@ -715,9 +715,22 @@ const movimientosData = [
     "cambio": 117.0
   },
   {
+    "username": "",
+    "cliente": "",
+    "recibo": "45",
+    "fecha": "08/03/25",
+    "year": 2025,
+    "socio": "DAVID SANTIAGO GONZALEZ",
+    "cedula": "1000474798",
+    "cantidad": -176724.0,
+    "tipo": "COP",
+    "tasa": 4019.0,
+    "cambio": -43.97
+  },
+  {
     "username": "jfpg2006",
     "cliente": "001",
-    "recibo": "43",
+    "recibo": "44",
     "fecha": "08/03/25",
     "year": 2025,
     "socio": "JUAN FEDERICO PERALTA GONZALEZ",
@@ -1185,7 +1198,7 @@ const movimientosData = [
   {
     "username": "lmp1974",
     "cliente": "022",
-    "recibo": "93",
+    "recibo": "103",
     "fecha": "16/01/26",
     "year": 2026,
     "socio": "LAZARO MARTIN PERALTA",
@@ -1198,7 +1211,7 @@ const movimientosData = [
   {
     "username": "fmra1955",
     "cliente": "013",
-    "recibo": "92",
+    "recibo": "102",
     "fecha": "15/01/26",
     "year": 2026,
     "socio": "FLOR MARINA RODRIGUEZ AREVALO",
@@ -1211,7 +1224,7 @@ const movimientosData = [
   {
     "username": "lmp1974",
     "cliente": "022",
-    "recibo": "91",
+    "recibo": "101",
     "fecha": "07/01/26",
     "year": 2026,
     "socio": "LAZARO MARTIN PERALTA",
@@ -1224,7 +1237,7 @@ const movimientosData = [
   {
     "username": "lmp1974",
     "cliente": "022",
-    "recibo": "90",
+    "recibo": "100",
     "fecha": "05/01/26",
     "year": 2026,
     "socio": "LAZARO MARTIN PERALTA",
@@ -1237,7 +1250,7 @@ const movimientosData = [
   {
     "username": "MATRIS",
     "cliente": "A",
-    "recibo": "89",
+    "recibo": "99",
     "fecha": "01/01/26",
     "year": 2026,
     "socio": "CASTLE BLACK",
