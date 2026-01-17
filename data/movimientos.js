@@ -1183,6 +1183,19 @@ const movimientosData = [
     "cambio": 1258.0
   },
   {
+    "username": "lmp1974",
+    "cliente": "022",
+    "recibo": "93",
+    "fecha": "16/01/26",
+    "year": 2026,
+    "socio": "LAZARO MARTIN PERALTA",
+    "cedula": "324033",
+    "cantidad": 2000000.0,
+    "tipo": "COP",
+    "tasa": 3695.0,
+    "cambio": 541.34
+  },
+  {
     "username": "fmra1955",
     "cliente": "013",
     "recibo": "92",
