@@ -350,6 +350,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const crcmntHistL = document.getElementById("crcmntHistL");
   const utilidadRHistL = document.getElementById("utilidadRHistL");
   const utilidadHistL = document.getElementById("utilidadHistL");
+  const utilidadRHistLArrow = document.getElementById("utilidadRHistLArrow");
+  const utilidadHistLArrow = document.getElementById("utilidadHistLArrow");
   const fechaUnionHist = document.getElementById("fechaUnionHist");
   const logoutBtn = document.getElementById("logoutBtn");
   const menuBtn = document.getElementById("menuBtn");
@@ -390,6 +392,8 @@ let patrimonioCalc = 0;
 let aporteBaseL = null;
   let prevUtilLCopVal = null;
   let prevUtilTotalLCopVal = null;
+  let prevHistUtilLCopVal = null;
+  let prevHistUtilTotalLCopVal = null;
   let lastPatOsc = 0;
   let lastMonthCells = null;
   let reportYearText = "";
@@ -504,7 +508,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     reportYearText = isActualYear ? `${displayYear} (Actual)` : `${selectedYear}`;
 
     const toggleYearArrows = (show) => {
-      [utilidadArrow, utilidadTotalArrow, utilidadLArrow, utilidadTotalLArrow, utilidadRHistArrow, utilidadHistArrow].forEach((el) => {
+      [utilidadArrow, utilidadTotalArrow, utilidadLArrow, utilidadTotalLArrow].forEach((el) => {
         if (!el) return;
         el.style.display = show ? "" : "none";
       });
@@ -845,6 +849,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     }
     if (utilidadRHistArrow) utilidadRHistArrow.textContent = "";
     if (utilidadHistArrow) utilidadHistArrow.textContent = "";
+    if (utilidadRHistLArrow) utilidadRHistLArrow.textContent = "";
+    if (utilidadHistLArrow) utilidadHistLArrow.textContent = "";
     if (fechaUnionHist) fechaUnionHist.textContent = userData.fechaUnion || "";
 
     let prevRateValue = null;
@@ -1000,6 +1006,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       setTrendClass(utilidadHistL, utilTotalCopHist);
       setTrendClass(utilidadRHistL, utilRCopHist);
       setTrendClass(crcmntHistL, crcmntHistLCur);
+      if (Number.isFinite(utilRCopHist)) prevHistUtilLCopVal = utilRCopHist;
+      if (Number.isFinite(utilTotalCopHist)) prevHistUtilTotalLCopVal = utilTotalCopHist;
     }
 
     // Oscilar crecimiento USD ±0.50% y recalcular; para años pasados, solo histórico
@@ -1057,6 +1065,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             crcmntHistL.textContent = formatPercent(crcmntHistLCur);
             setTrendClass(crcmntHistL, crcmntHistLCur);
           }
+          setArrowIndicator(utilidadRHistLArrow, utilRCopHistTick, prevHistUtilLCopVal);
+          setArrowIndicator(utilidadHistLArrow, utilCopHistTick, prevHistUtilTotalLCopVal);
+          prevHistUtilLCopVal = utilRCopHistTick;
+          prevHistUtilTotalLCopVal = utilCopHistTick;
         }
         setArrowIndicator(utilidadRHistArrow, histUtilUsd, prevHistUtil);
         setArrowIndicator(utilidadHistArrow, histUtilUsd, prevHistUtilTot);
