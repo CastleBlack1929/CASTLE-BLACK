@@ -53,7 +53,7 @@ const setArrowIndicator = (el, nuevoValor, valorAnterior) => {
   if (!el) return;
   el.classList.remove("arrow-up", "arrow-down");
   if (!Number.isFinite(nuevoValor) || !Number.isFinite(valorAnterior)) {
-    el.textContent = "—";
+    el.textContent = "";
     return;
   }
   if (nuevoValor > valorAnterior) {
@@ -63,7 +63,7 @@ const setArrowIndicator = (el, nuevoValor, valorAnterior) => {
     el.textContent = "▼";
     el.classList.add("arrow-down");
   } else {
-    el.textContent = "—";
+    el.textContent = "";
   }
 };
 
@@ -330,7 +330,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const aporteL = document.getElementById("aporteL");
   const patrimonioL = document.getElementById("patrimonioL");
   const utilidadL = document.getElementById("utilidadL");
+  const utilidadLArrow = document.getElementById("utilidadLArrow");
   const utilidadTotalL = document.getElementById("utilidadTotalL");
+  const utilidadTotalLArrow = document.getElementById("utilidadTotalLArrow");
   const crcmntL = document.getElementById("crcmntL");
   const tablaMeses = document.getElementById("tablaMeses")?.querySelector("tbody");
   const tablaHonorarios = document.getElementById("tablaHonorarios")?.querySelector("tbody");
@@ -500,12 +502,13 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     reportYearText = isActualYear ? `${displayYear} (Actual)` : `${selectedYear}`;
 
     const toggleYearArrows = (show) => {
-      [utilidadArrow, utilidadTotalArrow, utilidadRHistArrow, utilidadHistArrow].forEach((el) => {
+      [utilidadArrow, utilidadTotalArrow, utilidadLArrow, utilidadTotalLArrow, utilidadRHistArrow, utilidadHistArrow].forEach((el) => {
         if (!el) return;
         el.style.display = show ? "" : "none";
       });
     };
     toggleYearArrows(isActualYear);
+    const currentMonthKey = isActualYear ? monthOrder[new Date().getMonth()] : null;
     selectedUserData = baseData;
     const totalAporteHistAll = computeTotalAportesAllYears(baseData, String(currentYearNumber));
     const totalPatrimonioHistAll = computeTotalPatrimonioAllYears(baseData, currentYearNumber);
@@ -822,8 +825,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     if (utilidadTotal) utilidadTotal.textContent = formatMoney(utilidadTotalUsd);
     setTrendClass(utilidad, utilidadUsd);
     setTrendClass(utilidadTotal, utilidadTotalUsd);
-    if (utilidadArrow) utilidadArrow.textContent = "—";
-    if (utilidadTotalArrow) utilidadTotalArrow.textContent = "—";
+    if (utilidadArrow) utilidadArrow.textContent = "";
+    if (utilidadTotalArrow) utilidadTotalArrow.textContent = "";
     crcmnt.textContent = formatPercent(crcmntBaseUsd);
     setTrendClass(crcmnt, crcmntBaseUsd);
 
@@ -838,8 +841,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       setTrendClass(utilidadHist, totalUtilHistAll);
       setTrendClass(crcmntHist, totalCrcmntHistAll);
     }
-    if (utilidadRHistArrow) utilidadRHistArrow.textContent = "—";
-    if (utilidadHistArrow) utilidadHistArrow.textContent = "—";
+    if (utilidadRHistArrow) utilidadRHistArrow.textContent = "";
+    if (utilidadHistArrow) utilidadHistArrow.textContent = "";
     if (fechaUnionHist) fechaUnionHist.textContent = userData.fechaUnion || "";
 
     let prevRateValue = null;
@@ -947,6 +950,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const utilidadTotalCop = usdUtilidad * rate;
       utilOsc = usdUtilidad; // mantener utilidad oscilada para próximos cálculos
 
+      const prevUtilLCop = toNumber(utilidadL?.textContent);
+      const prevUtilTotalLCop = toNumber(utilidadTotalL?.textContent);
       aporteL.textContent = formatMoneyCop(aporteCop);
       patrimonioL.textContent = formatMoneyCop(patrimonioCop);
       utilidadL.textContent = formatMoneyCop(utilidadCop);
@@ -957,11 +962,21 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       setTrendClass(utilidadL, utilidadCop);
       setTrendClass(utilidadTotalL, utilidadTotalCop);
       setTrendClass(crcmntL, crcmntLCur);
+      if (isActualYear) {
+        setArrowIndicator(utilidadLArrow, utilidadCop, prevUtilLCop);
+        setArrowIndicator(utilidadTotalLArrow, utilidadTotalCop, prevUtilTotalLCop);
+      }
       updateRateDisplay(rate, { updateArrow: false });
 
     };
 
     applyPesos(currentRate);
+    if (isActualYear) {
+      const utilCopInit = toNumber(utilidadL?.textContent);
+      const utilTotalCopInit = toNumber(utilidadTotalL?.textContent);
+      setArrowIndicator(utilidadLArrow, utilCopInit, utilCopInit);
+      setArrowIndicator(utilidadTotalLArrow, utilTotalCopInit, utilTotalCopInit);
+    }
 
     // Override histórico en COP con la tasa más reciente (siempre la misma para todos los años)
     const getHistoricalRate = () => {
@@ -1074,9 +1089,9 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           utilCalcBase = nuevaUtil;
           utilOsc = nuevaUtil;
 
-          if (patrimonio) patrimonio.textContent = formatNumber(nuevoPat);
-          utilidad.textContent = formatNumber(nuevaUtil);
-          if (utilidadTotal) utilidadTotal.textContent = formatNumber(nuevaUtil);
+          if (patrimonio) patrimonio.textContent = formatMoney(nuevoPat);
+          utilidad.textContent = formatMoney(nuevaUtil);
+          if (utilidadTotal) utilidadTotal.textContent = formatMoney(nuevaUtil);
           setTrendClass(utilidad, nuevaUtil);
           setTrendClass(utilidadTotal, nuevaUtil);
           setArrowIndicator(utilidadArrow, nuevaUtil, prevUtil);
@@ -1085,17 +1100,19 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           setTrendClass(crcmnt, nuevoCrcmnt);
           if (typeof crcmntArrow !== "undefined" && crcmntArrow) {
             crcmntArrow.textContent = Number.isFinite(prevCrcmnt)
-              ? (nuevoCrcmnt > prevCrcmnt ? "▲" : (nuevoCrcmnt < prevCrcmnt ? "▼" : "—"))
-              : "—";
+              ? (nuevoCrcmnt > prevCrcmnt ? "▲" : (nuevoCrcmnt < prevCrcmnt ? "▼" : ""))
+              : "";
           }
 
-          const janRow = monthRowMap["enero"];
-          if (janRow) {
-            janRow.patrCell.textContent = `$ ${formatNumber(nuevoPat)}`;
-            janRow.gpCell.textContent = `$ ${formatNumber(nuevaUtil)}`;
-            janRow.margenCell.textContent = formatPercent(nuevoCrcmnt);
-            janRow.margenCell.className = trendClass(nuevoCrcmnt);
-            janRow.gpCell.className = trendClass(nuevaUtil);
+          const currentRow = currentMonthKey ? monthRowMap[currentMonthKey] : null;
+          if (currentRow) {
+            const prevGp = toNumber(currentRow.gpCell?.textContent);
+            currentRow.patrCell.textContent = `$ ${formatNumber(nuevoPat)}`;
+            currentRow.gpCell.textContent = `$ ${formatNumber(nuevaUtil)}`;
+            currentRow.margenCell.textContent = formatPercent(nuevoCrcmnt);
+            currentRow.margenCell.className = trendClass(nuevoCrcmnt);
+            currentRow.gpCell.className = trendClass(nuevaUtil);
+            setArrowIndicator(currentRow.gpArrow, nuevaUtil, prevGp);
           }
 
           const rateToUse = Number.isFinite(currentRate) ? currentRate : baseRate;
@@ -1171,9 +1188,9 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           utilCalcBase = nuevaUtil;
           utilOsc = nuevaUtil;
 
-          if (patrimonio) patrimonio.textContent = formatNumber(nuevoPat);
-          utilidad.textContent = formatNumber(nuevaUtil);
-          if (utilidadTotal) utilidadTotal.textContent = formatNumber(nuevaUtil);
+          if (patrimonio) patrimonio.textContent = formatMoney(nuevoPat);
+          utilidad.textContent = formatMoney(nuevaUtil);
+          if (utilidadTotal) utilidadTotal.textContent = formatMoney(nuevaUtil);
           setTrendClass(utilidad, nuevaUtil);
           setTrendClass(utilidadTotal, nuevaUtil);
           setArrowIndicator(utilidadArrow, nuevaUtil, prevUtil);
@@ -1182,8 +1199,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           setTrendClass(crcmnt, nuevoCrcmnt);
           if (typeof crcmntArrow !== "undefined" && crcmntArrow) {
             crcmntArrow.textContent = Number.isFinite(prevCrcmnt)
-              ? (nuevoCrcmnt > prevCrcmnt ? "▲" : (nuevoCrcmnt < prevCrcmnt ? "▼" : "—"))
-              : "—";
+              ? (nuevoCrcmnt > prevCrcmnt ? "▲" : (nuevoCrcmnt < prevCrcmnt ? "▼" : ""))
+              : "";
           }
 
           const janRow = monthRowMap["enero"];
@@ -1220,13 +1237,28 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const cPatr = document.createElement("td");
           const isCurrentYear2026 = isActualYear && Number(displayYear) === 2026;
           const patrToShow = isCurrentYear2026 ? patrimonioCalc : patrVal;
-          cPatr.textContent = `$ ${formatNumber(patrToShow)}`;
+          let patrValueEl = cPatr;
+          let patrArrowEl = null;
           const cMarg = document.createElement("td");
           cMarg.className = trendClass(margen);
           cMarg.textContent = formatPercent(margen);
           const cGp = document.createElement("td");
           cGp.className = trendClass(g_p);
-          cGp.textContent = `$ ${formatNumber(g_p)}`;
+          let gpValueEl = cGp;
+          let gpArrowEl = null;
+
+          if (isActualYear && currentMonthKey && mes === currentMonthKey) {
+            const gpSpan = document.createElement("span");
+            const gpArrow = document.createElement("span");
+            gpArrow.className = "arrow-indicator";
+            cGp.appendChild(gpSpan);
+            cGp.appendChild(gpArrow);
+            gpValueEl = gpSpan;
+            gpArrowEl = gpArrow;
+          }
+
+          patrValueEl.textContent = `$ ${formatNumber(patrToShow)}`;
+          gpValueEl.textContent = `$ ${formatNumber(g_p)}`;
 
           row.appendChild(cMes);
           row.appendChild(cAporte);
@@ -1234,7 +1266,13 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           row.appendChild(cMarg);
           row.appendChild(cGp);
 
-          monthRowMap[mes] = { patrCell: cPatr, gpCell: cGp, margenCell: cMarg };
+          monthRowMap[mes] = {
+            patrCell: patrValueEl,
+            gpCell: gpValueEl,
+            margenCell: cMarg,
+            patrArrow: patrArrowEl,
+            gpArrow: gpArrowEl
+          };
 
           tablaMeses.appendChild(row);
         });
@@ -2098,7 +2136,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           arrowEl.classList.add("arrow-down");
         }
       } else if (arrowEl) {
-        arrowEl.textContent = "—";
+        arrowEl.textContent = "";
       }
     }
 
