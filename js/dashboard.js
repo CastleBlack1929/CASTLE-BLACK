@@ -388,6 +388,8 @@ let utilCalcBase = 0;
 let utilOsc = 0;
 let patrimonioCalc = 0;
 let aporteBaseL = null;
+  let prevUtilLCopVal = null;
+  let prevUtilTotalLCopVal = null;
   let lastPatOsc = 0;
   let lastMonthCells = null;
   let reportYearText = "";
@@ -950,8 +952,6 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const utilidadTotalCop = usdUtilidad * rate;
       utilOsc = usdUtilidad; // mantener utilidad oscilada para próximos cálculos
 
-      const prevUtilLCop = toNumber(utilidadL?.textContent);
-      const prevUtilTotalLCop = toNumber(utilidadTotalL?.textContent);
       aporteL.textContent = formatMoneyCop(aporteCop);
       patrimonioL.textContent = formatMoneyCop(patrimonioCop);
       utilidadL.textContent = formatMoneyCop(utilidadCop);
@@ -963,20 +963,16 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       setTrendClass(utilidadTotalL, utilidadTotalCop);
       setTrendClass(crcmntL, crcmntLCur);
       if (isActualYear) {
-        setArrowIndicator(utilidadLArrow, utilidadCop, prevUtilLCop);
-        setArrowIndicator(utilidadTotalLArrow, utilidadTotalCop, prevUtilTotalLCop);
+        setArrowIndicator(utilidadLArrow, utilidadCop, prevUtilLCopVal);
+        setArrowIndicator(utilidadTotalLArrow, utilidadTotalCop, prevUtilTotalLCopVal);
+        prevUtilLCopVal = utilidadCop;
+        prevUtilTotalLCopVal = utilidadTotalCop;
       }
       updateRateDisplay(rate, { updateArrow: false });
 
     };
 
     applyPesos(currentRate);
-    if (isActualYear) {
-      const utilCopInit = toNumber(utilidadL?.textContent);
-      const utilTotalCopInit = toNumber(utilidadTotalL?.textContent);
-      setArrowIndicator(utilidadLArrow, utilCopInit, utilCopInit);
-      setArrowIndicator(utilidadTotalLArrow, utilTotalCopInit, utilTotalCopInit);
-    }
 
     // Override histórico en COP con la tasa más reciente (siempre la misma para todos los años)
     const getHistoricalRate = () => {
