@@ -49,6 +49,24 @@ const setTrendClass = (el, value) => {
   else if (value < 0) el.classList.add("value-down");
 };
 
+const setArrowIndicator = (el, nuevoValor, valorAnterior) => {
+  if (!el) return;
+  el.classList.remove("arrow-up", "arrow-down");
+  if (!Number.isFinite(nuevoValor) || !Number.isFinite(valorAnterior)) {
+    el.textContent = "—";
+    return;
+  }
+  if (nuevoValor > valorAnterior) {
+    el.textContent = "▲";
+    el.classList.add("arrow-up");
+  } else if (nuevoValor < valorAnterior) {
+    el.textContent = "▼";
+    el.classList.add("arrow-down");
+  } else {
+    el.textContent = "—";
+  }
+};
+
 const trendClass = (value) => {
   const n = toNumber(value);
   if (!Number.isFinite(n)) return "";
@@ -340,6 +358,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   const graficoUtilidades = document.getElementById("graficoUtilidades");
   const tablaMovimientos = document.getElementById("tabla-movimientos");
   const rateValue = document.getElementById("rateValue");
+  let rateArrow = document.getElementById("rateArrow");
+  const ensureRateArrow = () => {
+    if (!rateValue) return null;
+    if (rateArrow) return rateArrow;
+    const parent = rateValue.parentElement;
+    if (!parent) return null;
+    rateArrow = document.createElement("span");
+    rateArrow.id = "rateArrow";
+    rateArrow.className = "arrow-indicator";
+    parent.appendChild(rateArrow);
+    return rateArrow;
+  };
+  ensureRateArrow();
   const rateTime = document.getElementById("rateTime");
   const yearSelect = document.getElementById("yearSelect");
   const downloadReportBtn = document.getElementById("downloadReportBtn");
@@ -467,6 +498,14 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const yearLabel = selectedYear !== "actual" ? selectedYear : currentYearNumber;
     const displayYear = yearLabel;
     reportYearText = isActualYear ? `${displayYear} (Actual)` : `${selectedYear}`;
+
+    const toggleYearArrows = (show) => {
+      [utilidadArrow, utilidadTotalArrow, utilidadRHistArrow, utilidadHistArrow].forEach((el) => {
+        if (!el) return;
+        el.style.display = show ? "" : "none";
+      });
+    };
+    toggleYearArrows(isActualYear);
     selectedUserData = baseData;
     const totalAporteHistAll = computeTotalAportesAllYears(baseData, String(currentYearNumber));
     const totalPatrimonioHistAll = computeTotalPatrimonioAllYears(baseData, currentYearNumber);
@@ -803,10 +842,24 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     if (utilidadHistArrow) utilidadHistArrow.textContent = "—";
     if (fechaUnionHist) fechaUnionHist.textContent = userData.fechaUnion || "";
 
-    const updateRateDisplay = (rate) => {
+    let prevRateValue = null;
+    const updateRateDisplay = (rate, { updateArrow = true } = {}) => {
       if (!Number.isFinite(rate)) return;
+      const prevRate = prevRateValue;
+      prevRateValue = rate;
       if (rateValue) {
         rateValue.textContent = formatNumber(rate, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+      if (updateArrow) {
+        rateArrow = ensureRateArrow() || rateArrow;
+        if (rateArrow) {
+          if (String(displayYear) === "2026") {
+            setArrowIndicator(rateArrow, rate, prevRate);
+          } else {
+            rateArrow.textContent = "";
+            rateArrow.classList.remove("arrow-up", "arrow-down");
+          }
+        }
       }
       if (rateTime) {
         if (isActualYear) {
@@ -904,7 +957,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       setTrendClass(utilidadL, utilidadCop);
       setTrendClass(utilidadTotalL, utilidadTotalCop);
       setTrendClass(crcmntL, crcmntLCur);
-      updateRateDisplay(rate);
+      updateRateDisplay(rate, { updateArrow: false });
 
     };
 
@@ -994,16 +1047,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             setTrendClass(crcmntHistL, crcmntHistLCur);
           }
         }
-        if (utilidadRHistArrow) {
-          utilidadRHistArrow.textContent = Number.isFinite(prevHistUtil)
-            ? (histUtilUsd > prevHistUtil ? "▲" : (histUtilUsd < prevHistUtil ? "▼" : "—"))
-            : "—";
-        }
-        if (utilidadHistArrow) {
-          utilidadHistArrow.textContent = Number.isFinite(prevHistUtilTot)
-            ? (histUtilUsd > prevHistUtilTot ? "▲" : (histUtilUsd < prevHistUtilTot ? "▼" : "—"))
-            : "—";
-        }
+        setArrowIndicator(utilidadRHistArrow, histUtilUsd, prevHistUtil);
+        setArrowIndicator(utilidadHistArrow, histUtilUsd, prevHistUtilTot);
       };
 
       // Actual (2026): oscilar tasa y resumen cada 3s, +/-0.05% tasa, +/-1% crecimiento
@@ -1034,16 +1079,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           if (utilidadTotal) utilidadTotal.textContent = formatNumber(nuevaUtil);
           setTrendClass(utilidad, nuevaUtil);
           setTrendClass(utilidadTotal, nuevaUtil);
-          if (utilidadArrow) {
-            utilidadArrow.textContent = Number.isFinite(prevUtil)
-              ? (nuevaUtil > prevUtil ? "▲" : (nuevaUtil < prevUtil ? "▼" : "—"))
-              : "—";
-          }
-          if (utilidadTotalArrow) {
-            utilidadTotalArrow.textContent = Number.isFinite(prevUtilTot)
-              ? (nuevaUtil > prevUtilTot ? "▲" : (nuevaUtil < prevUtilTot ? "▼" : "—"))
-              : "—";
-          }
+          setArrowIndicator(utilidadArrow, nuevaUtil, prevUtil);
+          setArrowIndicator(utilidadTotalArrow, nuevaUtil, prevUtilTot);
           crcmnt.textContent = formatPercent(nuevoCrcmnt);
           setTrendClass(crcmnt, nuevoCrcmnt);
           if (typeof crcmntArrow !== "undefined" && crcmntArrow) {
@@ -1139,16 +1176,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           if (utilidadTotal) utilidadTotal.textContent = formatNumber(nuevaUtil);
           setTrendClass(utilidad, nuevaUtil);
           setTrendClass(utilidadTotal, nuevaUtil);
-          if (utilidadArrow) {
-            utilidadArrow.textContent = Number.isFinite(prevUtil)
-              ? (nuevaUtil > prevUtil ? "▲" : (nuevaUtil < prevUtil ? "▼" : "—"))
-              : "—";
-          }
-          if (utilidadTotalArrow) {
-            utilidadTotalArrow.textContent = Number.isFinite(prevUtilTot)
-              ? (nuevaUtil > prevUtilTot ? "▲" : (nuevaUtil < prevUtilTot ? "▼" : "—"))
-              : "—";
-          }
+          setArrowIndicator(utilidadArrow, nuevaUtil, prevUtil);
+          setArrowIndicator(utilidadTotalArrow, nuevaUtil, prevUtilTot);
           crcmnt.textContent = formatPercent(nuevoCrcmnt);
           setTrendClass(crcmnt, nuevoCrcmnt);
           if (typeof crcmntArrow !== "undefined" && crcmntArrow) {
