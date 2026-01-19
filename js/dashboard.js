@@ -1010,7 +1010,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       if (isOscYear2026) {
         const baseAporteOsc = totalAportesActual || patrimonioCalc || 1;
         setInterval(() => {
-          const rateFactor = 1 + ((Math.random() - 0.5) * 0.001); // +/-0.05%
+          const rateFactor = 1 + ((Math.random() - 0.5) * 0.0005); // +/-0.025%
           currentRate = (currentRate || baseRate || DEFAULT_RATE_BY_YEAR.actual) * rateFactor;
           updateRateDisplay(currentRate);
 

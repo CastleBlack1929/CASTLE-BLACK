@@ -178,7 +178,7 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: fit-content;
+  width: 100%;
 }
 
 .resumen h3 {
@@ -187,7 +187,7 @@ h2 {
 }
 
 .tabla-resumen {
-  width: auto;
+  width: 100%;
   max-width: 100%;
   margin: 0 auto;
   border-collapse: collapse;
@@ -199,6 +199,19 @@ h2 {
   border: 1px solid var(--line);
   padding: 10px;
   text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.tabla-resumen th:first-child,
+.tabla-resumen td:first-child {
+  width: 40%;
+}
+
+.tabla-resumen th:nth-child(2),
+.tabla-resumen td:nth-child(2),
+.tabla-resumen th:nth-child(3),
+.tabla-resumen td:nth-child(3) {
+  width: 30%;
 }
 
 .tabla-resumen thead th {
