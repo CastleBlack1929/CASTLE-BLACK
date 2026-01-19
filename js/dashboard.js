@@ -390,6 +390,7 @@ let utilCalcBase = 0;
 let utilOsc = 0;
 let patrimonioCalc = 0;
 let aporteBaseL = null;
+  let histRateLive = null;
   let prevUtilLCopVal = null;
   let prevUtilTotalLCopVal = null;
   let prevHistUtilLCopVal = null;
@@ -716,6 +717,9 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const totalCrcmntHistAll = totalAporteHistMovAll !== 0
       ? (totalUtilHistAll / Math.abs(totalAporteHistMovAll)) * 100
       : 0;
+    const baseAporteHist = totalAporteHistMovAll || 0;
+    const basePatrHist = totalPatrimonioHistAll || baseAporteHist || 1;
+    const baseCrcmntHist = baseAporteHist ? totalCrcmntHistAll : 0;
 
     const safeTasaFallback = toNumber(userData.tasaBase) || toNumber(prevYearData?.tasaBase) || 1;
     const sumMovUsdByYear = (year) => {
@@ -894,6 +898,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     if (isActualYear) {
       baseRate = DEFAULT_RATE_BY_YEAR.actual;
       currentRate = baseRate;
+      histRateLive = currentRate;
       updateRateDisplay(currentRate);
       applyPesos(currentRate);
     } else {
@@ -907,6 +912,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       baseRate = Number.isFinite(rateBaseRaw) && rateBaseRaw > 0 ? rateBaseRaw : fallbackRate;
       if (userData.tasaBase) baseRate = toNumber(userData.tasaBase) || baseRate;
       currentRate = baseRate;
+      histRateLive = DEFAULT_RATE_BY_YEAR.actual || currentRate;
       if (rateValue) {
         rateValue.textContent = formatNumber(baseRate, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       }
@@ -982,6 +988,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
     // Override histórico en COP con la tasa más reciente (siempre la misma para todos los años)
     const getHistoricalRate = () => {
+      if (Number.isFinite(histRateLive)) return histRateLive;
       if (isActualYear && Number.isFinite(currentRate)) return currentRate;
       return DEFAULT_RATE_BY_YEAR.actual || 3710.5;
     };
@@ -1016,7 +1023,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       if (!oscilarResumen) return;
       const isOscYear2026 = selectedYear === "actual" || String(displayYear) === "2026";
       const updateHistOscillation = (nuevoPat, rateToUse) => {
-        const histRate = getHistoricalRate();
+        const histRate = Number.isFinite(rateToUse) ? rateToUse : getHistoricalRate();
         const prevHistUtil = toNumber(utilidadRHist?.textContent);
         const prevHistUtilTot = toNumber(utilidadHist?.textContent);
 
@@ -1080,6 +1087,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         setInterval(() => {
           const rateFactor = 1 + ((Math.random() - 0.5) * 0.0005); // +/-0.025%
           currentRate = (currentRate || baseRate || DEFAULT_RATE_BY_YEAR.actual) * rateFactor;
+          histRateLive = currentRate;
           updateRateDisplay(currentRate);
 
           const crFactor = 1 + ((Math.random() - 0.5) * 0.02); // +/-1%
@@ -1156,24 +1164,25 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             chartUtilidades.update();
           }
 
-          updateHistOscillation(nuevoPat, rateToUse);
+          const histFactor = baseAporteHist ? crFactor : (1 + ((Math.random() - 0.5) * 0.02));
+          const histPatr = baseAporteHist
+            ? baseAporteHist * (1 + (baseCrcmntHist * histFactor) / 100)
+            : basePatrHist * histFactor;
+          updateHistOscillation(histPatr, histRateLive);
         }, 3000);
       }
 
       // Histórico total: oscilar siempre en temporalidades pasadas
       if (!isOscYear2026) {
-        const baseAporteHist = totalAporteHistMovAll || 0;
-        const basePatrHist = totalPatrimonioHistAll || baseAporteHist || 1;
-        const baseCrcmntHist = baseAporteHist
-          ? ((basePatrHist - baseAporteHist) / Math.abs(baseAporteHist)) * 100
-          : 0;
         setInterval(() => {
+          const rateFactor = 1 + ((Math.random() - 0.5) * 0.0005); // +/-0.025%
+          histRateLive = (histRateLive || DEFAULT_RATE_BY_YEAR.actual || 1) * rateFactor;
           const crFactor = 1 + ((Math.random() - 0.5) * 0.02); // +/-1%
+          const histFactor = baseAporteHist ? crFactor : (1 + ((Math.random() - 0.5) * 0.02));
           const nuevoPat = baseAporteHist
-            ? baseAporteHist * (1 + (baseCrcmntHist * crFactor) / 100)
-            : basePatrHist * (1 + ((Math.random() - 0.5) * 0.02));
-          const rateToUse = Number.isFinite(currentRate) ? currentRate : baseRate;
-          updateHistOscillation(nuevoPat, rateToUse);
+            ? baseAporteHist * (1 + (baseCrcmntHist * histFactor) / 100)
+            : basePatrHist * histFactor;
+          updateHistOscillation(nuevoPat, histRateLive);
         }, 3000);
       }
 
