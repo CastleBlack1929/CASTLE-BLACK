@@ -577,8 +577,9 @@ table tr:hover {
 }
 
 .arrow-indicator {
-  margin-left: 6px;
-  font-size: 12px;
+  margin-left: 4px;
+  font-size: 10px;
+  line-height: 1;
 }
 
 .arrow-up {
