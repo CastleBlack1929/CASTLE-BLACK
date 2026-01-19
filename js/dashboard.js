@@ -1159,8 +1159,16 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
               cumulative.push(next);
               return next;
             }, 0);
+            const utilColors = updated.map(v => (v >= 0 ? "rgba(34, 197, 94, 0.6)" : "rgba(239, 68, 68, 0.6)"));
+            const utilBorders = updated.map(v => (v >= 0 ? "#22c55e" : "#ef4444"));
+            const acumColors = cumulative.map(v => (v >= 0 ? "rgba(15, 81, 50, 0.6)" : "rgba(127, 29, 29, 0.75)"));
+            const acumBorders = cumulative.map(v => (v >= 0 ? "#0f5132" : "#7f1d1d"));
             chartUtilidades.data.datasets[0].data = updated;
+            chartUtilidades.data.datasets[0].backgroundColor = utilColors;
+            chartUtilidades.data.datasets[0].borderColor = utilBorders;
             chartUtilidades.data.datasets[1].data = cumulative;
+            chartUtilidades.data.datasets[1].backgroundColor = acumColors;
+            chartUtilidades.data.datasets[1].borderColor = acumBorders;
             chartUtilidades.update();
           }
 
@@ -1503,8 +1511,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             {
               label: "Acumulada",
               data: utilidadAcumulada,
-              backgroundColor: "rgba(15, 81, 50, 0.6)",
-              borderColor: "#0f5132",
+              backgroundColor: utilidadAcumulada.map(v => (v >= 0 ? "rgba(15, 81, 50, 0.6)" : "rgba(127, 29, 29, 0.75)")),
+              borderColor: utilidadAcumulada.map(v => (v >= 0 ? "#0f5132" : "#7f1d1d")),
               borderWidth: 1
             }
           ]
