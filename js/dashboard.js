@@ -889,9 +889,9 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
     // Datos en COP (cálculo dinámico)
     const DEFAULT_RATE_BY_YEAR = {
-      actual: 3690.0, // tasa vigente 2026
+      actual: 3610.0, // tasa vigente 2026
       "2025": 3773.6,
-      "2026": 3690.0,
+      "2026": 3610.0,
       "2024": 4373.5
     };
 
