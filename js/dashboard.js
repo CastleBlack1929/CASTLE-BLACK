@@ -408,7 +408,10 @@ let logoDataUrl = null;
 let histBase = null;
 let chartPatrimonio = null;
 let chartUtilidades = null;
-let baseUtilidadesData = null;
+  let baseUtilidadesData = null;
+  let resizeChartsTimer = null;
+  let chartsResizeObserver = null;
+  let layoutResizeObserver = null;
   const monthRowMap = {};
   const USE_AUTO_PORTFOLIO = false;
   const ENABLE_OSCILLATION = true;
@@ -889,9 +892,9 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
     // Datos en COP (cálculo dinámico)
     const DEFAULT_RATE_BY_YEAR = {
-      actual: 3610.0, // tasa vigente 2026
+      actual: 3636.5, // tasa vigente 2026
       "2025": 3773.6,
-      "2026": 3610.0,
+      "2026": 3636.5,
       "2024": 4373.5
     };
 
@@ -1525,6 +1528,74 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           }
         }
       });
+
+      const wideLayoutMq = window.matchMedia("(min-width: 950px)");
+      const leftColumn = document.querySelector(".dashboard-left");
+      const rightColumn = document.querySelector(".dashboard-right");
+      const reportesPanel = document.querySelector(".reportes");
+      const graficosPanel = document.querySelector(".graficos-panel");
+      const syncGraficoHeight = () => {
+        if (!graficosPanel || !reportesPanel || !leftColumn || !rightColumn) return;
+
+        const setMaintain = (value) => {
+          if (chartPatrimonio) chartPatrimonio.options.maintainAspectRatio = value;
+          if (chartUtilidades) chartUtilidades.options.maintainAspectRatio = value;
+        };
+
+        if (!wideLayoutMq.matches) {
+          graficosPanel.style.height = "";
+          setMaintain(true);
+          return;
+        }
+
+        const leftHeight = leftColumn.getBoundingClientRect().height;
+        const reportesHeight = reportesPanel.getBoundingClientRect().height;
+        const gap = (() => {
+          const style = window.getComputedStyle(rightColumn);
+          const raw = style.rowGap || style.gap;
+          const parsed = parseFloat(raw);
+          return Number.isFinite(parsed) ? parsed : 0;
+        })();
+        const target = Math.max(0, leftHeight - reportesHeight - gap);
+        graficosPanel.style.height = target > 0 ? `${target}px` : "";
+        setMaintain(false);
+      };
+
+      const resizeCharts = () => {
+        if (chartPatrimonio) chartPatrimonio.resize();
+        if (chartUtilidades) chartUtilidades.resize();
+      };
+      const scheduleResize = () => {
+        if (resizeChartsTimer) clearTimeout(resizeChartsTimer);
+        resizeChartsTimer = setTimeout(() => {
+          requestAnimationFrame(() => {
+            syncGraficoHeight();
+            resizeCharts();
+            requestAnimationFrame(resizeCharts);
+          });
+        }, 80);
+      };
+      scheduleResize();
+      window.addEventListener("resize", scheduleResize);
+      if (typeof ResizeObserver !== "undefined") {
+        if (chartsResizeObserver) chartsResizeObserver.disconnect();
+        if (layoutResizeObserver) layoutResizeObserver.disconnect();
+        chartsResizeObserver = new ResizeObserver(scheduleResize);
+        layoutResizeObserver = new ResizeObserver(scheduleResize);
+        const targets = [
+          graficoPatrimonio?.parentElement,
+          graficoUtilidades?.parentElement,
+          graficoPatrimonio,
+          graficoUtilidades
+        ].filter(Boolean);
+        targets.forEach((el) => chartsResizeObserver.observe(el));
+        const layoutTargets = [leftColumn, rightColumn, reportesPanel, graficosPanel].filter(Boolean);
+        layoutTargets.forEach((el) => layoutResizeObserver.observe(el));
+      } else if (wideLayoutMq?.addEventListener || wideLayoutMq?.addListener) {
+        const onWideChange = () => scheduleResize();
+        if (wideLayoutMq.addEventListener) wideLayoutMq.addEventListener("change", onWideChange);
+        else wideLayoutMq.addListener(onWideChange);
+      }
     }
 
     // Movimientos

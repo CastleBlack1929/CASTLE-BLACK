@@ -66,8 +66,10 @@
 
   <!-- Contenido principal -->
   <main>
-    <!-- Datos principales comparativos -->
-    <section class="resumen">
+    <div class="dashboard-columns">
+      <div class="dashboard-left">
+        <!-- Datos principales comparativos -->
+        <section class="resumen">
       <h3>Estado de cuenta</h3>
       <p class="tabla-tip">Aquí ves tu aporte, patrimonio, crecimiento y utilidades en USD y COP con tendencia en vivo; este resumen aplica desde el 01/01/2025 y años anteriores se consultan en la sección histórica.</p>
       <table class="tabla-resumen">
@@ -106,17 +108,89 @@
           </tr>
         </tbody>
       </table>
-    </section>
+        </section>
 
-    <!-- Cotización en vivo -->
-    <div class="rate-box">
-      <p class="rate-title">COP por USD</p>
-      <p class="rate-value"><span id="rateValue"></span><span id="rateArrow" class="arrow-indicator"></span></p>
-      <p class="rate-time">Actualizado: <span id="rateTime"></span></p>
-    </div>
+        <!-- Cotización en vivo -->
+        <div class="rate-box">
+          <p class="rate-title">COP por USD</p>
+          <p class="rate-value"><span id="rateValue"></span><span id="rateArrow" class="arrow-indicator"></span></p>
+          <p class="rate-time">Actualizado: <span id="rateTime"></span></p>
+        </div>
 
-    <!-- Reportes -->
-    <section class="reportes">
+        <!-- Honorarios -->
+        <section class="honorarios">
+          <h3>Honorarios a Castle Black</h3>
+          <p class="honorarios-desc">
+            Cálculo trimestral automático sobre utilidades generadas. La comisión varía según el tramo de utilidad del trimestre.
+          </p>
+          <div class="honorarios-corte" aria-label="Corte de honorarios">
+            <strong>Corte aplicado:</strong>
+            <span id="corteHonorariosText">ENE-ABR-JUL-OCT</span>
+          </div>
+          <table id="tablaHonorarios">
+            <thead>
+              <tr>
+                <th>Trimestre</th>
+                <th>Tarifa</th>
+                <th>Comisión</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <p class="honorarios-total">Total anual honorarios: <span id="honorariosTotal"></span></p>
+        </section>
+
+        <!-- Estado de cuenta total (histórico) -->
+        <section class="resumen resumen-historico">
+          <h3>Estado de Cuenta Total</h3>
+          <p class="resumen-desc">
+            Como consecuencia de los aportes y movimientos realizados durante el tiempo que ha mantenido su relación con nosotros, a continuación podrá observar el margen de utilidad obtenido desde el momento en que se unió al portafolio. Este análisis refleja el desempeño acumulado histórico de su inversión y el crecimiento real de su capital tras considerar utilidades, retiros y comisiones.
+          </p>
+          <p class="resumen-desc tip-historico">Nota: El tipo de cambio en esta sección se muestra en vivo para reflejar el valor más reciente.</p>
+          <p class="resumen-fecha">Fecha de unión: <span id="fechaUnionHist"></span></p>
+          <table class="tabla-resumen">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Dólares (USD)</th>
+                <th>Pesos (COP)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>Aporte</th>
+                <td id="aporteHist"></td>
+                <td id="aporteHistL"></td>
+              </tr>
+              <tr>
+                <th>Patrimonio</th>
+                <td id="patrimonioHist"></td>
+                <td id="patrimonioHistL"></td>
+              </tr>
+              <tr>
+                <th>Crecimiento</th>
+                <td id="crcmntHist"></td>
+                <td id="crcmntHistL"></td>
+              </tr>
+              <tr>
+                <th>Utilidad R</th>
+                <td><span id="utilidadRHist"></span><span id="utilidadRHistArrow" class="arrow-indicator"></span></td>
+                <td><span id="utilidadRHistL"></span><span id="utilidadRHistLArrow" class="arrow-indicator"></span></td>
+              </tr>
+              <tr>
+                <th>Utilidad</th>
+                <td><span id="utilidadHist"></span><span id="utilidadHistArrow" class="arrow-indicator"></span></td>
+                <td><span id="utilidadHistL"></span><span id="utilidadHistLArrow" class="arrow-indicator"></span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+
+      <div class="dashboard-right">
+        <!-- Reportes -->
+        <section class="reportes">
       <h3>Reporte Mensual</h3>
       <p class="tabla-tip">Cada fila muestra lo que aportaste, el patrimonio al cierre del mes y la ganancia/margen mensual.</p>
       <table id="tablaMeses">
@@ -132,89 +206,24 @@
         <tbody></tbody>
       </table>
 
-      <div class="graficos">
-        <div class="grafico">
-          <h4>Patrimonio</h4>
-          <p class="tabla-tip">Línea verde: evolución de tu patrimonio mes a mes.</p>
-          <canvas id="graficoPatrimonio"></canvas>
-        </div>
-        <div class="grafico">
-          <h4>Utilidad</h4>
-          <p class="tabla-tip">Barras: utilidad de cada mes y su acumulado.</p>
-          <canvas id="graficoUtilidades"></canvas>
-        </div>
-      </div>
-    </section>
+        </section>
 
-    <!-- Honorarios -->
-    <section class="honorarios">
-      <h3>Honorarios a Castle Black</h3>
-      <p class="honorarios-desc">
-        Cálculo trimestral automático sobre utilidades generadas. La comisión varía según el tramo de utilidad del trimestre.
-      </p>
-      <div class="honorarios-corte" aria-label="Corte de honorarios">
-        <strong>Corte aplicado:</strong>
-        <span id="corteHonorariosText">ENE-ABR-JUL-OCT</span>
+        <section class="graficos-panel">
+          <div class="graficos">
+            <div class="grafico">
+              <h4>Patrimonio</h4>
+              <p class="tabla-tip">Línea verde: evolución de tu patrimonio mes a mes.</p>
+              <canvas id="graficoPatrimonio"></canvas>
+            </div>
+            <div class="grafico">
+              <h4>Utilidad</h4>
+              <p class="tabla-tip">Barras: utilidad de cada mes y su acumulado.</p>
+              <canvas id="graficoUtilidades"></canvas>
+            </div>
+          </div>
+        </section>
       </div>
-      <table id="tablaHonorarios">
-        <thead>
-          <tr>
-            <th>Trimestre</th>
-            <th>Tarifa</th>
-            <th>Comisión</th>
-            <th>Valor</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-      <p class="honorarios-total">Total anual honorarios: <span id="honorariosTotal"></span></p>
-    </section>
-
-    <!-- Estado de cuenta total (histórico) -->
-    <section class="resumen resumen-historico">
-      <h3>Estado de Cuenta Total</h3>
-      <p class="resumen-desc">
-        Como consecuencia de los aportes y movimientos realizados durante el tiempo que ha mantenido su relación con nosotros, a continuación podrá observar el margen de utilidad obtenido desde el momento en que se unió al portafolio. Este análisis refleja el desempeño acumulado histórico de su inversión y el crecimiento real de su capital tras considerar utilidades, retiros y comisiones.
-      </p>
-      <p class="resumen-desc tip-historico">Nota: El tipo de cambio en esta sección se muestra en vivo para reflejar el valor más reciente.</p>
-      <p class="resumen-fecha">Fecha de unión: <span id="fechaUnionHist"></span></p>
-      <table class="tabla-resumen">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Dólares (USD)</th>
-            <th>Pesos (COP)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th>Aporte</th>
-            <td id="aporteHist"></td>
-            <td id="aporteHistL"></td>
-          </tr>
-          <tr>
-            <th>Patrimonio</th>
-            <td id="patrimonioHist"></td>
-            <td id="patrimonioHistL"></td>
-          </tr>
-          <tr>
-            <th>Crecimiento</th>
-            <td id="crcmntHist"></td>
-            <td id="crcmntHistL"></td>
-          </tr>
-          <tr>
-            <th>Utilidad R</th>
-            <td><span id="utilidadRHist"></span><span id="utilidadRHistArrow" class="arrow-indicator"></span></td>
-            <td><span id="utilidadRHistL"></span><span id="utilidadRHistLArrow" class="arrow-indicator"></span></td>
-          </tr>
-          <tr>
-            <th>Utilidad</th>
-            <td><span id="utilidadHist"></span><span id="utilidadHistArrow" class="arrow-indicator"></span></td>
-            <td><span id="utilidadHistL"></span><span id="utilidadHistLArrow" class="arrow-indicator"></span></td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+    </div>
 
     <!-- Movimientos -->
     <section class="movimientos">

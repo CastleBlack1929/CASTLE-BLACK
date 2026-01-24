@@ -163,6 +163,19 @@ h2 {
   margin-bottom: 20px;
 }
 
+.dashboard-columns {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dashboard-left,
+.dashboard-right {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
 /* Data */
 .resumen {
   background-color: var(--card);
@@ -235,6 +248,7 @@ h2 {
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
   padding: 16px;
+  box-sizing: border-box;
 }
 
 .rate-title {
@@ -273,6 +287,7 @@ h2 {
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
   padding: 18px;
+  box-sizing: border-box;
 }
 
 .honorarios h3 {
@@ -348,6 +363,15 @@ footer {
   box-sizing: border-box;
 }
 
+.graficos-panel {
+  margin-top: 30px;
+  background: transparent;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  box-sizing: border-box;
+}
+
 /* Tablas */
 table {
   background-color: #0b0b0b;
@@ -381,7 +405,7 @@ table tr:hover {
 }
 
 .movimientos {
-  margin: 0 auto 30px;
+  margin: 24px auto 30px;
   background: var(--card);
   padding: 18px;
   border-radius: 16px;
@@ -393,18 +417,20 @@ table tr:hover {
 .graficos {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 28px;
+  align-items: center;
 }
 
 .grafico {
-  border: none;
-  border-radius: 0;
-  padding: 0;
-  background: transparent;
-  max-width: 520px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  background: var(--card);
+  max-width: 480px;
   width: 100%;
   margin: 0 auto;
-  box-shadow: none;
+  box-shadow: var(--shadow);
+  box-sizing: border-box;
 }
 
 .grafico h4 {
@@ -417,9 +443,11 @@ table tr:hover {
   border-radius: 8px;
   padding: 10px;
   width: 100%;
-  max-width: 520px;
+  max-width: 100%;
   max-height: 360px;
   margin: 0 auto;
+  box-sizing: border-box;
+  display: block;
 }
 
 /* Menú superior */
@@ -603,6 +631,126 @@ table tr:hover {
   main {
     padding: 22px 14px 28px;
   }
+}
+
+@media (max-width: 949px) {
+  .dashboard-columns {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .dashboard-left,
+  .dashboard-right {
+    display: contents;
+  }
+
+  .resumen {
+    order: 1;
+  }
+
+  .rate-box {
+    order: 2;
+  }
+
+  .reportes {
+    order: 3;
+  }
+
+  .graficos-panel {
+    order: 4;
+  }
+
+  .honorarios {
+    order: 5;
+  }
+
+  .resumen-historico {
+    order: 6;
+  }
+
+  .resumen,
+  .rate-box,
+  .reportes,
+  .graficos-panel,
+  .honorarios,
+  .resumen-historico,
+  .movimientos {
+    margin: 0 auto;
+  }
+
+  .rate-box {
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .movimientos {
+    margin-top: 16px;
+  }
+}
+
+@media (min-width: 950px) {
+  main {
+    max-width: 1600px;
+  }
+
+  .dashboard-columns {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 24px;
+    align-items: start;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .dashboard-left,
+  .dashboard-right {
+    gap: 24px;
+  }
+
+  .resumen,
+  .honorarios,
+  .resumen-historico,
+  .reportes,
+  .graficos-panel {
+    max-width: none;
+    margin: 0;
+    width: 100%;
+  }
+
+  .rate-box {
+    max-width: 720px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .graficos-panel .graficos {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    height: 100%;
+  }
+
+  .grafico {
+    display: flex;
+    flex-direction: column;
+    max-width: none;
+    margin: 0;
+  }
+
+  .graficos canvas {
+    flex: 1;
+    max-width: none;
+    max-height: 280px;
+  }
+
+  table,
+  #tablaHonorarios {
+    width: 100%;
+  }
+
 }
 
 @media (max-width: 768px) {
