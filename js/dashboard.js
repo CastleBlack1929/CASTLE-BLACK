@@ -395,6 +395,9 @@ let aporteBaseL = null;
   let prevUtilTotalLCopVal = null;
   let prevHistUtilLCopVal = null;
   let prevHistUtilTotalLCopVal = null;
+  let prevUsdForCopArrow = null;
+  let prevUsdTotalForCopArrow = null;
+  let copArrowsArmed = false;
   let lastPatOsc = 0;
   let lastMonthCells = null;
   let reportYearText = "";
@@ -522,6 +525,21 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       });
     };
     toggleYearArrows(isActualYear);
+    if (isActualYear) {
+      copArrowsArmed = false;
+      prevUtilLCopVal = null;
+      prevUtilTotalLCopVal = null;
+      prevUsdForCopArrow = null;
+      prevUsdTotalForCopArrow = null;
+      if (utilidadLArrow) {
+        utilidadLArrow.textContent = "";
+        utilidadLArrow.classList.remove("arrow-up", "arrow-down");
+      }
+      if (utilidadTotalLArrow) {
+        utilidadTotalLArrow.textContent = "";
+        utilidadTotalLArrow.classList.remove("arrow-up", "arrow-down");
+      }
+    }
     const currentMonthKey = isActualYear ? monthOrder[new Date().getMonth()] : null;
     selectedUserData = baseData;
     const totalAporteHistAll = computeTotalAportesAllYears(baseData, String(currentYearNumber));
@@ -864,10 +882,24 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     if (utilidadHistLArrow) utilidadHistLArrow.textContent = "";
     if (fechaUnionHist) fechaUnionHist.textContent = userData.fechaUnion || "";
 
-    let prevRateValue = null;
+  let prevRateValue = null;
+  const RATE_STORAGE_KEY = "lastRateValue";
+  const RATE_PREV_STORAGE_KEY = "prevRateValue";
+  const RATE_DIR_STORAGE_KEY = "lastRateDirection";
+  let lastRateDirection = null;
+  const readStoredRate = (key) => toNumber(localStorage.getItem(key));
     const updateRateDisplay = (rate, { updateArrow = true } = {}) => {
       if (!Number.isFinite(rate)) return;
-      const prevRate = prevRateValue;
+      let prevRate = prevRateValue;
+      if (isActualYear && !Number.isFinite(prevRate)) {
+        const storedLast = readStoredRate(RATE_STORAGE_KEY);
+        const storedPrev = readStoredRate(RATE_PREV_STORAGE_KEY);
+        if (Number.isFinite(storedLast)) {
+          prevRate = storedLast === rate && Number.isFinite(storedPrev) ? storedPrev : storedLast;
+        } else if (Number.isFinite(storedPrev)) {
+          prevRate = storedPrev;
+        }
+      }
       prevRateValue = rate;
       if (rateValue) {
         rateValue.textContent = formatNumber(rate, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
@@ -875,12 +907,46 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       if (updateArrow) {
         rateArrow = ensureRateArrow() || rateArrow;
         if (rateArrow) {
-          if (String(displayYear) === "2026") {
-            setArrowIndicator(rateArrow, rate, prevRate);
+          if (isActualYear) {
+            let direction = lastRateDirection;
+            if (Number.isFinite(prevRate)) {
+              if (rate > prevRate) direction = "up";
+              else if (rate < prevRate) direction = "down";
+            } else if (!direction) {
+              const storedDir = localStorage.getItem(RATE_DIR_STORAGE_KEY);
+              direction = storedDir === "down" ? "down" : (storedDir === "up" ? "up" : null);
+            }
+            if (direction === "up") {
+              rateArrow.textContent = "▲";
+              rateArrow.classList.add("arrow-up");
+              rateArrow.classList.remove("arrow-down");
+            } else if (direction === "down") {
+              rateArrow.textContent = "▼";
+              rateArrow.classList.add("arrow-down");
+              rateArrow.classList.remove("arrow-up");
+            } else {
+              rateArrow.textContent = "▲";
+              rateArrow.classList.add("arrow-up");
+              rateArrow.classList.remove("arrow-down");
+              direction = "up";
+            }
+            if (direction) {
+              lastRateDirection = direction;
+              localStorage.setItem(RATE_DIR_STORAGE_KEY, direction);
+            }
           } else {
             rateArrow.textContent = "";
             rateArrow.classList.remove("arrow-up", "arrow-down");
           }
+        }
+      }
+      if (isActualYear) {
+        const storedLast = readStoredRate(RATE_STORAGE_KEY);
+        if (!Number.isFinite(storedLast)) {
+          localStorage.setItem(RATE_STORAGE_KEY, String(rate));
+        } else if (storedLast !== rate) {
+          localStorage.setItem(RATE_PREV_STORAGE_KEY, String(storedLast));
+          localStorage.setItem(RATE_STORAGE_KEY, String(rate));
         }
       }
       if (rateTime) {
@@ -1022,22 +1088,31 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       setTrendClass(utilidadTotalL, utilidadTotalCop);
       setTrendClass(crcmntL, crcmntLCur);
       if (isActualYear) {
-        setArrowIndicator(utilidadLArrow, utilidadCop, prevUtilLCopVal);
-        setArrowIndicator(utilidadTotalLArrow, utilidadTotalCop, prevUtilTotalLCopVal);
-        prevUtilLCopVal = utilidadCop;
-        prevUtilTotalLCopVal = utilidadTotalCop;
+        const usdUtilVal = Number.isFinite(utilUsdOverride) ? utilUsdOverride : utilCalcBase;
+        const usdUtilTotVal = Number.isFinite(utilUsdOverride) ? utilUsdOverride : utilCalcBase;
+        if (!Number.isFinite(prevUsdForCopArrow) && Number.isFinite(usdUtilVal)) {
+          prevUsdForCopArrow = usdUtilVal;
+          prevUsdTotalForCopArrow = usdUtilTotVal;
+          if (utilidadLArrow) {
+            utilidadLArrow.textContent = "";
+            utilidadLArrow.classList.remove("arrow-up", "arrow-down");
+          }
+          if (utilidadTotalLArrow) {
+            utilidadTotalLArrow.textContent = "";
+            utilidadTotalLArrow.classList.remove("arrow-up", "arrow-down");
+          }
+        } else if (Number.isFinite(prevUsdForCopArrow) && Number.isFinite(usdUtilVal)) {
+          setArrowIndicator(utilidadLArrow, usdUtilVal, prevUsdForCopArrow);
+          setArrowIndicator(utilidadTotalLArrow, usdUtilTotVal, prevUsdTotalForCopArrow);
+          prevUsdForCopArrow = usdUtilVal;
+          prevUsdTotalForCopArrow = usdUtilTotVal;
+        }
       }
       updateRateDisplay(rate, { updateArrow: false });
 
     };
 
     applyPesos(currentRate);
-    if (isActualYear) {
-      const utilLVal = toNumber(utilidadL?.textContent);
-      const utilTotLVal = toNumber(utilidadTotalL?.textContent);
-      if (Number.isFinite(utilLVal)) prevUtilLCopVal = utilLVal;
-      if (Number.isFinite(utilTotLVal)) prevUtilTotalLCopVal = utilTotLVal;
-    }
 
     // Override histórico en COP con la tasa más reciente (siempre la misma para todos los años)
     const getHistoricalRate = () => {
