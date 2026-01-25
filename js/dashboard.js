@@ -969,7 +969,12 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     };
     const AUTO_RATE_ENABLED = true;
     const RATE_REFRESH_MS = 30 * 1000;
-    const RATE_API_URL = "http://localhost:8787/api/rate";
+    const RATE_API_URL = (() => {
+      const storedUrl = localStorage.getItem("rateProxyUrl");
+      if (storedUrl) return storedUrl;
+      if (typeof window !== "undefined" && window.RATE_PROXY_URL) return window.RATE_PROXY_URL;
+      return "http://localhost:8787/api/rate";
+    })();
 
     const applyLiveRate = (rate) => {
       if (!Number.isFinite(rate) || rate <= 0) return;
