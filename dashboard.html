@@ -71,7 +71,7 @@
         <!-- Datos principales comparativos -->
         <section class="resumen">
       <h3>Estado de cuenta</h3>
-      <p class="tabla-tip">Aquí ves tu aporte, patrimonio, crecimiento y utilidades en USD y COP con tendencia en vivo; este resumen aplica desde el 01/01/2025 y años anteriores se consultan en la sección histórica.</p>
+      <p class="tabla-tip">Aquí ves tu aporte del año, patrimonio, crecimiento y utilidades en USD y COP con tendencia en vivo; el aporte del año es la suma de los movimientos del año en curso más el patrimonio de años anteriores si aplica.</p>
       <table class="tabla-resumen">
         <thead>
           <tr>
@@ -82,7 +82,7 @@
         </thead>
         <tbody>
           <tr>
-            <th>Aporte</th>
+            <th>Aporte del año</th>
             <td id="aporte"></td>
             <td id="aporteL"></td>
           </tr>
@@ -97,12 +97,12 @@
             <td id="crcmntL"></td>
           </tr>
           <tr>
-            <th>Utilidad R</th>
+            <th>Utilidad real</th>
             <td><span id="utilidad"></span><span id="utilidadArrow" class="arrow-indicator"></span></td>
             <td><span id="utilidadL"></span><span id="utilidadLArrow" class="arrow-indicator"></span></td>
           </tr>
           <tr>
-            <th>Utilidad</th>
+            <th>Utilidad dólar</th>
             <td><span id="utilidadTotal"></span><span id="utilidadTotalArrow" class="arrow-indicator"></span></td>
             <td><span id="utilidadTotalL"></span><span id="utilidadTotalLArrow" class="arrow-indicator"></span></td>
           </tr>
@@ -145,7 +145,7 @@
         <section class="resumen resumen-historico">
           <h3>Estado de Cuenta Total</h3>
           <p class="resumen-desc">
-            Como consecuencia de los aportes y movimientos realizados durante el tiempo que ha mantenido su relación con nosotros, a continuación podrá observar el margen de utilidad obtenido desde el momento en que se unió al portafolio. Este análisis refleja el desempeño acumulado histórico de su inversión y el crecimiento real de su capital tras considerar utilidades, retiros y comisiones.
+            Este resumen muestra el desempeño acumulado desde tu ingreso al portafolio. El aporte histórico es la suma de todos los movimientos realizados durante tu relación con nosotros.
           </p>
           <p class="resumen-desc tip-historico">Nota: El tipo de cambio en esta sección se muestra en vivo para reflejar el valor más reciente.</p>
           <p class="resumen-fecha">Fecha de unión: <span id="fechaUnionHist"></span></p>
@@ -159,7 +159,7 @@
             </thead>
             <tbody>
               <tr>
-                <th>Aporte</th>
+                <th>Aporte histórico</th>
                 <td id="aporteHist"></td>
                 <td id="aporteHistL"></td>
               </tr>
@@ -174,12 +174,12 @@
                 <td id="crcmntHistL"></td>
               </tr>
               <tr>
-                <th>Utilidad R</th>
+                <th>Utilidad real</th>
                 <td><span id="utilidadRHist"></span><span id="utilidadRHistArrow" class="arrow-indicator"></span></td>
                 <td><span id="utilidadRHistL"></span><span id="utilidadRHistLArrow" class="arrow-indicator"></span></td>
               </tr>
               <tr>
-                <th>Utilidad</th>
+                <th>Utilidad dólar</th>
                 <td><span id="utilidadHist"></span><span id="utilidadHistArrow" class="arrow-indicator"></span></td>
                 <td><span id="utilidadHistL"></span><span id="utilidadHistLArrow" class="arrow-indicator"></span></td>
               </tr>

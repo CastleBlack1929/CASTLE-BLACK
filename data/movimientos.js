@@ -1196,6 +1196,19 @@ const movimientosData = [
     "cambio": 1258.0
   },
   {
+    "username": "aygr1975",
+    "cliente": "002",
+    "recibo": "105",
+    "fecha": "24/01/26",
+    "year": 2026,
+    "socio": "ALEIDA YANIRA GONZALEZ",
+    "cedula": "52332911",
+    "cantidad": 1000000.0,
+    "tipo": "COP",
+    "tasa": 3645.0,
+    "cambio": 274.33
+  },
+  {
     "username": "jgb1975",
     "cliente": "009",
     "recibo": "104",
