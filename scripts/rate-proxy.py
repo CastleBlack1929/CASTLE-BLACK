@@ -1,5 +1,6 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
+import threading
 import time
 import urllib.request
 
@@ -10,6 +11,8 @@ TRADINGVIEW_PAYLOAD = {
   "columns": ["close"],
 }
 CACHE_TTL_SECONDS = 30
+REQUEST_TIMEOUT_SECONDS = 4
+FETCH_TIMEOUT_SECONDS = REQUEST_TIMEOUT_SECONDS + 1
 
 cache_rate = None
 cache_time = 0
@@ -28,7 +31,7 @@ def fetch_rate_tradingview():
       "Content-Type": "application/json",
     },
   )
-  with urllib.request.urlopen(req, timeout=4) as resp:
+  with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT_SECONDS) as resp:
     payload = json.loads(resp.read().decode("utf-8", "ignore"))
     data_row = (payload.get("data") or [None])[0]
     if not data_row:
@@ -39,13 +42,34 @@ def fetch_rate_tradingview():
     return float(values[0])
 
 
+def fetch_rate_with_timeout():
+  result = {"rate": None, "error": None}
+
+  def _run():
+    try:
+      result["rate"] = fetch_rate_tradingview()
+    except Exception as exc:
+      result["error"] = exc
+
+  thread = threading.Thread(target=_run, daemon=True)
+  thread.start()
+  thread.join(FETCH_TIMEOUT_SECONDS)
+  if thread.is_alive():
+    return None, TimeoutError("Tiempo de espera agotado")
+  if result["error"] is not None:
+    return None, result["error"]
+  return result["rate"], None
+
+
 def get_rate():
   global cache_rate, cache_time
   now = time.time()
   if cache_rate and (now - cache_time) < CACHE_TTL_SECONDS:
     return cache_rate
-  rate = fetch_rate_tradingview()
-  if not rate:
+  rate, error = fetch_rate_with_timeout()
+  if error:
+    raise error
+  if rate is None:
     raise ValueError("No se pudo leer la tasa")
   cache_rate = rate
   cache_time = now
@@ -89,6 +113,6 @@ class RateHandler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-  server = HTTPServer(("localhost", PORT), RateHandler)
+  server = ThreadingHTTPServer(("localhost", PORT), RateHandler)
   print(f"Rate proxy activo en http://localhost:{PORT}/api/rate")
   server.serve_forever()
