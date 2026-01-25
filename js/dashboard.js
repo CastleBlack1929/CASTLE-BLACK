@@ -970,10 +970,55 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const AUTO_RATE_ENABLED = true;
     const RATE_REFRESH_MS = 30 * 1000;
     const RATE_API_URL = (() => {
+      const isLocalHost = (host) => (
+        !host ||
+        host === "localhost" ||
+        host === "127.0.0.1" ||
+        host === "::1" ||
+        host.endsWith(".local")
+      );
+
+      const isPrivateIp = (host) => {
+        if (!host) return false;
+        if (host.startsWith("10.")) return true;
+        if (host.startsWith("192.168.")) return true;
+        if (host.startsWith("172.")) {
+          const parts = host.split(".");
+          if (parts.length >= 2) {
+            const octet = Number(parts[1]);
+            return Number.isFinite(octet) && octet >= 16 && octet <= 31;
+          }
+        }
+        return false;
+      };
+
+      const pageHost = typeof window !== "undefined" ? window.location.hostname : "";
+      const isLocalPage = isLocalHost(pageHost) || (typeof window !== "undefined" && window.location.protocol === "file:");
+
       const storedUrl = localStorage.getItem("rateProxyUrl");
-      if (storedUrl) return storedUrl;
-      if (typeof window !== "undefined" && window.RATE_PROXY_URL) return window.RATE_PROXY_URL;
-      return "http://localhost:8787/api/rate";
+      if (storedUrl) {
+        try {
+          const parsed = new URL(storedUrl, window.location.origin);
+          const host = parsed.hostname;
+          const isLocalTarget = isLocalHost(host) || isPrivateIp(host);
+          if (!isLocalTarget || isLocalPage) {
+            return parsed.toString();
+          }
+          localStorage.removeItem("rateProxyUrl");
+        } catch (error) {
+          localStorage.removeItem("rateProxyUrl");
+        }
+      }
+
+      if (typeof window !== "undefined" && window.RATE_PROXY_URL) {
+        return window.RATE_PROXY_URL;
+      }
+
+      if (isLocalPage) {
+        return "http://localhost:8787/api/rate";
+      }
+
+      return null;
     })();
 
     const applyLiveRate = (rate) => {
@@ -987,6 +1032,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     };
 
     const fetchLiveRate = async () => {
+      if (!RATE_API_URL) return false;
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 4500);
       try {
