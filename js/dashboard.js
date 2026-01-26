@@ -970,7 +970,6 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const AUTO_RATE_ENABLED = true;
     const RATE_REFRESH_MS = 30 * 1000;
     const TRADINGVIEW_API_URL = "https://scanner.tradingview.com/forex/scan";
-    const TRADINGVIEW_CORS_PROXY = `https://cors.isomorphic-git.org/${TRADINGVIEW_API_URL}`;
     const TRADINGVIEW_PAYLOAD = {
       symbols: { tickers: ["FX_IDC:USDCOP"], query: { types: [] } },
       columns: ["close"]
@@ -1029,7 +1028,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       }
 
       rateFetchMode = "tradingview";
-      return TRADINGVIEW_CORS_PROXY;
+      return TRADINGVIEW_API_URL;
     })();
 
     const applyLiveRate = (rate) => {
@@ -1050,7 +1049,6 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         const options = { signal: controller.signal, cache: "no-store" };
         if (rateFetchMode === "tradingview") {
           options.method = "POST";
-          options.headers = { "Content-Type": "application/json" };
           options.body = JSON.stringify(TRADINGVIEW_PAYLOAD);
         }
         const response = await fetch(RATE_API_URL, options);
