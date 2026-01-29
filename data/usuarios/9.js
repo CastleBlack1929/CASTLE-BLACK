@@ -213,39 +213,39 @@ window.userData = {
       "meses": {
         "enero": {
           "aporte": 0.0,
-          "patrimonio": 1749.3
+          "patrimonio": 0.0
         },
         "febrero": {
           "aporte": 0.0,
-          "patrimonio": 1749.3
+          "patrimonio": 0.0
         },
         "marzo": {
           "aporte": 0.0,
-          "patrimonio": 1749.3
+          "patrimonio": 0.0
         },
         "abril": {
           "aporte": 0.0,
-          "patrimonio": 1749.3
+          "patrimonio": 0.0
         },
         "mayo": {
           "aporte": 0.0,
-          "patrimonio": 1749.3
+          "patrimonio": 0.0
         },
         "junio": {
           "aporte": 0.0,
-          "patrimonio": 1749.3
+          "patrimonio": 0.0
         },
         "julio": {
           "aporte": 0.0,
-          "patrimonio": 1749.3
+          "patrimonio": 0.0
         },
         "agosto": {
           "aporte": 0.0,
-          "patrimonio": 1749.3
+          "patrimonio": 0.0
         },
         "septiembre": {
           "aporte": 0.0,
-          "patrimonio": 1749.3
+          "patrimonio": 0.0
         },
         "octubre": {
           "aporte": 467.11,
@@ -260,7 +260,7 @@ window.userData = {
           "patrimonio": 2825.73
         }
       },
-      "patrimonioPrev": 1749.3,
+      "patrimonioPrev": 0.0,
       "honorariosTrimestres": [
         {
           "nombre": "TRIMESTRE 1",
