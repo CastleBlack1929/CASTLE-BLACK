@@ -843,6 +843,22 @@ table tr:hover {
     word-break: break-word;
   }
 
+  .movimientos {
+    padding: 14px;
+  }
+
+  .movimientos table {
+    font-size: 10px;
+  }
+
+  .movimientos table th,
+  .movimientos table td {
+    padding: 4px 3px;
+    white-space: nowrap;
+    word-break: normal;
+    line-height: 1.1;
+  }
+
   .graficos {
     gap: 16px;
   }
