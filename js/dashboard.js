@@ -179,7 +179,8 @@ const computeDerived = (meses = {}, prevPatrInicial = 0, useAporteAsPrev = false
   let totalAporte = 0;
   let prevPatrimonio = Number(prevPatrInicial) || 0;
   let lastIdx = -1;
-  let firstHandled = false;
+  let firstPatrimonioHandled = false;
+  const allowAporteAsPrev = useAporteAsPrev || !Number.isFinite(Number(prevPatrInicial)) || Number(prevPatrInicial) === 0;
 
   const monthly = monthOrder
     .filter(m => meses[m])
@@ -200,7 +201,7 @@ const computeDerived = (meses = {}, prevPatrInicial = 0, useAporteAsPrev = false
       let margen = basePrev !== 0 ? (g_p / Math.abs(basePrev)) * 100 : 0;
 
       // Caso enero: si no hay patrimonio previo, usa el aporte como base provisional
-      if (useAporteAsPrev && !firstHandled && basePrev === 0 && aporte !== 0 && patrimonio !== 0) {
+      if (allowAporteAsPrev && !firstPatrimonioHandled && basePrev === 0 && aporte !== 0 && patrimonio !== 0) {
         basePrev = aporte;
         g_p = patrimonio - aporte; // utilidad respecto al aporte de cierre anterior
         margen = aporte !== 0 ? (g_p / Math.abs(aporte)) * 100 : 0;
@@ -210,7 +211,7 @@ const computeDerived = (meses = {}, prevPatrInicial = 0, useAporteAsPrev = false
       if (aporte !== 0 || patrimonio !== 0 || g_p !== 0) lastIdx = idx;
 
       if (patrimonio !== 0) prevPatrimonio = patrimonio;
-      if (hasData) firstHandled = true;
+      if (patrimonio !== 0) firstPatrimonioHandled = true;
 
       return { mes, aporte, patrimonio, g_p, margen };
     });

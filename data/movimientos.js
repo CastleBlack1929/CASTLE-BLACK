@@ -946,7 +946,7 @@ const movimientosData = [
     "cantidad": 2000000.0,
     "tipo": "COP",
     "tasa": 4378.0,
-    "cambio": 456.0
+    "cambio": 456.8
   },
   {
     "username": "vspg2008",
@@ -1011,20 +1011,20 @@ const movimientosData = [
     "cantidad": 2000000.0,
     "tipo": "COP",
     "tasa": 4282.0,
-    "cambio": 467.0
+    "cambio": 467.1
   },
   {
     "username": "jgb1975",
     "cliente": "009",
     "recibo": "16",
-    "fecha": "01/10/24",
-    "year": 2024,
+    "fecha": "28/12/23",
+    "year": 2023,
     "socio": "CARROCERIAS JGB (ALEIDA YANIRA GONZALEZ)",
     "cedula": "830103701-9",
     "cantidad": 7000000.0,
     "tipo": "COP",
     "tasa": 4002.0,
-    "cambio": 1749.0
+    "cambio": 1749.3
   },
   {
     "username": "jfpg2006",
