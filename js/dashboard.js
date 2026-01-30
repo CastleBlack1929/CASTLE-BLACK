@@ -542,21 +542,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         utilidadTotalLArrow.classList.remove("arrow-up", "arrow-down");
       }
     }
-    const getForcedMonthKey = () => {
-      if (typeof window === "undefined") return null;
-      const params = new URLSearchParams(window.location.search);
-      const rawParam = params.get("forceMonth") || params.get("mes");
-      const stored = localStorage.getItem("forceMonthKey");
-      const value = String(rawParam || stored || "").trim().toLowerCase();
-      if (!value) return null;
-      if (/^\d+$/.test(value)) {
-        const idx = Number(value);
-        if (idx >= 1 && idx <= 12) return monthOrder[idx - 1];
-      }
-      const match = monthOrder.find((mes) => mes.startsWith(value));
-      return match || null;
-    };
-    let currentMonthKey = isActualYear ? (getForcedMonthKey() || monthOrder[new Date().getMonth()]) : null;
+    let currentMonthKey = isActualYear ? monthOrder[new Date().getMonth()] : null;
     const applyMonthSnapshotToRow = (mes, snapshot) => {
       const row = monthRowMap[mes];
       if (!row || !snapshot) return;
@@ -633,8 +619,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     };
     const syncCurrentMonthKey = () => {
       if (!isActualYear) return;
-      const forcedKey = getForcedMonthKey();
-      const newKey = forcedKey || monthOrder[new Date().getMonth()];
+      const newKey = monthOrder[new Date().getMonth()];
       if (newKey === currentMonthKey) return;
       if (currentMonthKey) captureMonthSnapshot(currentMonthKey);
       currentMonthKey = newKey;
