@@ -800,13 +800,35 @@ table tr:hover {
     height: 50px;
   }
 
+  .user-info {
+    min-width: 0;
+  }
+
+  .user-meta {
+    flex-wrap: nowrap;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .user-meta > span {
+    min-width: 0;
+  }
+
   .user-info h2 {
     font-size: 18px;
   }
 
   .user-id,
   .datetime-text {
-    font-size: 12px;
+    font-size: clamp(10px, 2.6vw, 12px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .datetime-text {
+    margin-left: 0;
+    min-width: 0;
   }
 
   .menu-btn {

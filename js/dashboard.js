@@ -419,6 +419,7 @@ let chartUtilidades = null;
   let liveRateTimer = null;
   let liveRate = null;
   const monthRowMap = {};
+  const monthSnapshots = {};
   const USE_AUTO_PORTFOLIO = false;
   const ENABLE_OSCILLATION = true;
   const ENABLE_RATE_OSCILLATION = false;
@@ -541,7 +542,64 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         utilidadTotalLArrow.classList.remove("arrow-up", "arrow-down");
       }
     }
-    const currentMonthKey = isActualYear ? monthOrder[new Date().getMonth()] : null;
+    let currentMonthKey = isActualYear ? monthOrder[new Date().getMonth()] : null;
+    const applyMonthSnapshotToRow = (mes, snapshot) => {
+      const row = monthRowMap[mes];
+      if (!row || !snapshot) return;
+      if (Number.isFinite(snapshot.patrimonio)) {
+        row.patrCell.textContent = `$ ${formatNumber(snapshot.patrimonio)}`;
+      }
+      if (Number.isFinite(snapshot.g_p)) {
+        row.gpCell.textContent = `$ ${formatNumber(snapshot.g_p)}`;
+        row.gpCell.className = trendClass(snapshot.g_p);
+      }
+      if (Number.isFinite(snapshot.margen)) {
+        row.margenCell.textContent = formatPercent(snapshot.margen);
+        row.margenCell.className = trendClass(snapshot.margen);
+      }
+    };
+    const captureMonthSnapshot = (mes) => {
+      const row = monthRowMap[mes];
+      if (!row) return;
+      monthSnapshots[mes] = {
+        patrimonio: toNumber(row.patrCell?.textContent),
+        g_p: toNumber(row.gpCell?.textContent),
+        margen: toNumber(row.margenCell?.textContent)
+      };
+    };
+    const updateMonthArrowVisibility = () => {
+      Object.keys(monthRowMap).forEach((mes) => {
+        const row = monthRowMap[mes];
+        if (!row?.gpArrow) return;
+        const isCurrent = isActualYear && currentMonthKey && mes === currentMonthKey;
+        row.gpArrow.style.display = isCurrent ? "" : "none";
+        if (!isCurrent) {
+          row.gpArrow.textContent = "";
+          row.gpArrow.classList.remove("arrow-up", "arrow-down");
+        }
+      });
+    };
+    const syncCurrentMonthKey = () => {
+      if (!isActualYear) return;
+      const newKey = monthOrder[new Date().getMonth()];
+      if (newKey === currentMonthKey) return;
+      if (currentMonthKey) captureMonthSnapshot(currentMonthKey);
+      currentMonthKey = newKey;
+      updateMonthArrowVisibility();
+      if (!monthSnapshots[currentMonthKey]) {
+        monthSnapshots[currentMonthKey] = {
+          patrimonio: Number.isFinite(patrimonioCalc) ? patrimonioCalc : 0,
+          g_p: Number.isFinite(utilOsc) ? utilOsc : 0,
+          margen: Number.isFinite(crcmntBaseUsd) ? crcmntBaseUsd : 0
+        };
+      }
+      applyMonthSnapshotToRow(currentMonthKey, monthSnapshots[currentMonthKey]);
+    };
+    const startMonthAutoSync = () => {
+      if (!isActualYear) return;
+      syncCurrentMonthKey();
+      setInterval(syncCurrentMonthKey, 1000);
+    };
     selectedUserData = baseData;
     const totalAporteHistAll = computeTotalAportesAllYears(baseData, String(currentYearNumber));
     const totalPatrimonioHistAll = computeTotalPatrimonioAllYears(baseData, currentYearNumber);
@@ -865,6 +923,13 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     if (utilidadTotalArrow) utilidadTotalArrow.textContent = "";
     crcmnt.textContent = formatPercent(crcmntBaseUsd);
     setTrendClass(crcmnt, crcmntBaseUsd);
+    if (isActualYear && currentMonthKey) {
+      monthSnapshots[currentMonthKey] = {
+        patrimonio: patrimonioCalc,
+        g_p: utilCalcBase,
+        margen: crcmntBaseUsd
+      };
+    }
 
     // Estado de cuenta total (provisionalmente igual al resumen actual)
     if (histBase) {
@@ -1333,6 +1398,11 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             currentRow.margenCell.className = trendClass(nuevoCrcmnt);
             currentRow.gpCell.className = trendClass(nuevaUtil);
             setArrowIndicator(currentRow.gpArrow, nuevaUtil, prevGp);
+            monthSnapshots[currentMonthKey] = {
+              patrimonio: nuevoPat,
+              g_p: nuevaUtil,
+              margen: nuevoCrcmnt
+            };
           }
 
           const rateToUse = Number.isFinite(currentRate) ? currentRate : baseRate;
@@ -1340,12 +1410,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             applyPesos(rateToUse, nuevoPat, nuevaUtil);
           }
 
-          Object.keys(monthRowMap).forEach((mes) => {
-            const row = monthRowMap[mes];
-            if (row?.patrCell) {
-              row.patrCell.textContent = `$ ${formatNumber(nuevoPat)}`;
-            }
-          });
+          // Los meses anteriores se mantienen con el último valor almacenado.
 
           if (chartPatrimonio && chartPatrimonio.data?.datasets?.[0]) {
             chartPatrimonio.data.datasets[0].data = chartPatrimonio.data.labels.map(() => nuevoPat);
@@ -1467,29 +1532,34 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           cAporte.textContent = `$ ${formatNumber(aporte)}`;
           const cPatr = document.createElement("td");
           const isCurrentYear2026 = isActualYear && Number(displayYear) === 2026;
-          const patrToShow = isCurrentYear2026 ? patrimonioCalc : patrVal;
+          const snapshot = monthSnapshots[mes];
+          const snapshotPatr = Number.isFinite(snapshot?.patrimonio) ? snapshot.patrimonio : null;
+          const livePatr = (isCurrentYear2026 && currentMonthKey === mes && Number.isFinite(patrimonioCalc))
+            ? patrimonioCalc
+            : null;
+          const patrToShow = Number.isFinite(livePatr)
+            ? livePatr
+            : (Number.isFinite(snapshotPatr) ? snapshotPatr : patrVal);
           let patrValueEl = cPatr;
           let patrArrowEl = null;
+          const gpToShow = Number.isFinite(snapshot?.g_p) ? snapshot.g_p : g_p;
+          const margenToShow = Number.isFinite(snapshot?.margen) ? snapshot.margen : margen;
           const cMarg = document.createElement("td");
-          cMarg.className = trendClass(margen);
-          cMarg.textContent = formatPercent(margen);
+          cMarg.className = trendClass(margenToShow);
+          cMarg.textContent = formatPercent(margenToShow);
           const cGp = document.createElement("td");
-          cGp.className = trendClass(g_p);
-          let gpValueEl = cGp;
-          let gpArrowEl = null;
-
-          if (isActualYear && currentMonthKey && mes === currentMonthKey) {
-            const gpSpan = document.createElement("span");
-            const gpArrow = document.createElement("span");
-            gpArrow.className = "arrow-indicator";
-            cGp.appendChild(gpSpan);
-            cGp.appendChild(gpArrow);
-            gpValueEl = gpSpan;
-            gpArrowEl = gpArrow;
-          }
+          cGp.className = trendClass(gpToShow);
+          const gpSpan = document.createElement("span");
+          const gpArrow = document.createElement("span");
+          gpArrow.className = "arrow-indicator";
+          gpArrow.style.display = (isActualYear && currentMonthKey && mes === currentMonthKey) ? "" : "none";
+          cGp.appendChild(gpSpan);
+          cGp.appendChild(gpArrow);
+          let gpValueEl = gpSpan;
+          let gpArrowEl = gpArrow;
 
           patrValueEl.textContent = `$ ${formatNumber(patrToShow)}`;
-          gpValueEl.textContent = `$ ${formatNumber(g_p)}`;
+          gpValueEl.textContent = `$ ${formatNumber(gpToShow)}`;
 
           row.appendChild(cMes);
           row.appendChild(cAporte);
@@ -1514,6 +1584,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         tablaMeses.appendChild(emptyRow);
       }
     }
+    updateMonthArrowVisibility();
+    startMonthAutoSync();
 
     // Honorarios
     if (tablaHonorarios && honorariosTotal) {
