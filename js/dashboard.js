@@ -542,7 +542,21 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         utilidadTotalLArrow.classList.remove("arrow-up", "arrow-down");
       }
     }
-    let currentMonthKey = isActualYear ? monthOrder[new Date().getMonth()] : null;
+    const getForcedMonthKey = () => {
+      if (typeof window === "undefined") return null;
+      const params = new URLSearchParams(window.location.search);
+      const rawParam = params.get("forceMonth") || params.get("mes");
+      const stored = localStorage.getItem("forceMonthKey");
+      const value = String(rawParam || stored || "").trim().toLowerCase();
+      if (!value) return null;
+      if (/^\d+$/.test(value)) {
+        const idx = Number(value);
+        if (idx >= 1 && idx <= 12) return monthOrder[idx - 1];
+      }
+      const match = monthOrder.find((mes) => mes.startsWith(value));
+      return match || null;
+    };
+    let currentMonthKey = isActualYear ? (getForcedMonthKey() || monthOrder[new Date().getMonth()]) : null;
     const applyMonthSnapshotToRow = (mes, snapshot) => {
       const row = monthRowMap[mes];
       if (!row || !snapshot) return;
@@ -557,6 +571,44 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         row.margenCell.textContent = formatPercent(snapshot.margen);
         row.margenCell.className = trendClass(snapshot.margen);
       }
+    };
+    const getPrevMonthKey = (mes) => {
+      if (!mes) return null;
+      const idx = monthOrder.indexOf(mes);
+      if (idx <= 0) return null;
+      return monthOrder[idx - 1];
+    };
+    const getMonthAporte = (mes) => {
+      if (!mes || !derived?.monthly?.length) return 0;
+      const found = derived.monthly.find((item) => item.mes === mes);
+      return toNumber(found?.aporte) || 0;
+    };
+    const getPrevMonthPatrimonio = (mes) => {
+      const prevKey = getPrevMonthKey(mes);
+      if (prevKey) {
+        const snapPatr = toNumber(monthSnapshots[prevKey]?.patrimonio);
+        if (Number.isFinite(snapPatr)) return snapPatr;
+        const rowPatr = toNumber(monthRowMap[prevKey]?.patrCell?.textContent);
+        if (Number.isFinite(rowPatr)) return rowPatr;
+        const derivedPrev = derived?.monthly?.find((item) => item.mes === prevKey);
+        const derivedPatr = toNumber(derivedPrev?.patrimonio);
+        if (Number.isFinite(derivedPatr)) return derivedPatr;
+      }
+      const initial = toNumber(prevPatrInicial);
+      return Number.isFinite(initial) ? initial : 0;
+    };
+    const computeMonthMetrics = (mes, patrimonioValue) => {
+      const patrimonio = Number.isFinite(patrimonioValue) ? patrimonioValue : 0;
+      const aporteMes = getMonthAporte(mes);
+      let basePrev = getPrevMonthPatrimonio(mes);
+      let g_p = patrimonio - basePrev - aporteMes;
+      let margen = basePrev !== 0 ? (g_p / Math.abs(basePrev)) * 100 : 0;
+      if (basePrev === 0 && aporteMes !== 0 && patrimonio !== 0) {
+        basePrev = aporteMes;
+        g_p = patrimonio - aporteMes;
+        margen = aporteMes !== 0 ? (g_p / Math.abs(aporteMes)) * 100 : 0;
+      }
+      return { patrimonio, g_p, margen };
     };
     const captureMonthSnapshot = (mes) => {
       const row = monthRowMap[mes];
@@ -581,17 +633,14 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     };
     const syncCurrentMonthKey = () => {
       if (!isActualYear) return;
-      const newKey = monthOrder[new Date().getMonth()];
+      const forcedKey = getForcedMonthKey();
+      const newKey = forcedKey || monthOrder[new Date().getMonth()];
       if (newKey === currentMonthKey) return;
       if (currentMonthKey) captureMonthSnapshot(currentMonthKey);
       currentMonthKey = newKey;
       updateMonthArrowVisibility();
       if (!monthSnapshots[currentMonthKey]) {
-        monthSnapshots[currentMonthKey] = {
-          patrimonio: Number.isFinite(patrimonioCalc) ? patrimonioCalc : 0,
-          g_p: Number.isFinite(utilOsc) ? utilOsc : 0,
-          margen: Number.isFinite(crcmntBaseUsd) ? crcmntBaseUsd : 0
-        };
+        monthSnapshots[currentMonthKey] = computeMonthMetrics(currentMonthKey, patrimonioCalc);
       }
       applyMonthSnapshotToRow(currentMonthKey, monthSnapshots[currentMonthKey]);
     };
@@ -924,11 +973,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     crcmnt.textContent = formatPercent(crcmntBaseUsd);
     setTrendClass(crcmnt, crcmntBaseUsd);
     if (isActualYear && currentMonthKey) {
-      monthSnapshots[currentMonthKey] = {
-        patrimonio: patrimonioCalc,
-        g_p: utilCalcBase,
-        margen: crcmntBaseUsd
-      };
+      monthSnapshots[currentMonthKey] = computeMonthMetrics(currentMonthKey, patrimonioCalc);
     }
 
     // Estado de cuenta total (provisionalmente igual al resumen actual)
@@ -1392,17 +1437,14 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const currentRow = currentMonthKey ? monthRowMap[currentMonthKey] : null;
           if (currentRow) {
             const prevGp = toNumber(currentRow.gpCell?.textContent);
-            currentRow.patrCell.textContent = `$ ${formatNumber(nuevoPat)}`;
-            currentRow.gpCell.textContent = `$ ${formatNumber(nuevaUtil)}`;
-            currentRow.margenCell.textContent = formatPercent(nuevoCrcmnt);
-            currentRow.margenCell.className = trendClass(nuevoCrcmnt);
-            currentRow.gpCell.className = trendClass(nuevaUtil);
-            setArrowIndicator(currentRow.gpArrow, nuevaUtil, prevGp);
-            monthSnapshots[currentMonthKey] = {
-              patrimonio: nuevoPat,
-              g_p: nuevaUtil,
-              margen: nuevoCrcmnt
-            };
+            const metrics = computeMonthMetrics(currentMonthKey, nuevoPat);
+            currentRow.patrCell.textContent = `$ ${formatNumber(metrics.patrimonio)}`;
+            currentRow.gpCell.textContent = `$ ${formatNumber(metrics.g_p)}`;
+            currentRow.margenCell.textContent = formatPercent(metrics.margen);
+            currentRow.margenCell.className = trendClass(metrics.margen);
+            currentRow.gpCell.className = trendClass(metrics.g_p);
+            setArrowIndicator(currentRow.gpArrow, metrics.g_p, prevGp);
+            monthSnapshots[currentMonthKey] = metrics;
           }
 
           const rateToUse = Number.isFinite(currentRate) ? currentRate : baseRate;
