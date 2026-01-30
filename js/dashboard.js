@@ -288,6 +288,124 @@ const tarifaHonorarios = (utilidad) => {
   return { nombre: "ZAFIRO", comision: "5%", valor: utilidad * 0.05 };
 };
 
+const MONTHLY_MARGIN_BY_YEAR = {
+  2026: {}
+};
+
+const getMonthlyMarginPercent = (year, mes) => {
+  const yearData = MONTHLY_MARGIN_BY_YEAR?.[Number(year)];
+  if (!yearData) return 0;
+  const value = toNumber(yearData[mes]);
+  return Number.isFinite(value) ? value : 0;
+};
+
+const buildHonorarioDeductionMap = (corte) => {
+  const trimestres = getTrimestresByCorte(corte);
+  const map = {};
+  trimestres.forEach((tri) => {
+    const mesesTri = Array.isArray(tri.meses) ? tri.meses : [];
+    if (!mesesTri.length) return;
+    const lastMes = mesesTri[mesesTri.length - 1];
+    if (lastMes === "diciembre") return;
+    const lastIdx = monthOrder.indexOf(lastMes);
+    if (lastIdx === -1 || lastIdx + 1 >= monthOrder.length) return;
+    const dedMes = monthOrder[lastIdx + 1];
+    map[dedMes] = { nombre: tri.nombre, meses: mesesTri };
+  });
+  return map;
+};
+
+const computeDerivedWithMonthlyRules = ({
+  meses = {},
+  prevPatrInicial = 0,
+  useAporteAsPrev = false,
+  year,
+  corteAplicado,
+  derivedPrevYear = null,
+  disableHonorarios = false,
+  currentMonthIndex = 11,
+  startMonthKey = "febrero"
+}) => {
+  let totalAporte = 0;
+  let prevPatrimonio = Number(prevPatrInicial) || 0;
+  let lastIdx = -1;
+  let firstPatrimonioHandled = false;
+  const allowAporteAsPrev = useAporteAsPrev || !Number.isFinite(Number(prevPatrInicial)) || Number(prevPatrInicial) === 0;
+  const prevYearUtilByMes = derivedPrevYear?.monthly?.reduce((acc, item) => {
+    acc[item.mes] = item.g_p;
+    return acc;
+  }, {}) || {};
+  const deductionMap = buildHonorarioDeductionMap(corteAplicado);
+  const utilByMes = {};
+  const startIdx = monthOrder.indexOf(startMonthKey);
+  const effectiveStartIdx = startIdx >= 0 ? startIdx : 1;
+
+  const getHonorarioDeductionForMonth = (mes) => {
+    if (disableHonorarios) return 0;
+    const tri = deductionMap[mes];
+    if (!tri) return 0;
+    const utilTrim = (tri.meses || []).reduce((sum, item) => {
+      const currentVal = toNumber(utilByMes[item]);
+      if (Number.isFinite(currentVal)) return sum + currentVal;
+      const prevVal = toNumber(prevYearUtilByMes[item]);
+      return sum + (Number.isFinite(prevVal) ? prevVal : 0);
+    }, 0);
+    const tarifa = tarifaHonorarios(utilTrim);
+    return tarifa.valor || 0;
+  };
+
+  const monthly = monthOrder
+    .filter(m => meses[m])
+    .map((mes, idx) => {
+      const raw = meses[mes] || {};
+      const rawAporte = toNumber(raw.aporte);
+      const rawPatrimonio = toNumber(raw.patrimonio);
+      const aporte = Number.isFinite(rawAporte) ? rawAporte : 0;
+      let patrimonio = Number.isFinite(rawPatrimonio) ? rawPatrimonio : 0;
+
+      const monthIdx = monthOrder.indexOf(mes);
+      const applyRules = monthIdx >= effectiveStartIdx && monthIdx <= currentMonthIndex;
+
+      if (applyRules) {
+        const base = prevPatrimonio + aporte;
+        const marginPct = getMonthlyMarginPercent(year, mes);
+        const marginRate = Number.isFinite(marginPct) ? marginPct / 100 : 0;
+        patrimonio = base + (base * marginRate);
+        const deduction = getHonorarioDeductionForMonth(mes);
+        if (deduction) patrimonio -= deduction;
+      } else if (aporte === 0 && patrimonio === 0 && prevPatrimonio !== 0) {
+        patrimonio = prevPatrimonio;
+      }
+
+      let basePrev = prevPatrimonio;
+      let g_p = patrimonio - basePrev - aporte;
+      let margen = basePrev !== 0 ? (g_p / Math.abs(basePrev)) * 100 : 0;
+
+      if (allowAporteAsPrev && !firstPatrimonioHandled && basePrev === 0 && aporte !== 0 && patrimonio !== 0) {
+        basePrev = aporte;
+        g_p = patrimonio - aporte;
+        margen = aporte !== 0 ? (g_p / Math.abs(aporte)) * 100 : 0;
+      }
+
+      totalAporte += aporte;
+      if (aporte !== 0 || patrimonio !== 0 || g_p !== 0) lastIdx = idx;
+
+      if (patrimonio !== 0) prevPatrimonio = patrimonio;
+      if (patrimonio !== 0) firstPatrimonioHandled = true;
+
+      utilByMes[mes] = g_p;
+
+      return { mes, aporte, patrimonio, g_p, margen };
+    });
+
+  const latest = lastIdx >= 0 ? monthly[lastIdx] : monthly[monthly.length - 1] || { patrimonio: 0, aporte: 0 };
+  const patrimonioActual = latest?.patrimonio || 0;
+  const utilidadActual = patrimonioActual - totalAporte;
+  const crcmntActual = totalAporte !== 0 ? (utilidadActual / Math.abs(totalAporte)) * 100 : 0;
+
+  return { monthly, totalAporte, patrimonioActual, utilidadActual, crcmntActual };
+};
+
 const loadUserData = (filePath) =>
   new Promise((resolve, reject) => {
     delete window.userData;
@@ -719,6 +837,11 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     let derived = null;
     derivedData = derived;
     selectedUserData = userData;
+    const disableHonorarios =
+      claveUsuario === "jfpg2006" ||
+      claveUsuario === "matris" ||
+      String(userData.socio || "").trim().toUpperCase() === "CASTLE BLACK";
+    const corteAplicado = (userData.corte || baseData.corte || "MAR-JUN-SEP-DIC").trim().toUpperCase();
 
     // Mostrar datos del usuario
     nombreCliente.textContent = userData.nombre || userData.socio || "Usuario";
@@ -781,9 +904,6 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       ? prevClosingPatr
       : (toNumber(userData.patrimonioPrev) || 0);
 
-    const mesesForCalc = buildMesesWithMovAportes(userData.meses || {}, displayYear);
-    derived = computeDerived(mesesForCalc, prevPatrInicial, useAporteAsPrev);
-    derivedData = derived;
     const prevPrevClosingPatr = toNumber(prevPrevYearData?.meses?.diciembre?.patrimonio) || 0;
     const derivedPrevYear = prevYearData?.meses
       ? computeDerived(
@@ -792,6 +912,22 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         baseData.usarAporteComoPrev === true
       )
       : null;
+    const currentMonthIndex = new Date().getMonth();
+    const isMonthlyRulesYear = isActualYear && Number(displayYear) === 2026;
+    const mesesForCalc = buildMesesWithMovAportes(userData.meses || {}, displayYear);
+    derived = isMonthlyRulesYear
+      ? computeDerivedWithMonthlyRules({
+        meses: mesesForCalc,
+        prevPatrInicial,
+        useAporteAsPrev,
+        year: displayYear,
+        corteAplicado,
+        derivedPrevYear,
+        disableHonorarios,
+        currentMonthIndex
+      })
+      : computeDerived(mesesForCalc, prevPatrInicial, useAporteAsPrev);
+    derivedData = derived;
 
     const getMovUsdValue = (mov, fallbackRate = null) => {
       const tipo = (mov.tipo || "").toUpperCase();
@@ -933,6 +1069,13 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       // Si el patrimonio calculado es inválido o cero, usa al menos el aporte total
       if ((!patrimonioCalcUsd || patrimonioCalcUsd <= 0) && totalAportesActual > 0) {
         patrimonioCalcUsd = totalAportesActual;
+      }
+    }
+    if (isMonthlyRulesYear && currentMonthKey) {
+      const monthData = derived?.monthly?.find((item) => item.mes === currentMonthKey);
+      const monthPatr = toNumber(monthData?.patrimonio);
+      if (Number.isFinite(monthPatr)) {
+        patrimonioCalcUsd = monthPatr;
       }
     }
 
@@ -1616,11 +1759,6 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
     // Honorarios
     if (tablaHonorarios && honorariosTotal) {
-      const disableHonorarios =
-        claveUsuario === "jfpg2006" ||
-        claveUsuario === "matris" ||
-        String(userData.socio || "").trim().toUpperCase() === "CASTLE BLACK";
-      const corteAplicado = (userData.corte || baseData.corte || "MAR-JUN-SEP-DIC").trim().toUpperCase();
       if (corteHonorariosText) corteHonorariosText.textContent = corteAplicado;
       const autoHonorarios2026 = isActualYear;
       const trimestres = autoHonorarios2026
