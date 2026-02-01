@@ -293,14 +293,25 @@ const tarifaHonorarios = (utilidad) => {
 };
 
 const MONTHLY_MARGIN_BY_YEAR = {
-  2026: {}
+  2026: {
+    febrero: 0.5
+  }
 };
 
-const getMonthlyMarginPercent = (year, mes) => {
-  const yearData = MONTHLY_MARGIN_BY_YEAR?.[Number(year)];
-  if (!yearData) return 0;
-  const value = toNumber(yearData[mes]);
-  return Number.isFinite(value) ? value : 0;
+const getMonthlyMarginPercent = (year, mes, { currentMonthIndex = null, currentDay = null } = {}) => {
+  const yearNum = Number(year);
+  const yearData = MONTHLY_MARGIN_BY_YEAR?.[yearNum];
+  const value = toNumber(yearData?.[mes]);
+  if (Number.isFinite(value)) return value;
+  if (yearNum !== 2026) return 0;
+  const monthIdx = monthOrder.indexOf(mes);
+  if (monthIdx === -1) return 0;
+  const startIdx = monthOrder.indexOf("marzo");
+  if (monthIdx < startIdx) return 0;
+  if (!Number.isFinite(currentMonthIndex) || !Number.isFinite(currentDay)) return 0;
+  if (monthIdx > currentMonthIndex) return 0;
+  if (monthIdx < currentMonthIndex) return 0.5;
+  return currentDay >= 15 ? 0.5 : 0.25;
 };
 
 const buildHonorarioDeductionMap = (corte) => {
@@ -328,6 +339,7 @@ const computeDerivedWithMonthlyRules = ({
   derivedPrevYear = null,
   disableHonorarios = false,
   currentMonthIndex = 11,
+  currentDay = null,
   startMonthKey = "febrero"
 }) => {
   let totalAporte = 0;
@@ -372,7 +384,7 @@ const computeDerivedWithMonthlyRules = ({
 
       if (applyRules) {
         const base = prevPatrimonio + aporte;
-        const marginPct = getMonthlyMarginPercent(year, mes);
+        const marginPct = getMonthlyMarginPercent(year, mes, { currentMonthIndex, currentDay });
         const marginRate = Number.isFinite(marginPct) ? marginPct / 100 : 0;
         patrimonio = base + (base * marginRate);
         const deduction = getHonorarioDeductionForMonth(mes);
@@ -384,6 +396,12 @@ const computeDerivedWithMonthlyRules = ({
       let basePrev = prevPatrimonio;
       let g_p = patrimonio - basePrev - aporte;
       let margen = basePrev !== 0 ? (g_p / Math.abs(basePrev)) * 100 : 0;
+      if (applyRules) {
+        const baseTotal = basePrev + aporte;
+        if (baseTotal !== 0) {
+          margen = (g_p / Math.abs(baseTotal)) * 100;
+        }
+      }
 
       if (allowAporteAsPrev && !firstPatrimonioHandled && basePrev === 0 && aporte !== 0 && patrimonio !== 0) {
         basePrev = aporte;
@@ -713,6 +731,15 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       let basePrev = getPrevMonthPatrimonio(mes);
       let g_p = patrimonio - basePrev - aporteMes;
       let margen = basePrev !== 0 ? (g_p / Math.abs(basePrev)) * 100 : 0;
+      if (isMonthlyRulesYear) {
+        const marginPct = getMonthlyMarginPercent(displayYear, mes, { currentMonthIndex, currentDay });
+        if (Number.isFinite(marginPct)) {
+          const baseTotal = basePrev + aporteMes;
+          if (baseTotal !== 0) {
+            margen = (g_p / Math.abs(baseTotal)) * 100;
+          }
+        }
+      }
       if (basePrev === 0 && aporteMes !== 0 && patrimonio !== 0) {
         basePrev = aporteMes;
         g_p = patrimonio - aporteMes;
@@ -950,21 +977,9 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         baseData.usarAporteComoPrev === true
       )
       : null;
-    const loadUsersList = () =>
-      new Promise((resolve) => {
-        if (typeof users !== "undefined" && Array.isArray(users)) {
-          resolve(users);
-          return;
-        }
-        const script = document.createElement("script");
-        script.src = `data/users.js?v=${Date.now()}`;
-        script.async = true;
-        script.onload = () => {
-          resolve(typeof users !== "undefined" && Array.isArray(users) ? users : []);
-        };
-        script.onerror = () => resolve([]);
-        document.head.appendChild(script);
-      });
+    const loadUsersList = () => Promise.resolve(
+      (typeof users !== "undefined" && Array.isArray(users)) ? users : []
+    );
     const computeHonorarioDeductionForMonth = ({ derivedCurrent, derivedPrev, corte, monthKey, year }) => {
       if (!monthKey) return 0;
       const utilPorMes = derivedCurrent?.monthly?.reduce((acc, m) => {
@@ -998,7 +1013,9 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const ensureCastleBlackHonorariosMovement = async () => {
       const isCastleBlack = claveUsuario === "matris" || String(baseData.socio || "").trim().toUpperCase() === "CASTLE BLACK";
       if (!isCastleBlack || !isActualYear || Number(displayYear) !== currentYearNumber) return;
-      const currentMonthIdx = new Date().getMonth();
+      const now = new Date();
+      const currentMonthIdx = now.getMonth();
+      const currentDay = now.getDate();
       if (currentMonthIdx < monthOrder.indexOf("febrero")) return;
       const monthKey = monthOrder[currentMonthIdx];
       const usersList = await loadUsersList();
@@ -1036,7 +1053,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           corteAplicado: corte,
           derivedPrevYear: derivedPrev,
           disableHonorarios: false,
-          currentMonthIndex: currentMonthIdx
+          currentMonthIndex: currentMonthIdx,
+          currentDay
         });
         const deduction = computeHonorarioDeductionForMonth({
           derivedCurrent,
@@ -1086,7 +1104,9 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     } catch (err) {
       console.error("Error al generar movimiento de honorarios:", err);
     }
-    const currentMonthIndex = new Date().getMonth();
+    const currentDate = new Date();
+    const currentMonthIndex = currentDate.getMonth();
+    const currentDay = currentDate.getDate();
     const isMonthlyRulesYear = isActualYear && Number(displayYear) === 2026;
     const mesesForCalc = buildMesesWithMovAportes(userData.meses || {}, displayYear);
     derived = isMonthlyRulesYear
@@ -1098,7 +1118,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         corteAplicado,
         derivedPrevYear,
         disableHonorarios,
-        currentMonthIndex
+        currentMonthIndex,
+        currentDay
       })
       : computeDerived(mesesForCalc, prevPatrInicial, useAporteAsPrev);
     derivedData = derived;
