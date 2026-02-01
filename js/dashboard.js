@@ -535,6 +535,7 @@ let histBase = null;
 let chartPatrimonio = null;
 let chartUtilidades = null;
   let baseUtilidadesData = null;
+  let baseUtilCumulativeData = null;
   let utilChartTicked = false;
   let resizeChartsTimer = null;
   let chartsResizeObserver = null;
@@ -1740,6 +1741,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
               : "";
           }
 
+          let currentMonthGp = null;
           const currentRow = currentMonthKey ? monthRowMap[currentMonthKey] : null;
           if (currentRow) {
             const prevGp = toNumber(currentRow.gpCell?.textContent);
@@ -1751,6 +1753,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             currentRow.gpCell.className = trendClass(metrics.g_p);
             setArrowIndicator(currentRow.gpArrow, metrics.g_p, prevGp);
             monthSnapshots[currentMonthKey] = metrics;
+            if (Number.isFinite(metrics.g_p)) currentMonthGp = metrics.g_p;
           }
 
           const rateToUse = Number.isFinite(currentRate) ? currentRate : baseRate;
@@ -1771,23 +1774,34 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             const monthKey = currentMonthKey || "enero";
             const monthIdx = labels.indexOf(monthKey);
             if (monthIdx >= 0) {
-              const baseVal = toNumber(baseUtilidadesData[monthIdx]);
-              if (Number.isFinite(baseVal) && baseVal !== 0) {
-                updated[monthIdx] = Math.sign(baseVal) * Math.abs(nuevaUtil);
+              const monthValue = Number.isFinite(currentMonthGp)
+                ? currentMonthGp
+                : toNumber(monthSnapshots[monthKey]?.g_p);
+              if (Number.isFinite(monthValue)) {
+                updated[monthIdx] = monthValue;
               } else {
-                updated[monthIdx] = nuevaUtil;
+                updated[monthIdx] = baseUtilidadesData[monthIdx];
               }
             }
             if (!utilChartTicked) {
               utilChartTicked = true;
-              if (monthIdx >= 0) baseUtilidadesData[monthIdx] = updated[monthIdx];
+              if (monthIdx >= 0) {
+                const delta = updated[monthIdx] - (Number.isFinite(baseUtilidadesData[monthIdx]) ? baseUtilidadesData[monthIdx] : 0);
+                baseUtilidadesData[monthIdx] = updated[monthIdx];
+                if (Array.isArray(baseUtilCumulativeData)) {
+                  const baseCum = Number.isFinite(baseUtilCumulativeData[monthIdx]) ? baseUtilCumulativeData[monthIdx] : 0;
+                  baseUtilCumulativeData[monthIdx] = baseCum + delta;
+                }
+              }
             } else {
-              const cumulative = [];
-              updated.reduce((acc, val) => {
-                const next = acc + (Number(val) || 0);
-                cumulative.push(next);
-                return next;
-              }, 0);
+              const cumulative = Array.isArray(baseUtilCumulativeData)
+                ? baseUtilCumulativeData.slice()
+                : [];
+              if (monthIdx >= 0 && Array.isArray(cumulative)) {
+                const baseVal = Number.isFinite(baseUtilidadesData[monthIdx]) ? baseUtilidadesData[monthIdx] : 0;
+                const baseCum = Number.isFinite(cumulative[monthIdx]) ? cumulative[monthIdx] : 0;
+                cumulative[monthIdx] = baseCum + (updated[monthIdx] - baseVal);
+              }
               const utilColors = updated.map(v => (v >= 0 ? "rgba(34, 197, 94, 0.6)" : "rgba(239, 68, 68, 0.6)"));
               const utilBorders = updated.map(v => (v >= 0 ? "#22c55e" : "#ef4444"));
               const acumColors = cumulative.map(v => (v >= 0 ? "rgba(15, 81, 50, 0.6)" : "rgba(127, 29, 29, 0.75)"));
@@ -2107,6 +2121,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         utilidadAcumulada.push(next);
         return next;
       }, 0);
+      baseUtilCumulativeData = utilidadAcumulada.slice();
 
       chartPatrimonio = new Chart(graficoPatrimonio.getContext("2d"), {
         type: "line",
