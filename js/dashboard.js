@@ -28,6 +28,8 @@ const formatNumber = (value, options = {}) => {
   });
 };
 
+const formatCopValue = (value) => formatNumber(value, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
 const formatPercent = (value) => {
   const numberValue = toNumber(value);
   if (!Number.isFinite(numberValue)) {
@@ -89,6 +91,8 @@ const monthOrder = [
   "noviembre",
   "diciembre"
 ];
+
+const HONORARIOS_RATE_FALLBACK = 3636.5;
 
 const sumAportesFromMeses = (meses = {}) =>
   monthOrder.reduce((acc, mes) => acc + (toNumber(meses?.[mes]?.aporte) || 0), 0);
@@ -302,7 +306,7 @@ const getMonthlyMarginPercent = (year, mes) => {
 const buildHonorarioDeductionMap = (corte) => {
   const trimestres = getTrimestresByCorte(corte);
   const map = {};
-  trimestres.forEach((tri) => {
+  trimestres.forEach((tri, index) => {
     const mesesTri = Array.isArray(tri.meses) ? tri.meses : [];
     if (!mesesTri.length) return;
     const lastMes = mesesTri[mesesTri.length - 1];
@@ -310,7 +314,7 @@ const buildHonorarioDeductionMap = (corte) => {
     const lastIdx = monthOrder.indexOf(lastMes);
     if (lastIdx === -1 || lastIdx + 1 >= monthOrder.length) return;
     const dedMes = monthOrder[lastIdx + 1];
-    map[dedMes] = { nombre: tri.nombre, meses: mesesTri };
+    map[dedMes] = { nombre: tri.nombre, meses: mesesTri, index };
   });
   return map;
 };
@@ -531,6 +535,7 @@ let histBase = null;
 let chartPatrimonio = null;
 let chartUtilidades = null;
   let baseUtilidadesData = null;
+  let utilChartTicked = false;
   let resizeChartsTimer = null;
   let chartsResizeObserver = null;
   let layoutResizeObserver = null;
@@ -870,6 +875,20 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       if (!Number.isFinite(tasaMov) || tasaMov === 0) return 0;
       return Number.isFinite(cantidadCop) ? cantidadCop / tasaMov : 0;
     };
+    const matchMovimientoForUserData = (mov, data) => {
+      const clave = String(data?.username || "").trim().toLowerCase();
+      const idClienteData = String(data?.idCliente || "").trim().toLowerCase();
+      const cedulaData = String(data?.cedula || "").trim().toLowerCase();
+      const movUser = String(mov.username || "").trim().toLowerCase();
+      const movCliente = String(mov.cliente || "").trim().toLowerCase();
+      if (movUser || movCliente) {
+        const userMatch = movUser && clave && movUser === clave;
+        const clienteMatch = movCliente && idClienteData && movCliente === idClienteData;
+        return userMatch || clienteMatch;
+      }
+      const movCedula = String(mov.cedula || "").trim().toLowerCase();
+      return cedulaData && movCedula === cedulaData;
+    };
     const buildMesesWithMovAportes = (meses = {}, year) => {
       if (typeof movimientosData === "undefined" || !Array.isArray(movimientosData)) return meses;
       const sums = {};
@@ -888,6 +907,24 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const merged = { ...meses };
       keys.forEach((mesKey) => {
         const base = meses?.[mesKey] || {};
+        merged[mesKey] = { ...base, aporte: sums[mesKey] };
+      });
+      return merged;
+    };
+    const buildMesesWithMovAportesForUser = (data, year) => {
+      if (typeof movimientosData === "undefined" || !Array.isArray(movimientosData)) return data?.meses || {};
+      const sums = {};
+      movimientosData
+        .filter((m) => matchMovimientoForUserData(m, data) && Number(m.year) === Number(year))
+        .forEach((m) => {
+          const mesKey = monthKeyFromFecha(m.fecha);
+          if (!mesKey) return;
+          const usdVal = getMovUsdValueLocal(m);
+          sums[mesKey] = (sums[mesKey] || 0) + (Number.isFinite(usdVal) ? usdVal : 0);
+        });
+      const merged = { ...(data?.meses || {}) };
+      Object.keys(sums).forEach((mesKey) => {
+        const base = merged?.[mesKey] || {};
         merged[mesKey] = { ...base, aporte: sums[mesKey] };
       });
       return merged;
@@ -912,6 +949,142 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         baseData.usarAporteComoPrev === true
       )
       : null;
+    const loadUsersList = () =>
+      new Promise((resolve) => {
+        if (typeof users !== "undefined" && Array.isArray(users)) {
+          resolve(users);
+          return;
+        }
+        const script = document.createElement("script");
+        script.src = `data/users.js?v=${Date.now()}`;
+        script.async = true;
+        script.onload = () => {
+          resolve(typeof users !== "undefined" && Array.isArray(users) ? users : []);
+        };
+        script.onerror = () => resolve([]);
+        document.head.appendChild(script);
+      });
+    const computeHonorarioDeductionForMonth = ({ derivedCurrent, derivedPrev, corte, monthKey, year }) => {
+      if (!monthKey) return 0;
+      const utilPorMes = derivedCurrent?.monthly?.reduce((acc, m) => {
+        acc[m.mes] = m.g_p;
+        return acc;
+      }, {}) || {};
+      const utilPorMesPrev = derivedPrev?.monthly?.reduce((acc, m) => {
+        acc[m.mes] = m.g_p;
+        return acc;
+      }, {}) || {};
+      const deductionMap = buildHonorarioDeductionMap(corte);
+      const targetTri = deductionMap[monthKey];
+      if (!targetTri) return 0;
+      const mesesTri = targetTri.meses || [];
+      const triHasEnero = mesesTri.includes("enero");
+      const triHasPrevWrap = triHasEnero && (mesesTri.includes("noviembre") || mesesTri.includes("diciembre"));
+      const utilTrim = mesesTri.reduce((sum, mes) => {
+        if (Number(year) === 2026 && targetTri.index === 3 && mes === "enero") {
+          return sum;
+        }
+        const currentVal = toNumber(utilPorMes[mes]);
+        if (triHasPrevWrap && (mes === "noviembre" || mes === "diciembre")) {
+          const prevVal = toNumber(utilPorMesPrev[mes]);
+          if (Number.isFinite(prevVal)) return sum + prevVal;
+        }
+        return sum + (Number.isFinite(currentVal) ? currentVal : 0);
+      }, 0);
+      const tarifa = tarifaHonorarios(utilTrim);
+      return tarifa.valor || 0;
+    };
+    const ensureCastleBlackHonorariosMovement = async () => {
+      const isCastleBlack = claveUsuario === "matris" || String(baseData.socio || "").trim().toUpperCase() === "CASTLE BLACK";
+      if (!isCastleBlack || !isActualYear || Number(displayYear) !== currentYearNumber) return;
+      const currentMonthIdx = new Date().getMonth();
+      if (currentMonthIdx < monthOrder.indexOf("febrero")) return;
+      const monthKey = monthOrder[currentMonthIdx];
+      const usersList = await loadUsersList();
+      if (!usersList.length) return;
+      let totalUsd = 0;
+      for (const userEntry of usersList) {
+        if (!userEntry?.dataFile) continue;
+        const username = String(userEntry.username || "").trim().toLowerCase();
+        if (username === "matris") continue;
+        const userInfo = await loadUserData(userEntry.dataFile).catch(() => null);
+        if (!userInfo) continue;
+        const userIsCastle = String(userInfo.socio || "").trim().toUpperCase() === "CASTLE BLACK";
+        if (userIsCastle || username === "jfpg2006") continue;
+        const corte = (userInfo.corte || "MAR-JUN-SEP-DIC").trim().toUpperCase();
+        const userPrevYearKey = String(currentYearNumber - 1);
+        const userPrevYearData = userInfo.historico?.[userPrevYearKey];
+        const userPrevPrevYearKey = String(currentYearNumber - 2);
+        const userPrevPrevYearData = userInfo.historico?.[userPrevPrevYearKey];
+        const prevClosing = toNumber(userPrevYearData?.meses?.diciembre?.patrimonio) || 0;
+        const userPrevPatr = prevClosing > 0 ? prevClosing : (toNumber(userInfo.patrimonioPrev) || 0);
+        const userPrevPrevClosing = toNumber(userPrevPrevYearData?.meses?.diciembre?.patrimonio) || 0;
+        const derivedPrev = userPrevYearData?.meses
+          ? computeDerived(
+            userPrevYearData.meses || {},
+            userPrevPrevClosing || toNumber(userPrevYearData.patrimonioPrev) || 0,
+            userInfo.usarAporteComoPrev === true
+          )
+          : null;
+        const mesesCalc = buildMesesWithMovAportesForUser(userInfo, currentYearNumber);
+        const derivedCurrent = computeDerivedWithMonthlyRules({
+          meses: mesesCalc,
+          prevPatrInicial: userPrevPatr,
+          useAporteAsPrev: userInfo.usarAporteComoPrev === true,
+          year: currentYearNumber,
+          corteAplicado: corte,
+          derivedPrevYear: derivedPrev,
+          disableHonorarios: false,
+          currentMonthIndex: currentMonthIdx
+        });
+        const deduction = computeHonorarioDeductionForMonth({
+          derivedCurrent,
+          derivedPrev,
+          corte,
+          monthKey,
+          year: currentYearNumber
+        });
+        totalUsd += Number.isFinite(deduction) ? deduction : 0;
+      }
+      if (!Number.isFinite(totalUsd) || totalUsd <= 0) return;
+      const rate = Number.isFinite(currentRate)
+        ? currentRate
+        : (Number.isFinite(baseRate) ? baseRate : HONORARIOS_RATE_FALLBACK);
+      const pad2 = (n) => n.toString().padStart(2, "0");
+      const monthNum = pad2(currentMonthIdx + 1);
+      const yearShort = String(currentYearNumber).slice(-2);
+      const fecha = `01/${monthNum}/${yearShort}`;
+      const exists = movimientosData.some((m) =>
+        String(m.username || "").toLowerCase() === "matris" &&
+        String(m.fecha || "") === fecha &&
+        String(m.concepto || "") === "HONORARIOS"
+      );
+      if (exists) return;
+      const maxRecibo = movimientosData.reduce((max, m) => {
+        const val = Number(m.recibo);
+        return Number.isFinite(val) && val > max ? val : max;
+      }, 0);
+      const nuevoRecibo = String(maxRecibo + 1);
+      movimientosData.unshift({
+        "username": "MATRIS",
+        "cliente": "A",
+        "recibo": nuevoRecibo,
+        "fecha": fecha,
+        "year": currentYearNumber,
+        "socio": "CASTLE BLACK",
+        "cedula": "-",
+        "cantidad": totalUsd * rate,
+        "tipo": "COP",
+        "tasa": rate,
+        "cambio": totalUsd,
+        "concepto": "HONORARIOS"
+      });
+    };
+    try {
+      await ensureCastleBlackHonorariosMovement();
+    } catch (err) {
+      console.error("Error al generar movimiento de honorarios:", err);
+    }
     const currentMonthIndex = new Date().getMonth();
     const isMonthlyRulesYear = isActualYear && Number(displayYear) === 2026;
     const mesesForCalc = buildMesesWithMovAportes(userData.meses || {}, displayYear);
@@ -1105,15 +1278,20 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     }
 
     // Estado de cuenta total (provisionalmente igual al resumen actual)
+    const histPatrUsdDisplay = isActualYear ? patrimonioCalc : totalPatrimonioHistAll;
+    const histUtilUsdDisplay = histPatrUsdDisplay - totalAporteHistMovAll;
+    const histCrcmntUsdDisplay = totalAporteHistMovAll
+      ? (histUtilUsdDisplay / Math.abs(totalAporteHistMovAll)) * 100
+      : 0;
     if (histBase) {
       if (aporteHist) aporteHist.textContent = formatMoney(totalAporteHistMovAll);
-      if (patrimonioHist) patrimonioHist.textContent = formatMoney(totalPatrimonioHistAll);
-      if (utilidadRHist) utilidadRHist.textContent = formatMoney(totalUtilHistAll);
-      if (utilidadHist) utilidadHist.textContent = formatMoney(totalUtilHistAll);
-      if (crcmntHist) crcmntHist.textContent = formatPercent(totalCrcmntHistAll);
-      setTrendClass(utilidadRHist, totalUtilHistAll);
-      setTrendClass(utilidadHist, totalUtilHistAll);
-      setTrendClass(crcmntHist, totalCrcmntHistAll);
+      if (patrimonioHist) patrimonioHist.textContent = formatMoney(histPatrUsdDisplay);
+      if (utilidadRHist) utilidadRHist.textContent = formatMoney(histUtilUsdDisplay);
+      if (utilidadHist) utilidadHist.textContent = formatMoney(histUtilUsdDisplay);
+      if (crcmntHist) crcmntHist.textContent = formatPercent(histCrcmntUsdDisplay);
+      setTrendClass(utilidadRHist, histUtilUsdDisplay);
+      setTrendClass(utilidadHist, histUtilUsdDisplay);
+      setTrendClass(crcmntHist, histCrcmntUsdDisplay);
     }
     if (utilidadRHistArrow) utilidadRHistArrow.textContent = "";
     if (utilidadHistArrow) utilidadHistArrow.textContent = "";
@@ -1431,11 +1609,11 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     if (histBase && aporteHistL && patrimonioHistL && utilidadRHistL && utilidadHistL && crcmntHistL) {
       const aporteCopHist = totalMovCopAll;
       if (aporteHist) aporteHist.textContent = formatMoney(totalAporteHistMovAll);
-      if (patrimonioHist) patrimonioHist.textContent = formatMoney(totalPatrimonioHistAll);
-      if (utilidadRHist) utilidadRHist.textContent = formatMoney(totalUtilHistAll);
-      if (utilidadHist) utilidadHist.textContent = formatMoney(totalUtilHistAll);
-      const patrCopHist = totalPatrimonioHistAll * LATEST_HISTORICAL_RATE;
-      const utilUsdHist = totalUtilHistAll;
+      if (patrimonioHist) patrimonioHist.textContent = formatMoney(histPatrUsdDisplay);
+      if (utilidadRHist) utilidadRHist.textContent = formatMoney(histUtilUsdDisplay);
+      if (utilidadHist) utilidadHist.textContent = formatMoney(histUtilUsdDisplay);
+      const patrCopHist = histPatrUsdDisplay * LATEST_HISTORICAL_RATE;
+      const utilUsdHist = histUtilUsdDisplay;
       const utilCopHist = patrCopHist - aporteCopHist;
       const utilRCopHist = utilCopHist;
       const utilTotalCopHist = utilUsdHist * LATEST_HISTORICAL_RATE;
@@ -1590,31 +1768,46 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           if (chartUtilidades && chartUtilidades.data?.datasets?.length && Array.isArray(baseUtilidadesData)) {
             const labels = chartUtilidades.data.labels || [];
             const updated = baseUtilidadesData.slice();
-            const eneroIdx = labels.indexOf("enero");
-            if (eneroIdx >= 0) updated[eneroIdx] = nuevaUtil;
-            const cumulative = [];
-            updated.reduce((acc, val) => {
-              const next = acc + (Number(val) || 0);
-              cumulative.push(next);
-              return next;
-            }, 0);
-            const utilColors = updated.map(v => (v >= 0 ? "rgba(34, 197, 94, 0.6)" : "rgba(239, 68, 68, 0.6)"));
-            const utilBorders = updated.map(v => (v >= 0 ? "#22c55e" : "#ef4444"));
-            const acumColors = cumulative.map(v => (v >= 0 ? "rgba(15, 81, 50, 0.6)" : "rgba(127, 29, 29, 0.75)"));
-            const acumBorders = cumulative.map(v => (v >= 0 ? "#0f5132" : "#7f1d1d"));
-            chartUtilidades.data.datasets[0].data = updated;
-            chartUtilidades.data.datasets[0].backgroundColor = utilColors;
-            chartUtilidades.data.datasets[0].borderColor = utilBorders;
-            chartUtilidades.data.datasets[1].data = cumulative;
-            chartUtilidades.data.datasets[1].backgroundColor = acumColors;
-            chartUtilidades.data.datasets[1].borderColor = acumBorders;
-            chartUtilidades.update();
+            const monthKey = currentMonthKey || "enero";
+            const monthIdx = labels.indexOf(monthKey);
+            if (monthIdx >= 0) {
+              const baseVal = toNumber(baseUtilidadesData[monthIdx]);
+              if (Number.isFinite(baseVal) && baseVal !== 0) {
+                updated[monthIdx] = Math.sign(baseVal) * Math.abs(nuevaUtil);
+              } else {
+                updated[monthIdx] = nuevaUtil;
+              }
+            }
+            if (!utilChartTicked) {
+              utilChartTicked = true;
+              if (monthIdx >= 0) baseUtilidadesData[monthIdx] = updated[monthIdx];
+            } else {
+              const cumulative = [];
+              updated.reduce((acc, val) => {
+                const next = acc + (Number(val) || 0);
+                cumulative.push(next);
+                return next;
+              }, 0);
+              const utilColors = updated.map(v => (v >= 0 ? "rgba(34, 197, 94, 0.6)" : "rgba(239, 68, 68, 0.6)"));
+              const utilBorders = updated.map(v => (v >= 0 ? "#22c55e" : "#ef4444"));
+              const acumColors = cumulative.map(v => (v >= 0 ? "rgba(15, 81, 50, 0.6)" : "rgba(127, 29, 29, 0.75)"));
+              const acumBorders = cumulative.map(v => (v >= 0 ? "#0f5132" : "#7f1d1d"));
+              chartUtilidades.data.datasets[0].data = updated;
+              chartUtilidades.data.datasets[0].backgroundColor = utilColors;
+              chartUtilidades.data.datasets[0].borderColor = utilBorders;
+              chartUtilidades.data.datasets[1].data = cumulative;
+              chartUtilidades.data.datasets[1].backgroundColor = acumColors;
+              chartUtilidades.data.datasets[1].borderColor = acumBorders;
+              chartUtilidades.update();
+            }
           }
 
           const histFactor = baseAporteHist ? crFactor : (1 + ((Math.random() - 0.5) * 0.02));
-          const histPatr = baseAporteHist
-            ? baseAporteHist * (1 + (baseCrcmntHist * histFactor) / 100)
-            : basePatrHist * histFactor;
+          const histPatr = isActualYear
+            ? nuevoPat
+            : (baseAporteHist
+                ? baseAporteHist * (1 + (baseCrcmntHist * histFactor) / 100)
+                : basePatrHist * histFactor);
           updateHistOscillation(histPatr, histRateLive);
         }, 3000);
       }
