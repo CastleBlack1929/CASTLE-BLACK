@@ -1594,6 +1594,31 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       setTrendClass(utilidadL, utilidadCop);
       setTrendClass(utilidadTotalL, utilidadTotalCop);
       setTrendClass(crcmntL, crcmntLCur);
+      if (histBase && patrimonioHistL && utilidadRHistL && utilidadHistL && crcmntHistL) {
+        const aporteCopHist = totalMovCopAll || 0;
+        const histUsd = histPatrUsdDisplay || 0;
+        const histUtilUsd = histUsd - (totalAporteHistMovAll || 0);
+        const patrCopHist = histUsd * rate;
+        const utilRCopHist = patrCopHist - aporteCopHist;
+        const utilTotalCopHist = histUtilUsd * rate;
+        const crcmntHistLCur = aporteCopHist !== 0
+          ? (utilRCopHist / Math.abs(aporteCopHist)) * 100
+          : 0;
+        if (aporteHistL) aporteHistL.textContent = formatMoneyCop(aporteCopHist);
+        patrimonioHistL.textContent = formatMoneyCop(patrCopHist);
+        utilidadRHistL.textContent = formatMoneyCop(utilRCopHist);
+        utilidadHistL.textContent = formatMoneyCop(utilTotalCopHist);
+        crcmntHistL.textContent = formatPercent(crcmntHistLCur);
+        setTrendClass(utilidadRHistL, utilRCopHist);
+        setTrendClass(utilidadHistL, utilTotalCopHist);
+        setTrendClass(crcmntHistL, crcmntHistLCur);
+        if (!Number.isFinite(prevHistUtilLCopVal) && Number.isFinite(utilRCopHist)) {
+          prevHistUtilLCopVal = utilRCopHist;
+        }
+        if (!Number.isFinite(prevHistUtilTotalLCopVal) && Number.isFinite(utilTotalCopHist)) {
+          prevHistUtilTotalLCopVal = utilTotalCopHist;
+        }
+      }
       if (isActualYear) {
         const usdUtilVal = Number.isFinite(utilUsdOverride) ? utilUsdOverride : utilCalcBase;
         const usdUtilTotVal = Number.isFinite(utilUsdOverride) ? utilUsdOverride : utilCalcBase;

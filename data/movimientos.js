@@ -1277,7 +1277,7 @@ const movimientosData = [
     "username": "MATRIS",
     "cliente": "A",
     "recibo": "111",
-    "fecha": "01/02/26",
+    "fecha": "06/02/26",
     "year": 2026,
     "socio": "CASTLE BLACK",
     "cedula": "-",
@@ -1285,6 +1285,20 @@ const movimientosData = [
     "tipo": "COP",
     "tasa": 3685.0,
     "cambio": 542.70
+  },
+  {
+    "username": "MATRIS",
+    "cliente": "A",
+    "recibo": "109",
+    "fecha": "01/02/26",
+    "year": 2026,
+    "socio": "CASTLE BLACK",
+    "cedula": "-",
+    "cantidad": 517045.0,
+    "tipo": "COP",
+    "tasa": 3637.0,
+    "cambio": 142.18,
+    "concepto": "HONORARIOS"
   },
   {
     "username": "lmp1974",
