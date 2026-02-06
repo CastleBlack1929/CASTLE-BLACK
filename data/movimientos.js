@@ -1261,6 +1261,32 @@ const movimientosData = [
     "cambio": 4119.23
   },
   {
+    "username": "jfpg2006",
+    "cliente": "001",
+    "recibo": "110",
+    "fecha": "01/02/26",
+    "year": 2026,
+    "socio": "JUAN FEDERICO PERALTA GONZALEZ",
+    "cedula": "1141514508",
+    "cantidad": 8000000.0,
+    "tipo": "COP",
+    "tasa": 3685.0,
+    "cambio": 2170.74
+  },
+  {
+    "username": "MATRIS",
+    "cliente": "A",
+    "recibo": "111",
+    "fecha": "01/02/26",
+    "year": 2026,
+    "socio": "CASTLE BLACK",
+    "cedula": "-",
+    "cantidad": 2000000.0,
+    "tipo": "COP",
+    "tasa": 3685.0,
+    "cambio": 542.70
+  },
+  {
     "username": "lmp1974",
     "cliente": "022",
     "recibo": "103",
