@@ -1264,7 +1264,7 @@ const movimientosData = [
     "username": "jfpg2006",
     "cliente": "001",
     "recibo": "110",
-    "fecha": "01/02/26",
+    "fecha": "06/02/26",
     "year": 2026,
     "socio": "JUAN FEDERICO PERALTA GONZALEZ",
     "cedula": "1141514508",
@@ -1285,6 +1285,19 @@ const movimientosData = [
     "tipo": "COP",
     "tasa": 3685.0,
     "cambio": 542.70
+  },
+  {
+    "username": "clra1960",
+    "cliente": "019",
+    "recibo": "112",
+    "fecha": "06/02/26",
+    "year": 2026,
+    "socio": "CARMEN LIGIA RODRIGUEZ AREVALO",
+    "cedula": "35467082",
+    "cantidad": 200000.0,
+    "tipo": "COP",
+    "tasa": 3797.0,
+    "cambio": 52.68
   },
   {
     "username": "MATRIS",
