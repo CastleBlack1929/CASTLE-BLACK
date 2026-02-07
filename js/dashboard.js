@@ -518,6 +518,47 @@ document.addEventListener("DOMContentLoaded", async () => {
   ensureRateArrow();
   const rateTime = document.getElementById("rateTime");
   const yearSelect = document.getElementById("yearSelect");
+
+  const setLoadingValue = (el) => {
+    if (!el) return;
+    el.textContent = "...";
+    el.classList.remove("pos", "neg", "neutral");
+  };
+  [
+    aporte,
+    patrimonio,
+    utilidad,
+    utilidadTotal,
+    crcmnt,
+    aporteL,
+    patrimonioL,
+    utilidadL,
+    utilidadTotalL,
+    crcmntL,
+    aporteHist,
+    patrimonioHist,
+    crcmntHist,
+    utilidadRHist,
+    utilidadHist,
+    aporteHistL,
+    patrimonioHistL,
+    crcmntHistL,
+    utilidadRHistL,
+    utilidadHistL
+  ].forEach(setLoadingValue);
+  [
+    utilidadArrow,
+    utilidadTotalArrow,
+    utilidadLArrow,
+    utilidadTotalLArrow,
+    utilidadRHistArrow,
+    utilidadHistArrow,
+    utilidadRHistLArrow,
+    utilidadHistLArrow,
+    rateArrow
+  ].forEach((el) => {
+    if (el) el.textContent = "";
+  });
   const downloadReportBtn = document.getElementById("downloadReportBtn");
   const SESSION_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutos
   const SESSION_ACTIVITY_KEY = "sessionLastActivity";
@@ -1524,6 +1565,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       fetchLiveRate();
       liveRateTimer = setInterval(fetchLiveRate, RATE_REFRESH_MS);
     };
+    const shouldHoldRateDependentValues = () => (isActualYear && rateBootstrapping && !rateReady);
     if (isActualYear) {
       baseRate = DEFAULT_RATE_BY_YEAR.actual;
       currentRate = baseRate;
@@ -1569,7 +1611,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           : (String(displayYear) === "2025"
               ? (Number.isFinite(prevPatrLBase) ? (prevPatrLBase + (sumMovCop2025 || 0)) : null)
               : (Number.isFinite(baseRate) ? (totalAportesActual || 0) * baseRate : null)));
-    if (Number.isFinite(aporteLBase) && aporteL) {
+    if (!shouldHoldRateDependentValues() && Number.isFinite(aporteLBase) && aporteL) {
       aporteL.textContent = formatMoneyCop(aporteLBase);
     }
 
@@ -1659,7 +1701,9 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
     };
 
-    applyPesos(currentRate);
+    if (!shouldHoldRateDependentValues()) {
+      applyPesos(currentRate);
+    }
 
     // Override histórico en COP con la tasa más reciente (siempre la misma para todos los años)
     const getHistoricalRate = () => {
@@ -1667,34 +1711,36 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       if (isActualYear && Number.isFinite(currentRate)) return currentRate;
       return DEFAULT_RATE_BY_YEAR.actual || 3710.5;
     };
-    const LATEST_HISTORICAL_RATE = getHistoricalRate();
-    if (histBase && aporteHistL && patrimonioHistL && utilidadRHistL && utilidadHistL && crcmntHistL) {
-      const aporteCopHist = totalMovCopAll;
-      if (aporteHist) aporteHist.textContent = formatMoney(totalAporteHistMovAll);
-      if (patrimonioHist) patrimonioHist.textContent = formatMoney(histPatrUsdDisplay);
-      if (utilidadRHist) utilidadRHist.textContent = formatMoney(histUtilUsdDisplay);
-      if (utilidadHist) utilidadHist.textContent = formatMoney(histUtilUsdDisplay);
-      const patrCopHist = histPatrUsdDisplay * LATEST_HISTORICAL_RATE;
-      const utilUsdHist = histUtilUsdDisplay;
-      const utilCopHist = patrCopHist - aporteCopHist;
-      const utilRCopHist = utilCopHist;
-      const utilTotalCopHist = utilUsdHist * LATEST_HISTORICAL_RATE;
-      const crcmntHistLCur = aporteCopHist !== 0 ? (utilCopHist / Math.abs(aporteCopHist)) * 100 : 0;
-      aporteHistL.textContent = formatMoneyCop(aporteCopHist);
-      patrimonioHistL.textContent = formatMoneyCop(patrCopHist);
-      utilidadHistL.textContent = formatMoneyCop(utilTotalCopHist);
-      utilidadRHistL.textContent = formatMoneyCop(utilRCopHist);
-      crcmntHistL.textContent = formatPercent(crcmntHistLCur);
-      setTrendClass(utilidadHistL, utilTotalCopHist);
-      setTrendClass(utilidadRHistL, utilRCopHist);
-      setTrendClass(crcmntHistL, crcmntHistLCur);
-      if (Number.isFinite(utilRCopHist)) prevHistUtilLCopVal = utilRCopHist;
-      if (Number.isFinite(utilTotalCopHist)) prevHistUtilTotalLCopVal = utilTotalCopHist;
+    if (!shouldHoldRateDependentValues()) {
+      const LATEST_HISTORICAL_RATE = getHistoricalRate();
+      if (histBase && aporteHistL && patrimonioHistL && utilidadRHistL && utilidadHistL && crcmntHistL) {
+        const aporteCopHist = totalMovCopAll;
+        if (aporteHist) aporteHist.textContent = formatMoney(totalAporteHistMovAll);
+        if (patrimonioHist) patrimonioHist.textContent = formatMoney(histPatrUsdDisplay);
+        if (utilidadRHist) utilidadRHist.textContent = formatMoney(histUtilUsdDisplay);
+        if (utilidadHist) utilidadHist.textContent = formatMoney(histUtilUsdDisplay);
+        const patrCopHist = histPatrUsdDisplay * LATEST_HISTORICAL_RATE;
+        const utilUsdHist = histUtilUsdDisplay;
+        const utilCopHist = patrCopHist - aporteCopHist;
+        const utilRCopHist = utilCopHist;
+        const utilTotalCopHist = utilUsdHist * LATEST_HISTORICAL_RATE;
+        const crcmntHistLCur = aporteCopHist !== 0 ? (utilCopHist / Math.abs(aporteCopHist)) * 100 : 0;
+        aporteHistL.textContent = formatMoneyCop(aporteCopHist);
+        patrimonioHistL.textContent = formatMoneyCop(patrCopHist);
+        utilidadHistL.textContent = formatMoneyCop(utilTotalCopHist);
+        utilidadRHistL.textContent = formatMoneyCop(utilRCopHist);
+        crcmntHistL.textContent = formatPercent(crcmntHistLCur);
+        setTrendClass(utilidadHistL, utilTotalCopHist);
+        setTrendClass(utilidadRHistL, utilRCopHist);
+        setTrendClass(crcmntHistL, crcmntHistLCur);
+        if (Number.isFinite(utilRCopHist)) prevHistUtilLCopVal = utilRCopHist;
+        if (Number.isFinite(utilTotalCopHist)) prevHistUtilTotalLCopVal = utilTotalCopHist;
+      }
+      const utilHistLVal = toNumber(utilidadRHistL?.textContent);
+      const utilHistTotLVal = toNumber(utilidadHistL?.textContent);
+      if (Number.isFinite(utilHistLVal)) prevHistUtilLCopVal = utilHistLVal;
+      if (Number.isFinite(utilHistTotLVal)) prevHistUtilTotalLCopVal = utilHistTotLVal;
     }
-    const utilHistLVal = toNumber(utilidadRHistL?.textContent);
-    const utilHistTotLVal = toNumber(utilidadHistL?.textContent);
-    if (Number.isFinite(utilHistLVal)) prevHistUtilLCopVal = utilHistLVal;
-    if (Number.isFinite(utilHistTotLVal)) prevHistUtilTotalLCopVal = utilHistTotLVal;
 
     // Oscilar crecimiento USD ±0.50% y recalcular; para años pasados, solo histórico
     // Oscilar tasa y resumen solo en 2026 (actual); y patrimonio USD en 2025
