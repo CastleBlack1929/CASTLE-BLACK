@@ -1329,6 +1329,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
   const readStoredRate = (key) => toNumber(localStorage.getItem(key));
     const updateRateDisplay = (rate, { updateArrow = true } = {}) => {
       if (!Number.isFinite(rate)) return;
+      if (rateBootstrapping && !rateReady) return;
       let prevRate = prevRateValue;
       if (isActualYear && !Number.isFinite(prevRate)) {
         const storedLast = readStoredRate(RATE_STORAGE_KEY);
@@ -1438,7 +1439,13 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       };
 
       const pageHost = typeof window !== "undefined" ? window.location.hostname : "";
-      const isLocalPage = isLocalHost(pageHost) || (typeof window !== "undefined" && window.location.protocol === "file:");
+      const isFilePage = (typeof window !== "undefined" && window.location.protocol === "file:");
+      const isLocalPage = isLocalHost(pageHost) || isFilePage;
+
+      if (isFilePage) {
+        rateFetchMode = "tradingview";
+        return TRADINGVIEW_API_URL;
+      }
 
       const storedUrl = localStorage.getItem("rateProxyUrl");
       if (storedUrl) {
@@ -1469,6 +1476,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       rateFetchMode = "tradingview";
       return TRADINGVIEW_API_URL;
     })();
+    let rateBootstrapping = (typeof window !== "undefined" && window.location.protocol === "file:" && rateFetchMode === "tradingview");
+    let rateReady = false;
 
     const applyLiveRate = (rate) => {
       if (!Number.isFinite(rate) || rate <= 0) return;
@@ -1476,6 +1485,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       baseRate = rate;
       currentRate = rate;
       histRateLive = rate;
+      rateReady = true;
+      rateBootstrapping = false;
       updateRateDisplay(rate);
       applyPesos(rate);
     };
@@ -1517,8 +1528,12 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       baseRate = DEFAULT_RATE_BY_YEAR.actual;
       currentRate = baseRate;
       histRateLive = currentRate;
-      updateRateDisplay(currentRate);
-      applyPesos(currentRate);
+      if (rateBootstrapping) {
+        if (rateValue) rateValue.textContent = "...";
+      } else {
+        updateRateDisplay(currentRate);
+        applyPesos(currentRate);
+      }
     } else {
       const rateBaseRaw =
         toNumber(userData.patrimonioL) && patrimonioCalcUsd
