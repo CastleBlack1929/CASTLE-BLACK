@@ -1339,9 +1339,20 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     if (isActualYear && currentMonthKey) {
       monthSnapshots[currentMonthKey] = computeMonthMetrics(currentMonthKey, patrimonioCalc);
     }
+    if (isActualYear) {
+      localStorage.setItem("currentPatrimonioActual", String(patrimonioCalc));
+    }
+
+    // Estado de cuenta total: siempre con patrimonio de la fecha actual (cierre 31/12/2025)
+    const storedActualPatr = toNumber(localStorage.getItem("currentPatrimonioActual"));
+    const currentBaseDecPatr = toNumber(baseData?.meses?.diciembre?.patrimonio);
+    const currentPatrUsdDisplay = Number.isFinite(storedActualPatr) && storedActualPatr > 0
+      ? storedActualPatr
+      : (Number.isFinite(currentBaseDecPatr) && currentBaseDecPatr > 0 ? currentBaseDecPatr : patrimonioCalc);
 
     // Estado de cuenta total (provisionalmente igual al resumen actual)
-    const histPatrUsdDisplay = isActualYear ? patrimonioCalc : totalPatrimonioHistAll;
+    const histPatrUsdDisplay = currentPatrUsdDisplay;
+    const fixedHistPatrUsd = histPatrUsdDisplay;
     const histUtilUsdDisplay = histPatrUsdDisplay - totalAporteHistMovAll;
     const histCrcmntUsdDisplay = totalAporteHistMovAll
       ? (histUtilUsdDisplay / Math.abs(totalAporteHistMovAll)) * 100
@@ -1747,19 +1758,20 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const startOscillation = (oscilarResumen) => {
       if (!oscilarResumen) return;
       const isOscYear2026 = selectedYear === "actual" || String(displayYear) === "2026";
-      const updateHistOscillation = (nuevoPat, rateToUse) => {
+      const updateHistOscillation = (_nuevoPat, rateToUse) => {
         const histRate = Number.isFinite(rateToUse) ? rateToUse : getHistoricalRate();
         const prevHistUtil = toNumber(utilidadRHist?.textContent);
         const prevHistUtilTot = toNumber(utilidadHist?.textContent);
 
+        const histPatrFixed = fixedHistPatrUsd;
         if (patrimonioHist) {
-          patrimonioHist.textContent = formatMoney(nuevoPat);
+          patrimonioHist.textContent = formatMoney(histPatrFixed);
         }
         if (patrimonioHistL && Number.isFinite(histRate)) {
-          patrimonioHistL.textContent = formatMoneyCop(nuevoPat * histRate);
+          patrimonioHistL.textContent = formatMoneyCop(histPatrFixed * histRate);
         }
 
-        const histUtilUsd = nuevoPat - (totalAporteHistMovAll || 0);
+        const histUtilUsd = histPatrFixed - (totalAporteHistMovAll || 0);
         const histCrcmntUsd = totalAporteHistMovAll
           ? (histUtilUsd / Math.abs(totalAporteHistMovAll)) * 100
           : 0;
@@ -1777,7 +1789,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         }
         if (Number.isFinite(histRate)) {
           const aporteCopHistTick = totalMovCopAll || 0;
-          const patrCopHistTick = nuevoPat * histRate;
+          const patrCopHistTick = histPatrFixed * histRate;
           const utilRCopHistTick = patrCopHistTick - aporteCopHistTick;
           const utilCopHistTick = histUtilUsd * histRate;
           const crcmntHistLCur = aporteCopHistTick !== 0
