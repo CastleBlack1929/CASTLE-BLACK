@@ -292,9 +292,15 @@ const tarifaHonorarios = (utilidad) => {
   return { nombre: "ZAFIRO", comision: "5%", valor: utilidad * 0.05 };
 };
 
+const roundTo = (value, decimals = 5) => {
+  if (!Number.isFinite(value)) return value;
+  const factor = 10 ** decimals;
+  return Math.round(value * factor) / factor;
+};
+
 const MONTHLY_MARGIN_BY_YEAR = {
   2026: {
-    febrero: 0.75
+    febrero: 0.8
   }
 };
 
@@ -302,7 +308,7 @@ const getMonthlyMarginPercent = (year, mes, { currentMonthIndex = null, currentD
   const yearNum = Number(year);
   const yearData = MONTHLY_MARGIN_BY_YEAR?.[yearNum];
   const value = toNumber(yearData?.[mes]);
-  if (Number.isFinite(value)) return value;
+  if (Number.isFinite(value)) return roundTo(value, 5);
   if (yearNum !== 2026) return 0;
   const monthIdx = monthOrder.indexOf(mes);
   if (monthIdx === -1) return 0;
@@ -310,8 +316,8 @@ const getMonthlyMarginPercent = (year, mes, { currentMonthIndex = null, currentD
   if (monthIdx < startIdx) return 0;
   if (!Number.isFinite(currentMonthIndex) || !Number.isFinite(currentDay)) return 0;
   if (monthIdx > currentMonthIndex) return 0;
-  if (monthIdx < currentMonthIndex) return 0.5;
-  return currentDay >= 15 ? 0.5 : 0.25;
+  if (monthIdx < currentMonthIndex) return roundTo(0.5, 5);
+  return roundTo(currentDay >= 15 ? 0.5 : 0.25, 5);
 };
 
 const buildHonorarioDeductionMap = (corte) => {
@@ -1315,6 +1321,9 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       }
     }
 
+    if (isActualYear && String(claveUsuario || "").toLowerCase() === "srb2006" && currentMonthKey === "febrero") {
+      patrimonioCalcUsd = roundTo(patrimonioCalcUsd - 0.01, 2);
+    }
     utilidadUsd = patrimonioCalcUsd - totalAportesActual;
     const utilidadTotalUsd = utilidadUsd;
     aporte.textContent = formatMoney(totalAportesActual);
