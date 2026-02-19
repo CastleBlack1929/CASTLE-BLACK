@@ -294,7 +294,7 @@ const tarifaHonorarios = (utilidad) => {
 
 const MONTHLY_MARGIN_BY_YEAR = {
   2026: {
-    febrero: 0.5
+    febrero: 0.75
   }
 };
 
