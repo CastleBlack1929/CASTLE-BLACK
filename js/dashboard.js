@@ -1170,6 +1170,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       })
       : computeDerived(mesesForCalc, prevPatrInicial, useAporteAsPrev);
     derivedData = derived;
+    const derivedMonthlyMap = derived.monthly.reduce((acc, item) => {
+      acc[item.mes] = item;
+      return acc;
+    }, {});
 
     const getMovUsdValue = (mov, fallbackRate = null) => {
       const tipo = (mov.tipo || "").toUpperCase();
@@ -1873,8 +1877,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const currentRow = currentMonthKey ? monthRowMap[currentMonthKey] : null;
           if (currentRow) {
             const prevGp = toNumber(currentRow.gpCell?.textContent);
-            const metrics = computeMonthMetrics(currentMonthKey, nuevoPat);
-            currentRow.patrCell.textContent = `$ ${formatNumber(metrics.patrimonio)}`;
+          const metrics = computeMonthMetrics(currentMonthKey, nuevoPat);
+          currentRow.patrCell.textContent = `$ ${formatNumber(metrics.patrimonio)}`;
             currentRow.gpCell.textContent = `$ ${formatNumber(metrics.g_p)}`;
             currentRow.margenCell.textContent = formatPercent(metrics.margen);
             currentRow.margenCell.className = trendClass(metrics.margen);
@@ -1882,6 +1886,20 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             setArrowIndicator(currentRow.gpArrow, metrics.g_p, prevGp);
             monthSnapshots[currentMonthKey] = metrics;
             if (Number.isFinite(metrics.g_p)) currentMonthGp = metrics.g_p;
+          }
+
+          // Aplicar el tick de patrimonio a meses futuros
+          if (isActualYear && currentMonthKey) {
+            const currentIdx = monthOrder.indexOf(currentMonthKey);
+            if (currentIdx >= 0) {
+              monthOrder.forEach((mes, idx) => {
+                if (idx <= currentIdx) return;
+                const row = monthRowMap[mes];
+                if (!row || !row.patrCell) return;
+                if (monthSnapshots?.[mes]) return;
+                row.patrCell.textContent = `$ ${formatNumber(nuevoPat)}`;
+              });
+            }
           }
 
           const rateToUse = Number.isFinite(currentRate) ? currentRate : baseRate;
@@ -1892,8 +1910,16 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           // Los meses anteriores se mantienen con el último valor almacenado.
 
           if (chartPatrimonio && chartPatrimonio.data?.datasets?.[0]) {
-            chartPatrimonio.data.datasets[0].data = chartPatrimonio.data.labels.map(() => nuevoPat);
-            chartPatrimonio.update();
+            const labels = chartPatrimonio.data.labels || [];
+            const currentIdx = currentMonthKey ? labels.indexOf(currentMonthKey) : -1;
+            if (currentIdx >= 0) {
+              const updated = chartPatrimonio.data.datasets[0].data.slice();
+              for (let i = currentIdx; i < updated.length; i += 1) {
+                updated[i] = nuevoPat;
+              }
+              chartPatrimonio.data.datasets[0].data = updated;
+              chartPatrimonio.update();
+            }
           }
 
           if (chartUtilidades && chartUtilidades.data?.datasets?.length && Array.isArray(baseUtilidadesData)) {
@@ -2237,10 +2263,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     // Gráficos
     if (graficoPatrimonio && graficoUtilidades && derived.monthly.length && typeof Chart !== "undefined") {
       const meses = derived.monthly.map(m => m.mes);
-      const isCurrentYear2026 = isActualYear && Number(displayYear) === 2026;
-      const patrimonioData = isCurrentYear2026
-        ? derived.monthly.map(() => patrimonioCalc || 0)
-        : derived.monthly.map(m => m.patrimonio || 0);
+      const patrimonioData = derived.monthly.map(m => m.patrimonio || 0);
       const utilidadData = derived.monthly.map(m => m.g_p || 0);
       baseUtilidadesData = utilidadData.slice();
       const utilidadAcumulada = [];
@@ -2268,7 +2291,14 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         },
         options: {
           responsive: true,
-          plugins: { legend: { display: false } },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `${ctx.dataset.label}: ${formatNumber(ctx.parsed.y)}`
+              }
+            }
+          },
           scales: {
             y: { beginAtZero: true, ticks: { callback: v => formatNumber(v) } }
           }
