@@ -1,5 +1,18 @@
 const movimientosData = [
   {
+    "username": "jgb1975",
+    "cliente": "009",
+    "recibo": "113",
+    "fecha": "02/02/26",
+    "year": 2026,
+    "socio": "CARROCERIAS JGB",
+    "cedula": "830103701-9",
+    "cantidad": 2000000.0,
+    "tipo": "COP",
+    "tasa": 3669.0,
+    "cambio": 545.07
+  },
+  {
     "username": "vspg2008",
     "cliente": "006",
     "recibo": "98",
