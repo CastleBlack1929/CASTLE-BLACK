@@ -1588,10 +1588,25 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       liveRateTimer = setInterval(fetchLiveRate, RATE_REFRESH_MS);
     };
     const shouldHoldRateDependentValues = () => (isActualYear && rateBootstrapping && !rateReady);
+    const setLoadingDots = (el, show) => {
+      if (!el) return;
+      if (show) {
+        if (!el.dataset.loadingBackup) {
+          el.dataset.loadingBackup = el.textContent || "";
+        }
+        el.textContent = "...";
+      } else {
+        delete el.dataset.loadingBackup;
+      }
+    };
     const toggleCopSummaryVisibility = (show) => {
       [patrimonioL, crcmntL, utilidadL, utilidadTotalL].forEach((el) => {
         if (!el) return;
-        el.style.visibility = show ? "visible" : "hidden";
+        if (show) {
+          setLoadingDots(el, false);
+        } else {
+          setLoadingDots(el, true);
+        }
       });
     };
     if (isActualYear) {
@@ -1642,12 +1657,13 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           : (String(displayYear) === "2025"
               ? (Number.isFinite(prevPatrLBase) ? (prevPatrLBase + (sumMovCop2025 || 0)) : null)
               : (Number.isFinite(baseRate) ? (totalAportesActual || 0) * baseRate : null)));
-    if (!shouldHoldRateDependentValues() && Number.isFinite(aporteLBase) && aporteL) {
+    if (Number.isFinite(aporteLBase) && aporteL) {
       aporteL.textContent = formatMoneyCop(aporteLBase);
     }
 
     applyPesos = (rate, patrUsdOverride = null, utilUsdOverride = null) => {
       if (!Number.isFinite(rate)) return;
+      if (shouldHoldRateDependentValues()) return;
       const usdAporte = totalAportesActual;
       const usdPatrimonio = Number.isFinite(patrUsdOverride)
         ? patrUsdOverride
