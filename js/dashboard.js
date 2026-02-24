@@ -462,7 +462,7 @@ const loadUserData = (filePath) =>
     document.head.appendChild(script);
   });
 
-document.addEventListener("DOMContentLoaded", async () => {
+const initDashboard = async () => {
   const nombreCliente = document.getElementById("nombreCliente");
   const nivelText = document.getElementById("nivelText");
   const idClienteHeader = document.getElementById("idClienteHeader");
@@ -3096,4 +3096,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
   };
 
   // Sin oscilador adicional
-});
+};
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initDashboard);
+} else {
+  initDashboard();
+}

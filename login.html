@@ -3,11 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Acceso | Castle Black</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Serif:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style-login.css">
+  <link rel="stylesheet" data-href="css/style-login.css">
+  <script>
+    const CACHE_BUST = Date.now();
+    document.querySelectorAll('link[data-href]').forEach((link) => {
+      link.href = `${link.dataset.href}?v=${CACHE_BUST}`;
+    });
+  </script>
   <link rel="icon" href="img/logo-black.png" type="image/png">
   <link rel="apple-touch-icon" href="img/logo-black.png">
 </head>
@@ -41,7 +50,19 @@
     <p>© Castle Black 2026</p>
   </footer>
 
-  <script src="data/users.js?v=2026-03-08"></script>
-  <script src="js/login.js"></script>
+  <script>
+    const loadScriptsSequential = (sources) => sources.reduce(
+      (chain, src) => chain.then(() => new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = `${src}?v=${CACHE_BUST}`;
+        s.async = false;
+        s.onload = resolve;
+        s.onerror = reject;
+        document.body.appendChild(s);
+      })),
+      Promise.resolve()
+    );
+    loadScriptsSequential(['data/users.js', 'js/login.js']);
+  </script>
 </body>
 </html>
