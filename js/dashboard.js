@@ -1551,6 +1551,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       rateBootstrapping = false;
       updateRateDisplay(rate);
       applyPesos(rate);
+      toggleCopSummaryVisibility(true);
     };
 
     const fetchLiveRate = async () => {
@@ -1587,15 +1588,23 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       liveRateTimer = setInterval(fetchLiveRate, RATE_REFRESH_MS);
     };
     const shouldHoldRateDependentValues = () => (isActualYear && rateBootstrapping && !rateReady);
+    const toggleCopSummaryVisibility = (show) => {
+      [patrimonioL, crcmntL, utilidadL, utilidadTotalL].forEach((el) => {
+        if (!el) return;
+        el.style.visibility = show ? "visible" : "hidden";
+      });
+    };
     if (isActualYear) {
       baseRate = DEFAULT_RATE_BY_YEAR.actual;
       currentRate = baseRate;
       histRateLive = currentRate;
       if (rateBootstrapping) {
         if (rateValue) rateValue.textContent = "...";
+        toggleCopSummaryVisibility(false);
       } else {
         updateRateDisplay(currentRate);
         applyPesos(currentRate);
+        toggleCopSummaryVisibility(true);
       }
     } else {
       const rateBaseRaw =
@@ -1613,6 +1622,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         rateValue.textContent = formatNumber(baseRate, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       }
       applyPesos(currentRate);
+      toggleCopSummaryVisibility(true);
     }
     startRateAutoRefresh();
     crcmntBaseL = toNumber(userData.crcmntL) ?? crcmntBaseUsd ?? 0;
