@@ -300,7 +300,7 @@ const roundTo = (value, decimals = 5) => {
 
 const MONTHLY_MARGIN_BY_YEAR = {
   2026: {
-    febrero: 0.8
+    febrero: 0.95
   }
 };
 
@@ -1325,9 +1325,6 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       }
     }
 
-    if (isActualYear && String(claveUsuario || "").toLowerCase() === "srb2006" && currentMonthKey === "febrero") {
-      patrimonioCalcUsd = roundTo(patrimonioCalcUsd - 0.01, 2);
-    }
     utilidadUsd = patrimonioCalcUsd - totalAportesActual;
     const utilidadTotalUsd = utilidadUsd;
     aporte.textContent = formatMoney(totalAportesActual);
