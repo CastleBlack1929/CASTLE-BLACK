@@ -2497,7 +2497,11 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const isLocal = String(mov.tipo || "").toUpperCase() === localCurrency;
           const formatLocal = (val) => formatNumber(val, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
           const cantidadTxt = isLocal ? formatLocal(mov.cantidad) : formatNumber(mov.cantidad);
-          const tasaTxt = mov.tasa ? (isLocal ? formatLocal(mov.tasa) : formatNumber(mov.tasa)) : "";
+          const tasaTxt = mov.tasa
+            ? (localCurrency === "EUR"
+                ? formatNumber(mov.tasa, { minimumFractionDigits: 3, maximumFractionDigits: 3 })
+                : (isLocal ? formatLocal(mov.tasa) : formatNumber(mov.tasa)))
+            : "";
           row.innerHTML = `
             <td>${mov.recibo || ""}</td>
             <td>${mov.fecha || ""}</td>
