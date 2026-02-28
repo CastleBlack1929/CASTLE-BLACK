@@ -1521,12 +1521,6 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const AUTO_RATE_ENABLED = true;
     const RATE_REFRESH_MS = 30 * 1000;
     const DEFAULT_RATE_BY_YEAR = DEFAULT_RATE_BY_CURRENCY[localCurrency] || DEFAULT_RATE_BY_CURRENCY.COP;
-    const TRADINGVIEW_API_URL = "https://scanner.tradingview.com/forex/scan";
-    const RATE_SYMBOL = localCurrency === "EUR" ? "FX_IDC:USDEUR" : "FX_IDC:USDCOP";
-    const TRADINGVIEW_PAYLOAD = {
-      symbols: { tickers: [RATE_SYMBOL], query: { types: [] } },
-      columns: ["close"]
-    };
     let rateFetchMode = "proxy";
     const RATE_API_URL = (() => {
       const isLocalHost = (host) => (
@@ -1555,11 +1549,6 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const isFilePage = (typeof window !== "undefined" && window.location.protocol === "file:");
       const isLocalPage = isLocalHost(pageHost) || isFilePage;
 
-      if (isFilePage) {
-        rateFetchMode = "tradingview";
-        return TRADINGVIEW_API_URL;
-      }
-
       const storedUrl = localStorage.getItem("rateProxyUrl");
       if (storedUrl) {
         try {
@@ -1586,10 +1575,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         return "http://localhost:8787/api/rate";
       }
 
-      rateFetchMode = "tradingview";
-      return TRADINGVIEW_API_URL;
+      rateFetchMode = "proxy";
+      return null;
     })();
-    let rateBootstrapping = (typeof window !== "undefined" && window.location.protocol === "file:" && rateFetchMode === "tradingview");
+    let rateBootstrapping = isActualYear;
     let rateReady = false;
 
     const applyLiveRate = (rate) => {
@@ -1627,16 +1616,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         const options = { signal: controller.signal, cache: "no-store" };
         const targetUrl = buildRateUrl();
         if (!targetUrl) return false;
-        if (rateFetchMode === "tradingview") {
-          options.method = "POST";
-          options.body = JSON.stringify(TRADINGVIEW_PAYLOAD);
-        }
         const response = await fetch(targetUrl, options);
         if (!response.ok) return false;
         const data = await response.json();
-        const rate = rateFetchMode === "tradingview"
-          ? toNumber(data?.data?.[0]?.d?.[0])
-          : toNumber(data?.rate);
+        const rate = toNumber(data?.rate);
         if (!Number.isFinite(rate) || rate <= 0) return false;
         applyLiveRate(rate);
         return true;
