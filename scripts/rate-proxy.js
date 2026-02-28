@@ -4,7 +4,7 @@ const https = require("https");
 const PORT = Number(process.env.RATE_PORT) || 8787;
 // Usa el mismo valor del gráfico: https://www.tradingview.com/chart/o5jQyVQx/?symbol=FX_IDC%3AUSDEUR
 const TRADINGVIEW_URL = "https://scanner.tradingview.com/forex/scan";
-const CACHE_TTL_MS = 60 * 1000;
+const CACHE_TTL_MS = 5 * 1000;
 
 let cache = {
   rate: null,

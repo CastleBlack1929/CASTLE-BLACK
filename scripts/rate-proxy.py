@@ -1,12 +1,13 @@
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
+import os
 import threading
 import time
 import urllib.request
 import urllib.parse
 
-PORT = 8787
-CACHE_TTL_SECONDS = 30
+PORT = int(os.environ.get("PORT", "8787"))
+CACHE_TTL_SECONDS = 5
 TRADINGVIEW_URL = "https://scanner.tradingview.com/forex/scan"
 REQUEST_TIMEOUT_SECONDS = 4
 FETCH_TIMEOUT_SECONDS = REQUEST_TIMEOUT_SECONDS + 1
@@ -94,6 +95,10 @@ class RateHandler(BaseHTTPRequestHandler):
 
   def do_GET(self):
     path, _, query = self.path.partition("?")
+    if path == "/":
+      self._send_headers(200, "text/plain")
+      self.wfile.write(b"ok")
+      return
     if path != "/api/rate":
       self._send_headers(404, "text/plain")
       self.wfile.write(b"Not Found")
@@ -121,6 +126,6 @@ class RateHandler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-  server = ThreadingHTTPServer(("localhost", PORT), RateHandler)
+  server = ThreadingHTTPServer(("0.0.0.0", PORT), RateHandler)
   print(f"Rate proxy activo en http://localhost:{PORT}/api/rate")
   server.serve_forever()

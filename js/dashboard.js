@@ -298,6 +298,22 @@ const roundTo = (value, decimals = 5) => {
   return Math.round(value * factor) / factor;
 };
 
+const getNivelFromPatrimonio = (patrimonioUsd) => {
+  if (!Number.isFinite(patrimonioUsd)) return "";
+  if (patrimonioUsd <= 100) return "C";
+  if (patrimonioUsd <= 200) return "CC";
+  if (patrimonioUsd <= 500) return "CCC";
+  if (patrimonioUsd <= 700) return "B";
+  if (patrimonioUsd <= 1000) return "BB";
+  if (patrimonioUsd <= 1500) return "BBB";
+  if (patrimonioUsd <= 2000) return "A";
+  if (patrimonioUsd <= 5000) return "AA";
+  if (patrimonioUsd <= 10000) return "AAA";
+  if (patrimonioUsd <= 15000) return "S";
+  if (patrimonioUsd <= 25000) return "SS";
+  return "SSS";
+};
+
 const MONTHLY_MARGIN_BY_YEAR = {
   2026: {
     febrero: 0.95
@@ -967,7 +983,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
     // Mostrar datos del usuario
     nombreCliente.textContent = userData.nombre || userData.socio || "Usuario";
-    nivelText.textContent = userData.nivel ? `Nivel: ${userData.nivel}` : "Nivel: N/A";
+    nivelText.textContent = "Nivel: N/A";
     idClienteHeader.textContent = userData.idCliente ? `ID: ${userData.idCliente}` : "";
 
     const monthKeyFromFecha = (fecha) => {
@@ -1373,6 +1389,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     aporte.textContent = formatMoney(totalAportesActual);
     patrimonioCalc = patrimonioCalcUsd;
     patrimonio.textContent = formatMoney(patrimonioCalcUsd);
+    if (nivelText) {
+      const nivelValue = (userData.nivel || getNivelFromPatrimonio(patrimonioCalcUsd) || "").trim();
+      nivelText.textContent = nivelValue ? `Nivel: ${nivelValue}` : "Nivel: N/A";
+    }
     utilCalcBase = utilidadUsd; // Utilidad R
     utilOsc = utilidadUsd; // Utilidad total igual a utilidad R
     if (isActualYear) {
@@ -1519,65 +1539,16 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       }
     };
     const AUTO_RATE_ENABLED = true;
-    const RATE_REFRESH_MS = 30 * 1000;
+    const RATE_REFRESH_MS = 5 * 1000;
     const DEFAULT_RATE_BY_YEAR = DEFAULT_RATE_BY_CURRENCY[localCurrency] || DEFAULT_RATE_BY_CURRENCY.COP;
-    let rateFetchMode = "proxy";
-    const RATE_API_URL = (() => {
-      const isLocalHost = (host) => (
-        !host ||
-        host === "localhost" ||
-        host === "127.0.0.1" ||
-        host === "::1" ||
-        host.endsWith(".local")
-      );
-
-      const isPrivateIp = (host) => {
-        if (!host) return false;
-        if (host.startsWith("10.")) return true;
-        if (host.startsWith("192.168.")) return true;
-        if (host.startsWith("172.")) {
-          const parts = host.split(".");
-          if (parts.length >= 2) {
-            const octet = Number(parts[1]);
-            return Number.isFinite(octet) && octet >= 16 && octet <= 31;
-          }
-        }
-        return false;
-      };
-
-      const pageHost = typeof window !== "undefined" ? window.location.hostname : "";
-      const isFilePage = (typeof window !== "undefined" && window.location.protocol === "file:");
-      const isLocalPage = isLocalHost(pageHost) || isFilePage;
-
-      const storedUrl = localStorage.getItem("rateProxyUrl");
-      if (storedUrl) {
-        try {
-          const parsed = new URL(storedUrl, window.location.origin);
-          const host = parsed.hostname;
-          const isLocalTarget = isLocalHost(host) || isPrivateIp(host);
-          if (!isLocalTarget || isLocalPage) {
-            rateFetchMode = "proxy";
-            return parsed.toString();
-          }
-          localStorage.removeItem("rateProxyUrl");
-        } catch (error) {
-          localStorage.removeItem("rateProxyUrl");
-        }
-      }
-
-      if (typeof window !== "undefined" && window.RATE_PROXY_URL) {
-        rateFetchMode = "proxy";
-        return window.RATE_PROXY_URL;
-      }
-
-      if (isLocalPage) {
-        rateFetchMode = "proxy";
-        return "http://localhost:8787/api/rate";
-      }
-
-      rateFetchMode = "proxy";
-      return null;
-    })();
+    const TRADINGVIEW_API_URL = "https://scanner.tradingview.com/forex/scan";
+    const RATE_SYMBOL = localCurrency === "EUR" ? "FX_IDC:USDEUR" : "FX_IDC:USDCOP";
+    const TRADINGVIEW_PAYLOAD = {
+      symbols: { tickers: [RATE_SYMBOL], query: { types: [] } },
+      columns: ["close"]
+    };
+    let rateFetchMode = "tradingview";
+    const RATE_API_URL = TRADINGVIEW_API_URL;
     let rateBootstrapping = isActualYear;
     let rateReady = false;
 
@@ -1594,32 +1565,22 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       toggleCopSummaryVisibility(true);
     };
 
-    const buildRateUrl = () => {
-      if (!RATE_API_URL) return null;
-      if (rateFetchMode !== "proxy") return RATE_API_URL;
-      const pair = localCurrency === "EUR" ? "USDEUR" : "USDCOP";
-      try {
-        const url = new URL(RATE_API_URL, window.location.origin);
-        url.searchParams.set("pair", pair);
-        return url.toString();
-      } catch (e) {
-        const glue = RATE_API_URL.includes("?") ? "&" : "?";
-        return `${RATE_API_URL}${glue}pair=${encodeURIComponent(pair)}`;
-      }
-    };
-
     const fetchLiveRate = async () => {
       if (!RATE_API_URL) return false;
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 4500);
       try {
         const options = { signal: controller.signal, cache: "no-store" };
-        const targetUrl = buildRateUrl();
-        if (!targetUrl) return false;
-        const response = await fetch(targetUrl, options);
+        if (rateFetchMode === "tradingview") {
+          options.method = "POST";
+          options.body = JSON.stringify(TRADINGVIEW_PAYLOAD);
+        }
+        const response = await fetch(RATE_API_URL, options);
         if (!response.ok) return false;
         const data = await response.json();
-        const rate = toNumber(data?.rate);
+        const rate = rateFetchMode === "tradingview"
+          ? toNumber(data?.data?.[0]?.d?.[0])
+          : toNumber(data?.rate);
         if (!Number.isFinite(rate) || rate <= 0) return false;
         applyLiveRate(rate);
         return true;
@@ -1685,24 +1646,14 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const fallbackRate = DEFAULT_RATE_BY_YEAR[selectedYear] || DEFAULT_RATE_BY_YEAR.actual || 1;
       baseRate = Number.isFinite(rateBaseRaw) && rateBaseRaw > 0 ? rateBaseRaw : fallbackRate;
       if (userData.tasaBase) baseRate = toNumber(userData.tasaBase) || baseRate;
-      if (localCurrency !== "COP") {
-        // Sin respaldo: esperar tasa en vivo para monedas distintas de COP
-        currentRate = NaN;
-        histRateLive = NaN;
-        rateReady = false;
-        rateBootstrapping = true;
-        if (rateValue) rateValue.textContent = "...";
-        toggleCopSummaryVisibility(false);
-      } else {
-        currentRate = baseRate;
-        histRateLive = DEFAULT_RATE_BY_YEAR.actual || currentRate;
-        if (rateValue) {
+      currentRate = baseRate;
+      histRateLive = DEFAULT_RATE_BY_YEAR.actual || currentRate;
+      if (rateValue) {
         const decimals = localCurrency === "EUR" ? 4 : 1;
         rateValue.textContent = formatNumber(baseRate, { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
       }
-        applyPesos(currentRate);
-        toggleCopSummaryVisibility(true);
-      }
+      applyPesos(currentRate);
+      toggleCopSummaryVisibility(true);
     }
     startRateAutoRefresh();
     crcmntBaseL = toNumber(userData.crcmntL) ?? crcmntBaseUsd ?? 0;
