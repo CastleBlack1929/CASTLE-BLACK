@@ -40,7 +40,7 @@
         <div id="menuDropdown" class="menu-dropdown" role="menu" aria-label="Opciones de cuenta" tabindex="-1">
           <div class="menu-info">
             <p class="menu-title">Cuenta</p>
-            <p class="menu-label">Cédula / NIT: <span id="menuCedula"></span></p>
+            <p class="menu-label">Identificación: <span id="menuCedula"></span></p>
             <p class="menu-label">Teléfono: <span id="menuTelefono"></span></p>
           </div>
           <div class="menu-info">
@@ -74,13 +74,13 @@
         <!-- Datos principales comparativos -->
         <section class="resumen">
       <h3>Estado de cuenta</h3>
-      <p class="tabla-tip">Aquí ves tu aporte del año, patrimonio, crecimiento y utilidades en USD y COP con tendencia en vivo; el aporte del año es la suma de los movimientos del año en curso más el patrimonio de años anteriores si aplica.</p>
+      <p class="tabla-tip" id="resumenTip">Aquí ves tu aporte del año, patrimonio, crecimiento y utilidades en USD y moneda local con tendencia en vivo; el aporte del año es la suma de los movimientos del año en curso más el patrimonio de años anteriores si aplica.</p>
       <table class="tabla-resumen">
         <thead>
           <tr>
             <th></th>
-            <th>Dólares (USD)</th>
-            <th>Pesos (COP)</th>
+            <th id="usdHeader">Dólares (USD)</th>
+            <th id="localHeader">Pesos (COP)</th>
           </tr>
         </thead>
         <tbody>
@@ -115,7 +115,7 @@
 
         <!-- Cotización en vivo -->
         <div class="rate-box">
-          <p class="rate-title">COP por USD</p>
+      <p class="rate-title" id="rateTitle">COP por USD</p>
           <p class="rate-value"><span id="rateValue"></span><span id="rateArrow" class="arrow-indicator"></span></p>
           <p class="rate-time">Actualizado: <span id="rateTime"></span></p>
         </div>
@@ -156,8 +156,8 @@
             <thead>
               <tr>
                 <th></th>
-                <th>Dólares (USD)</th>
-                <th>Pesos (COP)</th>
+            <th id="usdHeaderHist">Dólares (USD)</th>
+            <th id="localHeaderHist">Pesos (COP)</th>
               </tr>
             </thead>
             <tbody>
@@ -231,7 +231,7 @@
     <!-- Movimientos -->
     <section class="movimientos">
       <h3>Movimientos</h3>
-      <p class="tabla-tip">Listado de consignaciones y retiros con su tasa y valor en COP.</p>
+      <p class="tabla-tip" id="movimientosTip">Listado de consignaciones y retiros con su tasa y valor en moneda local.</p>
       <table>
         <thead>
           <tr>

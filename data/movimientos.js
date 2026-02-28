@@ -1,5 +1,18 @@
 const movimientosData = [
   {
+    "username": "JBP2002",
+    "cliente": "023",
+    "recibo": "114",
+    "fecha": "27/02/26",
+    "year": 2026,
+    "socio": "JOAN BELTRAN PRATS",
+    "cedula": "PAX023817",
+    "cantidad": 250.66,
+    "tipo": "EUR",
+    "tasa": 0.846,
+    "cambio": 296.17
+  },
+  {
     "username": "jgb1975",
     "cliente": "009",
     "recibo": "113",

@@ -2,7 +2,8 @@ const http = require("http");
 const https = require("https");
 
 const PORT = Number(process.env.RATE_PORT) || 8787;
-const SOURCE_URL = "https://www.google.com/finance/quote/USD-COP?hl=es";
+// Usa el mismo valor del gráfico: https://www.tradingview.com/chart/o5jQyVQx/?symbol=FX_IDC%3AUSDEUR
+const TRADINGVIEW_URL = "https://scanner.tradingview.com/forex/scan";
 const CACHE_TTL_MS = 60 * 1000;
 
 let cache = {
@@ -16,53 +17,60 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type"
 };
 
-const fetchHtml = () =>
+const fetchTradingView = (symbol) =>
   new Promise((resolve, reject) => {
-    https
-      .get(
-        SOURCE_URL,
-        {
-          headers: {
-            "User-Agent":
-              "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36"
-          }
-        },
-        (res) => {
-          let data = "";
-          res.on("data", (chunk) => {
-            data += chunk;
-          });
-          res.on("end", () => {
-            resolve(data);
-          });
+    const payload = JSON.stringify({
+      symbols: { tickers: [symbol], query: { types: [] } },
+      columns: ["close"]
+    });
+    const req = https.request(
+      TRADINGVIEW_URL,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Content-Length": Buffer.byteLength(payload),
+          "User-Agent":
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36"
         }
-      )
-      .on("error", reject);
+      },
+      (res) => {
+        let data = "";
+        res.on("data", (chunk) => {
+          data += chunk;
+        });
+        res.on("end", () => {
+          resolve(data);
+        });
+      }
+    );
+    req.on("error", reject);
+    req.write(payload);
+    req.end();
   });
 
-const parseRate = (html) => {
-  let match = html.match(/data-last-price=\"([0-9.,]+)\"/);
-  if (match && match[1]) {
-    return Number(match[1].replace(/,/g, ""));
+const parseTradingViewRate = (jsonText) => {
+  try {
+    const data = JSON.parse(jsonText);
+    const rate = data?.data?.[0]?.d?.[0];
+    return Number(rate);
+  } catch (e) {
+    return null;
   }
-  match = html.match(/YMlKec fxKbKc\">([^<]+)</);
-  if (match && match[1]) {
-    return Number(match[1].replace(/,/g, ""));
-  }
-  return null;
 };
 
-const getRate = async () => {
+const getRate = async (pair) => {
   const now = Date.now();
-  if (cache.rate && now - cache.fetchedAt < CACHE_TTL_MS) {
+  if (cache.rate && cache.pair === pair && now - cache.fetchedAt < CACHE_TTL_MS) {
     return cache.rate;
   }
-  const html = await fetchHtml();
-  const rate = parseRate(html);
+  const symbol = pair === "USDEUR" ? "FX_IDC:USDEUR" : "FX_IDC:USDCOP";
+  const raw = await fetchTradingView(symbol);
+  const rate = parseTradingViewRate(raw);
   if (!Number.isFinite(rate) || rate <= 0) {
     throw new Error("No se pudo leer la tasa");
   }
-  cache = { rate, fetchedAt: now };
+  cache = { rate, fetchedAt: now, pair };
   return rate;
 };
 
@@ -73,14 +81,17 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  if (req.url === "/api/rate") {
+  if (req.url.startsWith("/api/rate")) {
     try {
-      const rate = await getRate();
+      const url = new URL(req.url, `http://${req.headers.host}`);
+      const pair = (url.searchParams.get("pair") || "USDCOP").toUpperCase();
+      const rate = await getRate(pair);
       res.writeHead(200, { ...corsHeaders, "Content-Type": "application/json" });
       res.end(
         JSON.stringify({
           rate,
-          source: "google-finance",
+          source: "tradingview",
+          pair,
           fetchedAt: new Date().toISOString()
         })
       );
@@ -89,7 +100,7 @@ const server = http.createServer(async (req, res) => {
       res.end(
         JSON.stringify({
           error: String(error?.message || "Error"),
-          source: "google-finance",
+          source: "tradingview",
           fetchedAt: new Date().toISOString()
         })
       );

@@ -523,6 +523,13 @@ const initDashboard = async () => {
   };
   ensureRateArrow();
   const rateTime = document.getElementById("rateTime");
+  const rateTitle = document.getElementById("rateTitle");
+  const usdHeader = document.getElementById("usdHeader");
+  const localHeader = document.getElementById("localHeader");
+  const usdHeaderHist = document.getElementById("usdHeaderHist");
+  const localHeaderHist = document.getElementById("localHeaderHist");
+  const resumenTip = document.getElementById("resumenTip");
+  const movimientosTip = document.getElementById("movimientosTip");
   const yearSelect = document.getElementById("yearSelect");
 
   const setLoadingValue = (el) => {
@@ -908,6 +915,41 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     };
 
     const userData = getDataForYear(selectedYear);
+    const localCurrency = (userData.region || "COP").toUpperCase();
+    const formatMoneyLocal = (value) => (localCurrency === "COP" ? formatMoneyCop(value) : formatMoney(value));
+    const localCurrencyLabel = localCurrency === "COP"
+      ? "Pesos (COP)"
+      : (localCurrency === "EUR" ? "Euro (EUR)" : `${localCurrency} (${localCurrency})`);
+    const localCurrencyShort = localCurrency === "COP" ? "COP" : localCurrency;
+    const ratePairLabel = localCurrency === "EUR" ? "USD/EUR" : (localCurrency === "COP" ? "USD/COP" : `USD/${localCurrency}`);
+    const normalizeRate = (rateVal) => {
+      if (!Number.isFinite(rateVal) || rateVal <= 0) return null;
+      if (localCurrency === "EUR") return 1 / rateVal;
+      return rateVal;
+    };
+    const usdToLocal = (usd, rateVal) => {
+      const rateNorm = normalizeRate(rateVal);
+      if (!Number.isFinite(rateNorm) || rateNorm <= 0) return 0;
+      return localCurrency === "EUR" ? usd / rateNorm : usd * rateNorm;
+    };
+    const localToUsd = (localVal, rateVal) => {
+      const rateNorm = normalizeRate(rateVal);
+      if (!Number.isFinite(rateNorm) || rateNorm <= 0) return 0;
+      return localCurrency === "EUR" ? localVal * rateNorm : localVal / rateNorm;
+    };
+    if (localHeader) localHeader.textContent = localCurrencyLabel;
+    if (localHeaderHist) localHeaderHist.textContent = localCurrencyLabel;
+    if (usdHeader) usdHeader.textContent = "Dólares (USD)";
+    if (usdHeaderHist) usdHeaderHist.textContent = "Dólares (USD)";
+    if (rateTitle) {
+      rateTitle.textContent = localCurrency === "EUR" ? "USD por EUR" : `${localCurrency} por USD`;
+    }
+    if (resumenTip) {
+      resumenTip.textContent = `Aquí ves tu aporte del año, patrimonio, crecimiento y utilidades en USD y ${localCurrencyLabel} con tendencia en vivo; el aporte del año es la suma de los movimientos del año en curso más el patrimonio de años anteriores si aplica.`;
+    }
+    if (movimientosTip) {
+      movimientosTip.textContent = `Listado de consignaciones y retiros con su tasa y valor en ${localCurrencyShort}.`;
+    }
     const yearValidation = validateUserData(userData);
     if (!yearValidation.valid) {
       alert(`Datos del usuario incompletos para ${selectedYear === "actual" ? "este año" : selectedYear}: ${yearValidation.errors.join(" ")}`);
@@ -943,12 +985,12 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         const cantidadUsd = toNumber(mov.cantidad);
         return Number.isFinite(cantidadUsd) ? cantidadUsd : 0;
       }
-      const cambioCop = toNumber(mov.cambio);
-      if (Number.isFinite(cambioCop)) return cambioCop;
-      const tasaMov = toNumber(mov.tasa);
-      const cantidadCop = toNumber(mov.cantidad);
+      const cambioUsd = toNumber(mov.cambio);
+      if (Number.isFinite(cambioUsd)) return cambioUsd;
+      const tasaMov = normalizeRate(toNumber(mov.tasa));
+      const cantidadLocal = toNumber(mov.cantidad);
       if (!Number.isFinite(tasaMov) || tasaMov === 0) return 0;
-      return Number.isFinite(cantidadCop) ? cantidadCop / tasaMov : 0;
+      return Number.isFinite(cantidadLocal) ? localToUsd(cantidadLocal, tasaMov) : 0;
     };
     const matchMovimientoForUserData = (mov, data) => {
       const clave = String(data?.username || "").trim().toLowerCase();
@@ -1183,15 +1225,15 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         const cantidadUsd = toNumber(mov.cantidad);
         return Number.isFinite(cantidadUsd) ? cantidadUsd : 0;
       }
-      const cambioCop = toNumber(mov.cambio);
-      if (Number.isFinite(cambioCop)) return cambioCop;
-      const tasaMov = toNumber(mov.tasa);
-      const tasaFinal = (Number.isFinite(tasaMov) && tasaMov > 0)
+      const cambioUsd = toNumber(mov.cambio);
+      if (Number.isFinite(cambioUsd)) return cambioUsd;
+      const tasaMov = normalizeRate(toNumber(mov.tasa));
+      const tasaFinal = Number.isFinite(tasaMov) && tasaMov > 0
         ? tasaMov
-        : (Number.isFinite(fallbackRate) && fallbackRate > 0 ? fallbackRate : null);
+        : (Number.isFinite(fallbackRate) && fallbackRate > 0 ? normalizeRate(fallbackRate) : null);
       if (!tasaFinal) return 0;
-      const cantidadCop = toNumber(mov.cantidad);
-      return Number.isFinite(cantidadCop) ? cantidadCop / tasaFinal : 0;
+      const cantidadLocal = toNumber(mov.cantidad);
+      return Number.isFinite(cantidadLocal) ? localToUsd(cantidadLocal, tasaFinal) : 0;
     };
 
     const sumMovCopAllYears = () => {
@@ -1200,7 +1242,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         .filter(matchMovimientoForUser)
         .reduce((acc, mov) => {
           const tipo = (mov.tipo || "").toUpperCase();
-          if (tipo !== "COP") return acc;
+          if (tipo !== localCurrency) return acc;
           return acc + (toNumber(mov.cantidad) || 0);
         }, 0);
     };
@@ -1234,10 +1276,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         .filter((m) => matchMovimientoForUser(m) && Number(m.year) === year)
         .reduce((acc, mov) => {
           const tipo = (mov.tipo || "").toUpperCase();
-          const tasaMov = toNumber(mov.tasa) || safeTasaFallback || 1;
-          if (tipo === "COP") return acc + (toNumber(mov.cantidad) || 0);
+          const tasaMov = normalizeRate(toNumber(mov.tasa) || safeTasaFallback || 1);
+          if (tipo === localCurrency) return acc + (toNumber(mov.cantidad) || 0);
           const usd = toNumber(mov.cambio) || toNumber(mov.cantidad) || 0;
-          return acc + (usd || 0) * tasaMov;
+          return acc + usdToLocal(usd || 0, tasaMov);
         }, 0);
     };
     const sumMovUsd2023 = sumMovUsdByYear(2023);
@@ -1258,10 +1300,11 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     }, 0);
     const sumMovCop = movimientosActual.reduce((acc, mov) => {
       const tipo = (mov.tipo || "").toUpperCase();
-      if (tipo === "COP") return acc + (toNumber(mov.cantidad) || 0);
-      const tasaMov = toNumber(mov.tasa) || currentRate || baseRate || DEFAULT_RATE_BY_YEAR.actual || 1;
-      const cop = (toNumber(mov.cambio) || toNumber(mov.cantidad) || 0) * tasaMov;
-      return acc + (cop || 0);
+      if (tipo === localCurrency) return acc + (toNumber(mov.cantidad) || 0);
+      const tasaMov = normalizeRate(toNumber(mov.tasa) || currentRate || baseRate || DEFAULT_RATE_BY_YEAR.actual || 1);
+      const usd = toNumber(mov.cambio) || toNumber(mov.cantidad) || 0;
+      const localVal = usdToLocal(usd || 0, tasaMov);
+      return acc + (localVal || 0);
     }, 0);
     const sumMovUsdGlobal = movimientosYear.reduce((acc, mov) => {
       const rateFallback = currentRate || baseRate || safeTasaFallback || 0;
@@ -1404,7 +1447,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       }
       prevRateValue = rate;
       if (rateValue) {
-        rateValue.textContent = formatNumber(rate, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+        const decimals = localCurrency === "EUR" ? 4 : 1;
+        rateValue.textContent = formatNumber(rate, { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
       }
       if (updateArrow) {
         rateArrow = ensureRateArrow() || rateArrow;
@@ -1463,17 +1507,24 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     };
 
     // Datos en COP (cálculo dinámico)
-    const DEFAULT_RATE_BY_YEAR = {
-      actual: 3636.5, // tasa vigente 2026
-      "2025": 3773.6,
-      "2026": 3636.5,
-      "2024": 4373.5
+    const DEFAULT_RATE_BY_CURRENCY = {
+      COP: {
+        actual: 3636.5, // tasa vigente 2026
+        "2025": 3773.6,
+        "2026": 3636.5,
+        "2024": 4373.5
+      },
+      EUR: {
+        actual: 1.182
+      }
     };
     const AUTO_RATE_ENABLED = true;
     const RATE_REFRESH_MS = 30 * 1000;
+    const DEFAULT_RATE_BY_YEAR = DEFAULT_RATE_BY_CURRENCY[localCurrency] || DEFAULT_RATE_BY_CURRENCY.COP;
     const TRADINGVIEW_API_URL = "https://scanner.tradingview.com/forex/scan";
+    const RATE_SYMBOL = localCurrency === "EUR" ? "FX_IDC:USDEUR" : "FX_IDC:USDCOP";
     const TRADINGVIEW_PAYLOAD = {
-      symbols: { tickers: ["FX_IDC:USDCOP"], query: { types: [] } },
+      symbols: { tickers: [RATE_SYMBOL], query: { types: [] } },
       columns: ["close"]
     };
     let rateFetchMode = "proxy";
@@ -1554,17 +1605,33 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       toggleCopSummaryVisibility(true);
     };
 
+    const buildRateUrl = () => {
+      if (!RATE_API_URL) return null;
+      if (rateFetchMode !== "proxy") return RATE_API_URL;
+      const pair = localCurrency === "EUR" ? "USDEUR" : "USDCOP";
+      try {
+        const url = new URL(RATE_API_URL, window.location.origin);
+        url.searchParams.set("pair", pair);
+        return url.toString();
+      } catch (e) {
+        const glue = RATE_API_URL.includes("?") ? "&" : "?";
+        return `${RATE_API_URL}${glue}pair=${encodeURIComponent(pair)}`;
+      }
+    };
+
     const fetchLiveRate = async () => {
       if (!RATE_API_URL) return false;
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 4500);
       try {
         const options = { signal: controller.signal, cache: "no-store" };
+        const targetUrl = buildRateUrl();
+        if (!targetUrl) return false;
         if (rateFetchMode === "tradingview") {
           options.method = "POST";
           options.body = JSON.stringify(TRADINGVIEW_PAYLOAD);
         }
-        const response = await fetch(RATE_API_URL, options);
+        const response = await fetch(targetUrl, options);
         if (!response.ok) return false;
         const data = await response.json();
         const rate = rateFetchMode === "tradingview"
@@ -1610,7 +1677,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       });
     };
     if (isActualYear) {
-      baseRate = DEFAULT_RATE_BY_YEAR.actual;
+      baseRate = DEFAULT_RATE_BY_YEAR.actual || 1;
       currentRate = baseRate;
       histRateLive = currentRate;
       if (rateBootstrapping) {
@@ -1624,25 +1691,40 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     } else {
       const rateBaseRaw =
         toNumber(userData.patrimonioL) && patrimonioCalcUsd
-          ? toNumber(userData.patrimonioL) / patrimonioCalcUsd
+          ? (localCurrency === "EUR"
+              ? patrimonioCalcUsd / toNumber(userData.patrimonioL)
+              : toNumber(userData.patrimonioL) / patrimonioCalcUsd)
           : toNumber(userData.aporteL) && totalAportesActual
-            ? toNumber(userData.aporteL) / totalAportesActual
+            ? (localCurrency === "EUR"
+                ? totalAportesActual / toNumber(userData.aporteL)
+                : toNumber(userData.aporteL) / totalAportesActual)
             : toNumber(userData.tasaBase);
-      const fallbackRate = DEFAULT_RATE_BY_YEAR[selectedYear] || 4409.15;
+      const fallbackRate = DEFAULT_RATE_BY_YEAR[selectedYear] || DEFAULT_RATE_BY_YEAR.actual || 1;
       baseRate = Number.isFinite(rateBaseRaw) && rateBaseRaw > 0 ? rateBaseRaw : fallbackRate;
       if (userData.tasaBase) baseRate = toNumber(userData.tasaBase) || baseRate;
-      currentRate = baseRate;
-      histRateLive = DEFAULT_RATE_BY_YEAR.actual || currentRate;
-      if (rateValue) {
-        rateValue.textContent = formatNumber(baseRate, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if (localCurrency !== "COP") {
+        // Sin respaldo: esperar tasa en vivo para monedas distintas de COP
+        currentRate = NaN;
+        histRateLive = NaN;
+        rateReady = false;
+        rateBootstrapping = true;
+        if (rateValue) rateValue.textContent = "...";
+        toggleCopSummaryVisibility(false);
+      } else {
+        currentRate = baseRate;
+        histRateLive = DEFAULT_RATE_BY_YEAR.actual || currentRate;
+        if (rateValue) {
+        const decimals = localCurrency === "EUR" ? 4 : 1;
+        rateValue.textContent = formatNumber(baseRate, { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
       }
-      applyPesos(currentRate);
-      toggleCopSummaryVisibility(true);
+        applyPesos(currentRate);
+        toggleCopSummaryVisibility(true);
+      }
     }
     startRateAutoRefresh();
     crcmntBaseL = toNumber(userData.crcmntL) ?? crcmntBaseUsd ?? 0;
     const aporteBaseLInitial = (isActualYear || String(displayYear) === "2025")
-      ? null
+      ? (localCurrency === "COP" ? null : toNumber(userData.aporteL))
       : toNumber(userData.aporteL);
     aporteBaseL = aporteBaseLInitial;
     utilOsc = utilCalcBase;
@@ -1658,7 +1740,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
               ? (Number.isFinite(prevPatrLBase) ? (prevPatrLBase + (sumMovCop2025 || 0)) : null)
               : (Number.isFinite(baseRate) ? (totalAportesActual || 0) * baseRate : null)));
     if (Number.isFinite(aporteLBase) && aporteL) {
-      aporteL.textContent = formatMoneyCop(aporteLBase);
+      aporteL.textContent = formatMoneyLocal(aporteLBase);
     }
 
     applyPesos = (rate, patrUsdOverride = null, utilUsdOverride = null) => {
@@ -1677,21 +1759,21 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         : (isActualYear
             ? ((Number.isFinite(prevClosingPatrL)
                 ? prevClosingPatrL
-                : (prevClosingPatr || 0) * rate) + (sumMovCop || 0))
+                : usdToLocal((prevClosingPatr || 0), rate)) + (sumMovCop || 0))
             : (String(displayYear) === "2025"
                 ? ((Number.isFinite(prevClosingPatrL)
                     ? prevClosingPatrL
-                    : (prevClosingPatr || 0) * rate) + (sumMovCop2025 || 0))
-                : usdAporte * rate));
-      const patrimonioCop = usdPatrimonio * rate;
+                    : usdToLocal((prevClosingPatr || 0), rate)) + (sumMovCop2025 || 0))
+                : usdToLocal(usdAporte, rate)));
+      const patrimonioCop = usdToLocal(usdPatrimonio, rate);
       const utilidadCop = patrimonioCop - aporteCop;
-      const utilidadTotalCop = usdUtilidad * rate;
+      const utilidadTotalCop = usdToLocal(usdUtilidad, rate);
       utilOsc = usdUtilidad; // mantener utilidad oscilada para próximos cálculos
 
-      aporteL.textContent = formatMoneyCop(aporteCop);
-      patrimonioL.textContent = formatMoneyCop(patrimonioCop);
-      utilidadL.textContent = formatMoneyCop(utilidadCop);
-      if (utilidadTotalL) utilidadTotalL.textContent = formatMoneyCop(utilidadTotalCop);
+      aporteL.textContent = formatMoneyLocal(aporteCop);
+      patrimonioL.textContent = formatMoneyLocal(patrimonioCop);
+      utilidadL.textContent = formatMoneyLocal(utilidadCop);
+      if (utilidadTotalL) utilidadTotalL.textContent = formatMoneyLocal(utilidadTotalCop);
       const crcmntLCur = aporteCop !== 0 ? (utilidadCop / Math.abs(aporteCop)) * 100 : crcmntBaseL;
       crcmntL.textContent = formatPercent(crcmntLCur);
 
@@ -1708,10 +1790,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         const crcmntHistLCur = aporteCopHist !== 0
           ? (utilRCopHist / Math.abs(aporteCopHist)) * 100
           : 0;
-        if (aporteHistL) aporteHistL.textContent = formatMoneyCop(aporteCopHist);
-        patrimonioHistL.textContent = formatMoneyCop(patrCopHist);
-        utilidadRHistL.textContent = formatMoneyCop(utilRCopHist);
-        utilidadHistL.textContent = formatMoneyCop(utilTotalCopHist);
+        if (aporteHistL) aporteHistL.textContent = formatMoneyLocal(aporteCopHist);
+        patrimonioHistL.textContent = formatMoneyLocal(patrCopHist);
+        utilidadRHistL.textContent = formatMoneyLocal(utilRCopHist);
+        utilidadHistL.textContent = formatMoneyLocal(utilTotalCopHist);
         crcmntHistL.textContent = formatPercent(crcmntHistLCur);
         setTrendClass(utilidadRHistL, utilRCopHist);
         setTrendClass(utilidadHistL, utilTotalCopHist);
@@ -1756,7 +1838,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const getHistoricalRate = () => {
       if (Number.isFinite(histRateLive)) return histRateLive;
       if (isActualYear && Number.isFinite(currentRate)) return currentRate;
-      return DEFAULT_RATE_BY_YEAR.actual || 3710.5;
+      return DEFAULT_RATE_BY_YEAR.actual || 1;
     };
     if (!shouldHoldRateDependentValues()) {
       const LATEST_HISTORICAL_RATE = getHistoricalRate();
@@ -1766,16 +1848,18 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         if (patrimonioHist) patrimonioHist.textContent = formatMoney(histPatrUsdDisplay);
         if (utilidadRHist) utilidadRHist.textContent = formatMoney(histUtilUsdDisplay);
         if (utilidadHist) utilidadHist.textContent = formatMoney(histUtilUsdDisplay);
-        const patrCopHist = histPatrUsdDisplay * LATEST_HISTORICAL_RATE;
+        const patrCopHist = usdToLocal(histPatrUsdDisplay, LATEST_HISTORICAL_RATE);
         const utilUsdHist = histUtilUsdDisplay;
         const utilCopHist = patrCopHist - aporteCopHist;
         const utilRCopHist = utilCopHist;
-        const utilTotalCopHist = utilUsdHist * LATEST_HISTORICAL_RATE;
+        const utilTotalCopHist = usdToLocal(utilUsdHist, LATEST_HISTORICAL_RATE);
         const crcmntHistLCur = aporteCopHist !== 0 ? (utilCopHist / Math.abs(aporteCopHist)) * 100 : 0;
-        aporteHistL.textContent = formatMoneyCop(aporteCopHist);
-        patrimonioHistL.textContent = formatMoneyCop(patrCopHist);
-        utilidadHistL.textContent = formatMoneyCop(utilTotalCopHist);
-        utilidadRHistL.textContent = formatMoneyCop(utilRCopHist);
+        aporteHistL.textContent = formatMoneyLocal(
+          localCurrency === "COP" ? aporteCopHist : (Number.isFinite(aporteBaseL) ? aporteBaseL : aporteCopHist)
+        );
+        patrimonioHistL.textContent = formatMoneyLocal(patrCopHist);
+        utilidadHistL.textContent = formatMoneyLocal(utilTotalCopHist);
+        utilidadRHistL.textContent = formatMoneyLocal(utilRCopHist);
         crcmntHistL.textContent = formatPercent(crcmntHistLCur);
         setTrendClass(utilidadHistL, utilTotalCopHist);
         setTrendClass(utilidadRHistL, utilRCopHist);
@@ -1804,7 +1888,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           patrimonioHist.textContent = formatMoney(histPatrFixed);
         }
         if (patrimonioHistL && Number.isFinite(histRate)) {
-          patrimonioHistL.textContent = formatMoneyCop(histPatrFixed * histRate);
+          patrimonioHistL.textContent = formatMoneyLocal(histPatrFixed * histRate);
         }
 
         const histUtilUsd = histPatrFixed - (totalAporteHistMovAll || 0);
@@ -1825,20 +1909,25 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         }
         if (Number.isFinite(histRate)) {
           const aporteCopHistTick = totalMovCopAll || 0;
-          const patrCopHistTick = histPatrFixed * histRate;
+          const patrCopHistTick = usdToLocal(histPatrFixed, histRate);
           const utilRCopHistTick = patrCopHistTick - aporteCopHistTick;
-          const utilCopHistTick = histUtilUsd * histRate;
+          const utilCopHistTick = usdToLocal(histUtilUsd, histRate);
           const crcmntHistLCur = aporteCopHistTick !== 0
             ? (utilRCopHistTick / Math.abs(aporteCopHistTick)) * 100
             : 0;
-          if (aporteHistL) aporteHistL.textContent = formatMoneyCop(aporteCopHistTick);
-          if (patrimonioHistL) patrimonioHistL.textContent = formatMoneyCop(patrCopHistTick);
+          if (aporteHistL) {
+            const aporteHistLocal = localCurrency === "COP"
+              ? aporteCopHistTick
+              : (Number.isFinite(aporteBaseL) ? aporteBaseL : aporteCopHistTick);
+            aporteHistL.textContent = formatMoneyLocal(aporteHistLocal);
+          }
+          if (patrimonioHistL) patrimonioHistL.textContent = formatMoneyLocal(patrCopHistTick);
           if (utilidadRHistL) {
-            utilidadRHistL.textContent = formatMoneyCop(utilRCopHistTick);
+            utilidadRHistL.textContent = formatMoneyLocal(utilRCopHistTick);
             setTrendClass(utilidadRHistL, utilRCopHistTick);
           }
           if (utilidadHistL) {
-            utilidadHistL.textContent = formatMoneyCop(utilCopHistTick);
+            utilidadHistL.textContent = formatMoneyLocal(utilCopHistTick);
             setTrendClass(utilidadHistL, utilCopHistTick);
           }
           if (crcmntHistL) {
@@ -2471,10 +2560,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       if (registros.length) {
         registros.forEach(mov => {
           const row = document.createElement("tr");
-          const isCop = String(mov.tipo || "").toUpperCase() === "COP";
-          const formatCop = (val) => formatNumber(val, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-          const cantidadTxt = isCop ? formatCop(mov.cantidad) : formatNumber(mov.cantidad);
-          const tasaTxt = mov.tasa ? (isCop ? formatCop(mov.tasa) : formatNumber(mov.tasa)) : "";
+          const isLocal = String(mov.tipo || "").toUpperCase() === localCurrency;
+          const formatLocal = (val) => formatNumber(val, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+          const cantidadTxt = isLocal ? formatLocal(mov.cantidad) : formatNumber(mov.cantidad);
+          const tasaTxt = mov.tasa ? (isLocal ? formatLocal(mov.tasa) : formatNumber(mov.tasa)) : "";
           row.innerHTML = `
             <td>${mov.recibo || ""}</td>
             <td>${mov.fecha || ""}</td>
@@ -2752,7 +2841,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           doc.text("Horario de atención: L-V 8:00 - 18:00 (GMT-5)", marginX, y);
           y += 5;
           addParagraph("Este informe refleja exactamente lo que ves en tu dashboard: aportes, patrimonio, utilidades, honorarios y movimientos. Los valores en cero indican meses no cerrados o sin datos cargados.");
-          addParagraph("Metodología: cifras en USD basadas en tus aportes y patrimonio; COP convertidos con la tasa visible. Las utilidades consideran ganancias/pérdidas y comisiones. El apartado histórico muestra la evolución total desde tu fecha de ingreso.");
+          addParagraph(`Metodología: cifras en USD basadas en tus aportes y patrimonio; ${localCurrencyShort} convertidos con la tasa visible. Las utilidades consideran ganancias/pérdidas y comisiones. El apartado histórico muestra la evolución total desde tu fecha de ingreso.`);
           y += 4;
           doc.setDrawColor(40);
           doc.setLineWidth(0.4);
@@ -2765,7 +2854,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           addLine(safeText(nivelText));
           addLine(`Año: ${reportYearText}`);
           addLine(`Actualizado: ${updatedLabel}`);
-          addParagraph(`Informe dirigido a ${safeText(nombreCliente)} (${cleanId}). Datos de contacto registrados: Teléfono ${safeText(menuTelefono)} | Cédula/NIT ${safeText(menuCedula)}. Este documento consolida la información actual del dashboard para su referencia y soporte.`);
+          addParagraph(`Informe dirigido a ${safeText(nombreCliente)} (${cleanId}). Datos de contacto registrados: Teléfono ${safeText(menuTelefono)} | Identificación ${safeText(menuCedula)}. Este documento consolida la información actual del dashboard para su referencia y soporte.`);
           addParagraph("Como resultado de los movimientos realizados durante el presente año (o desde tu fecha de ingreso en este periodo), este estado de cuenta muestra el margen de utilidad obtenido. El enfoque está en los rendimientos del año seleccionado para evaluar el desempeño actual de tu inversión, incluyendo aportes, retiros y comisiones.");
           const cleanIdForFile = (cleanId || "sin-id").replace(/[^0-9a-zA-Z-]/g, "") || "sin-id";
           const yearMatch = (reportYearText || selectedYear || "").match(/\d{4}/);
@@ -2777,7 +2866,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           addTable(
             "Resumen de cuenta",
             `Como resultado de los movimientos realizados a lo largo del periodo seleccionado, y considerando únicamente el intervalo comprendido desde el 1 de enero de ${reportYearNumber} o desde la fecha en la que usted se unió al portafolio durante ese mismo año, a continuación podrá ver el margen de utilidad obtenido. Esta información refleja de manera precisa los rendimientos generados exclusivamente en ${reportYearNumber} dentro de su participación en el fondo de inversión, permitiéndole evaluar el desempeño de su inversión con base en los resultados alcanzados al cierre de dicho periodo.`,
-            ["", "USD", "COP"],
+            ["", "USD", localCurrencyShort],
             [
               ["Aporte", `$ ${safeText(aporte)}`, `$ ${safeText(aporteL)}`],
               ["Patrimonio", `$ ${safeText(patrimonio)}`, `$ ${safeText(patrimonioL)}`],
@@ -2789,7 +2878,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const rateStamp = selectedYear === "actual" ? "31/12/2025" : `31/12/${reportYearNumber}`;
           const summaryRateNumber = Number(currentRate || baseRate);
           const summaryRateText = Number.isFinite(summaryRateNumber) ? formatNumber(summaryRateNumber) : safeText(rateValue) || "N/D";
-          addParagraph(`Interpretación: Patrimonio y utilidad en USD, crecimiento porcentual sobre aportes acumulados. Conversión a COP usando la tasa vigente al cierre del periodo visible (tasa de cierre ${rateStamp}: $ ${summaryRateText}).`);
+          addParagraph(`Interpretación: Patrimonio y utilidad en USD, crecimiento porcentual sobre aportes acumulados. Conversión a ${localCurrencyShort} usando la tasa vigente al cierre del periodo visible (tasa de cierre ${rateStamp}: ${ratePairLabel} ${summaryRateText}).`);
           if (Array.isArray(derivedData?.monthly) && derivedData.monthly.length) {
             const patrSeries = derivedData.monthly.map((m) => Number(m.patrimonio) || 0);
             if (patrSeries.some((v) => v !== 0)) {
@@ -2893,13 +2982,13 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const histUtilRUsd = toNumber(safeText(utilidadRHist)) || 0;
           const histUtilUsd = toNumber(safeText(utilidadHist)) || 0;
           const histAporteCop = totalMovCopAll || 0;
-          const histPatrCop = histPatrUsd * latestHistoricalRate;
+          const histPatrCop = usdToLocal(histPatrUsd, latestHistoricalRate);
           const histUtilRCop = histPatrCop - histAporteCop;
-          const histUtilCop = histUtilUsd * latestHistoricalRate;
+          const histUtilCop = usdToLocal(histUtilUsd, latestHistoricalRate);
           addTable(
             "Totales históricos",
             "Cifras acumuladas desde tu fecha de ingreso. El crecimiento refleja el rendimiento sobre el total aportado.",
-            ["Concepto", "USD", "COP"],
+            ["Concepto", "USD", localCurrencyShort],
             [
               ["Aporte", fmtMoney(histAporteUsd), fmtMoney(histAporteCop)],
               ["Patrimonio", fmtMoney(histPatrUsd), fmtMoney(histPatrCop)],
@@ -2911,7 +3000,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
           y += 2;
           addLine("Tasa aplicada", 12, 8, "bold");
-          addLine(`USD/COP: ${formatNumber(latestHistoricalRate)}`);
+          addLine(`${ratePairLabel}: ${formatNumber(latestHistoricalRate)}`);
           const todayRateStamp = new Date().toLocaleDateString("es-CO");
           addLine(`Actualizada a ${todayRateStamp}`);
 
