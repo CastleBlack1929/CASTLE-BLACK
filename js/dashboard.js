@@ -1718,9 +1718,9 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         const aporteCopHist = totalMovCopAll || 0;
         const histUsd = histPatrUsdDisplay || 0;
         const histUtilUsd = histUsd - (totalAporteHistMovAll || 0);
-        const patrCopHist = histUsd * rate;
+        const patrCopHist = usdToLocal(histUsd, rate);
         const utilRCopHist = patrCopHist - aporteCopHist;
-        const utilTotalCopHist = histUtilUsd * rate;
+        const utilTotalCopHist = usdToLocal(histUtilUsd, rate);
         const crcmntHistLCur = aporteCopHist !== 0
           ? (utilRCopHist / Math.abs(aporteCopHist)) * 100
           : 0;
@@ -1734,8 +1734,18 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         setTrendClass(crcmntHistL, crcmntHistLCur);
         if (!Number.isFinite(prevHistUtilLCopVal) && Number.isFinite(utilRCopHist)) {
           prevHistUtilLCopVal = utilRCopHist;
+        } else if (Number.isFinite(prevHistUtilLCopVal) && Number.isFinite(utilRCopHist)) {
+          if (utilRCopHist !== prevHistUtilLCopVal) {
+            setArrowIndicator(utilidadRHistLArrow, utilRCopHist, prevHistUtilLCopVal);
+          }
+          prevHistUtilLCopVal = utilRCopHist;
         }
         if (!Number.isFinite(prevHistUtilTotalLCopVal) && Number.isFinite(utilTotalCopHist)) {
+          prevHistUtilTotalLCopVal = utilTotalCopHist;
+        } else if (Number.isFinite(prevHistUtilTotalLCopVal) && Number.isFinite(utilTotalCopHist)) {
+          if (utilTotalCopHist !== prevHistUtilTotalLCopVal) {
+            setArrowIndicator(utilidadHistLArrow, utilTotalCopHist, prevHistUtilTotalLCopVal);
+          }
           prevHistUtilTotalLCopVal = utilTotalCopHist;
         }
       }
@@ -1754,8 +1764,12 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             utilidadTotalLArrow.classList.remove("arrow-up", "arrow-down");
           }
         } else if (Number.isFinite(prevUsdForCopArrow) && Number.isFinite(usdUtilVal)) {
-          setArrowIndicator(utilidadLArrow, usdUtilVal, prevUsdForCopArrow);
-          setArrowIndicator(utilidadTotalLArrow, usdUtilTotVal, prevUsdTotalForCopArrow);
+          if (usdUtilVal !== prevUsdForCopArrow) {
+            setArrowIndicator(utilidadLArrow, usdUtilVal, prevUsdForCopArrow);
+          }
+          if (usdUtilTotVal !== prevUsdTotalForCopArrow) {
+            setArrowIndicator(utilidadTotalLArrow, usdUtilTotVal, prevUsdTotalForCopArrow);
+          }
           prevUsdForCopArrow = usdUtilVal;
           prevUsdTotalForCopArrow = usdUtilTotVal;
         }
@@ -1817,12 +1831,12 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         const prevHistUtil = toNumber(utilidadRHist?.textContent);
         const prevHistUtilTot = toNumber(utilidadHist?.textContent);
 
-        const histPatrFixed = fixedHistPatrUsd;
+        const histPatrFixed = Number.isFinite(_nuevoPat) ? _nuevoPat : fixedHistPatrUsd;
         if (patrimonioHist) {
           patrimonioHist.textContent = formatMoney(histPatrFixed);
         }
         if (patrimonioHistL && Number.isFinite(histRate)) {
-          patrimonioHistL.textContent = formatMoneyLocal(histPatrFixed * histRate);
+          patrimonioHistL.textContent = formatMoneyLocal(usdToLocal(histPatrFixed, histRate));
         }
 
         const histUtilUsd = histPatrFixed - (totalAporteHistMovAll || 0);
