@@ -362,7 +362,8 @@ const computeDerivedWithMonthlyRules = ({
   disableHonorarios = false,
   currentMonthIndex = 11,
   currentDay = null,
-  startMonthKey = "febrero"
+  startMonthKey = "febrero",
+  mergeFebToNext = false
 }) => {
   let totalAporte = 0;
   let prevPatrimonio = Number(prevPatrInicial) || 0;
@@ -382,12 +383,27 @@ const computeDerivedWithMonthlyRules = ({
     if (disableHonorarios) return 0;
     const tri = deductionMap[mes];
     if (!tri) return 0;
+    const mergeFeb =
+      mergeFebToNext &&
+      String(year) === "2026" &&
+      String(corteAplicado || "").toUpperCase() === "FEB-MAY-AGO-NOV";
+    if (mergeFeb && mes === "marzo") return 0;
     const utilTrim = (tri.meses || []).reduce((sum, item) => {
       const currentVal = toNumber(utilByMes[item]);
       if (Number.isFinite(currentVal)) return sum + currentVal;
       const prevVal = toNumber(prevYearUtilByMes[item]);
       return sum + (Number.isFinite(prevVal) ? prevVal : 0);
     }, 0);
+    if (mergeFeb && mes === "junio") {
+      const febVal = toNumber(utilByMes["febrero"]);
+      if (Number.isFinite(febVal)) {
+        return tarifaHonorarios(utilTrim + febVal).valor || 0;
+      }
+      const febPrevVal = toNumber(prevYearUtilByMes["febrero"]);
+      if (Number.isFinite(febPrevVal)) {
+        return tarifaHonorarios(utilTrim + febPrevVal).valor || 0;
+      }
+    }
     const tarifa = tarifaHonorarios(utilTrim);
     return tarifa.valor || 0;
   };
@@ -1085,7 +1101,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const loadUsersList = () => Promise.resolve(
       (typeof users !== "undefined" && Array.isArray(users)) ? users : []
     );
-    const computeHonorarioDeductionForMonth = ({ derivedCurrent, derivedPrev, corte, monthKey, year }) => {
+    const computeHonorarioDeductionForMonth = ({ derivedCurrent, derivedPrev, corte, monthKey, year, mergeFebToNext = false }) => {
       if (!monthKey) return 0;
       const utilPorMes = derivedCurrent?.monthly?.reduce((acc, m) => {
         acc[m.mes] = m.g_p;
@@ -1098,6 +1114,11 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const deductionMap = buildHonorarioDeductionMap(corte);
       const targetTri = deductionMap[monthKey];
       if (!targetTri) return 0;
+      const mergeFeb =
+        mergeFebToNext &&
+        String(year) === "2026" &&
+        String(corte || "").toUpperCase() === "FEB-MAY-AGO-NOV";
+      if (mergeFeb && monthKey === "marzo") return 0;
       const mesesTri = targetTri.meses || [];
       const triHasEnero = mesesTri.includes("enero");
       const triHasPrevWrap = triHasEnero && (mesesTri.includes("noviembre") || mesesTri.includes("diciembre"));
@@ -1112,7 +1133,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         }
         return sum + (Number.isFinite(currentVal) ? currentVal : 0);
       }, 0);
-      const tarifa = tarifaHonorarios(utilTrim);
+      const extraFeb = mergeFeb && monthKey === "junio"
+        ? (Number.isFinite(toNumber(utilPorMes["febrero"])) ? toNumber(utilPorMes["febrero"]) : toNumber(utilPorMesPrev["febrero"]) || 0)
+        : 0;
+      const tarifa = tarifaHonorarios(utilTrim + extraFeb);
       return tarifa.valor || 0;
     };
     const ensureCastleBlackHonorariosMovement = async () => {
@@ -1159,14 +1183,16 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           derivedPrevYear: derivedPrev,
           disableHonorarios: false,
           currentMonthIndex: currentMonthIdx,
-          currentDay
+          currentDay,
+          mergeFebToNext: String(userInfo.cortePrimerAno || "").trim().toUpperCase() === "FEB_MERGE_NEXT"
         });
         const deduction = computeHonorarioDeductionForMonth({
           derivedCurrent,
           derivedPrev,
           corte,
           monthKey,
-          year: currentYearNumber
+          year: currentYearNumber,
+          mergeFebToNext: String(userInfo.cortePrimerAno || "").trim().toUpperCase() === "FEB_MERGE_NEXT"
         });
         totalUsd += Number.isFinite(deduction) ? deduction : 0;
       }
@@ -1224,7 +1250,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         derivedPrevYear,
         disableHonorarios,
         currentMonthIndex,
-        currentDay
+        currentDay,
+        mergeFebToNext: String(userData.cortePrimerAno || "").trim().toUpperCase() === "FEB_MERGE_NEXT"
       })
       : computeDerived(mesesForCalc, prevPatrInicial, useAporteAsPrev);
     derivedData = derived;
@@ -2227,6 +2254,11 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         // No calcular honorarios para estos perfiles
       } else {
 
+      const mergeFebToNext =
+        autoHonorarios2026 &&
+        String(displayYear) === "2026" &&
+        String(userData.cortePrimerAno || "").trim().toUpperCase() === "FEB_MERGE_NEXT";
+
       trimestres.forEach((tri, triIndex) => {
         const mesesTri = tri.meses || [];
         const triHasEnero = mesesTri.includes("enero");
@@ -2277,17 +2309,40 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         }
 
         // Caso cálculo automático
-        const utilTrim = mesesTri.reduce((sum, mes) => {
-          if (autoHonorarios2026 && Number(displayYear) === 2026 && triIndex === 3 && mes === "enero") {
-            return sum;
-          }
-          const currentVal = toNumber(utilPorMes[mes]);
-          if (autoHonorarios2026 && triHasPrevWrap && (mes === "noviembre" || mes === "diciembre")) {
-            const prevVal = toNumber(utilPorMesPrev[mes]);
-            if (Number.isFinite(prevVal)) return sum + prevVal;
-          }
-          return sum + (Number.isFinite(currentVal) ? currentVal : 0);
-        }, 0);
+        const extraFeb = mergeFebToNext && triIndex === 1
+          ? (toNumber(utilPorMes["febrero"]) || 0)
+          : 0;
+        const utilTrim = mergeFebToNext && triIndex === 0
+          ? 0
+          : mesesTri.reduce((sum, mes) => {
+            if (autoHonorarios2026 && Number(displayYear) === 2026 && triIndex === 3 && mes === "enero") {
+              return sum;
+            }
+            const currentVal = toNumber(utilPorMes[mes]);
+            if (autoHonorarios2026 && triHasPrevWrap && (mes === "noviembre" || mes === "diciembre")) {
+              const prevVal = toNumber(utilPorMesPrev[mes]);
+              if (Number.isFinite(prevVal)) return sum + prevVal;
+            }
+            return sum + (Number.isFinite(currentVal) ? currentVal : 0);
+        }, extraFeb);
+        if (mergeFebToNext && triIndex === 0) {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${tri.nombre}</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+          `;
+          tablaHonorarios.appendChild(row);
+          trimestresData.push({
+            nombre: tri.nombre,
+            tarifa: "—",
+            comision: "—",
+            valor: 0
+          });
+          return;
+        }
+
         const tarifa = tarifaHonorarios(utilTrim);
         totalHonorarios += tarifa.valor || 0;
 
