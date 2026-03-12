@@ -2068,65 +2068,19 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         }, 3000);
       }
 
-      // Histórico total: oscilar siempre en temporalidades pasadas
+      // Para años pasados: oscilar usando el patrimonio actual como base.
       if (!isOscYear2026) {
         setInterval(() => {
-          if (ENABLE_RATE_OSCILLATION) {
-            const rateFactor = 1 + ((Math.random() - 0.5) * 0.0005); // +/-0.025%
-            histRateLive = (histRateLive || DEFAULT_RATE_BY_YEAR.actual || 1) * rateFactor;
-          }
+          const storedActualPatr = toNumber(localStorage.getItem("currentPatrimonioActual"));
+          const baseActualPatr = Number.isFinite(storedActualPatr) && storedActualPatr > 0
+            ? storedActualPatr
+            : (Number.isFinite(patrimonioCalc) && patrimonioCalc > 0
+                ? patrimonioCalc
+                : (Number.isFinite(basePatrHist) && basePatrHist > 0 ? basePatrHist : 0));
           const crFactor = 1 + ((Math.random() - 0.5) * 0.02); // +/-1%
-          const histFactor = baseAporteHist ? crFactor : (1 + ((Math.random() - 0.5) * 0.02));
-          const nuevoPat = baseAporteHist
-            ? baseAporteHist * (1 + (baseCrcmntHist * histFactor) / 100)
-            : basePatrHist * histFactor;
+          const nuevoPat = baseActualPatr ? baseActualPatr * crFactor : 0;
           updateHistOscillation(nuevoPat, histRateLive);
         }, 3000);
-      }
-
-      // Histórico 2025: oscilar solo patrimonio/utilidad USD cada 2s, +/-0.15% crecimiento
-      if (ENABLE_2025_OSCILLATION && !isActualYear && String(displayYear) === "2025") {
-        const baseAporteOsc = derived.totalAporte || 0;
-        setInterval(() => {
-          const crFactor = 1 + ((Math.random() - 0.5) * 0.02); // +/-1%
-          const nuevoPat = baseAporteOsc * (1 + (crcmntBaseUsd * crFactor) / 100);
-          const nuevoCrcmnt = baseAporteOsc !== 0
-            ? ((nuevoPat - baseAporteOsc) / Math.abs(baseAporteOsc)) * 100
-            : crcmntBaseUsd * crFactor;
-          const nuevaUtil = nuevoPat - baseAporteOsc;
-
-          const prevUtil = toNumber(utilidad?.textContent);
-          const prevUtilTot = toNumber(utilidadTotal?.textContent);
-          const prevCrcmnt = toNumber(crcmnt?.textContent);
-
-          patrimonioCalc = nuevoPat;
-          utilCalcBase = nuevaUtil;
-          utilOsc = nuevaUtil;
-
-          if (patrimonio) patrimonio.textContent = formatMoney(nuevoPat);
-          utilidad.textContent = formatMoney(nuevaUtil);
-          if (utilidadTotal) utilidadTotal.textContent = formatMoney(nuevaUtil);
-          setTrendClass(utilidad, nuevaUtil);
-          setTrendClass(utilidadTotal, nuevaUtil);
-          setArrowIndicator(utilidadArrow, nuevaUtil, prevUtil);
-          setArrowIndicator(utilidadTotalArrow, nuevaUtil, prevUtilTot);
-          crcmnt.textContent = formatPercent(nuevoCrcmnt);
-          setTrendClass(crcmnt, nuevoCrcmnt);
-          if (typeof crcmntArrow !== "undefined" && crcmntArrow) {
-            crcmntArrow.textContent = Number.isFinite(prevCrcmnt)
-              ? (nuevoCrcmnt > prevCrcmnt ? "▲" : (nuevoCrcmnt < prevCrcmnt ? "▼" : ""))
-              : "";
-          }
-
-          const janRow = monthRowMap["enero"];
-          if (janRow) {
-            janRow.patrCell.textContent = `$ ${formatNumber(nuevoPat)}`;
-            janRow.gpCell.textContent = `$ ${formatNumber(nuevaUtil)}`;
-            janRow.margenCell.textContent = formatPercent(nuevoCrcmnt);
-            janRow.margenCell.className = trendClass(nuevoCrcmnt);
-            janRow.gpCell.className = trendClass(nuevaUtil);
-          }
-        }, 2000);
       }
     };
 
