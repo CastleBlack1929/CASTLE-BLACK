@@ -317,7 +317,7 @@ const getNivelFromPatrimonio = (patrimonioUsd) => {
 const MONTHLY_MARGIN_BY_YEAR = {
   2026: {
     febrero: 0.95,
-    marzo: 0.27
+    marzo: 1.05
   }
 };
 
