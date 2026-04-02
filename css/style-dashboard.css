@@ -40,6 +40,18 @@ body::after {
   background: radial-gradient(circle, rgba(143, 152, 163, 0.18), transparent 60%);
 }
 
+body.makima-eye {
+  background-color: #000;
+  background-image:
+    radial-gradient(circle at 85% 20%, rgba(210, 15, 15, 0.22) 0 60px, transparent 60px 140px, rgba(210, 15, 15, 0.18) 140px 220px, transparent 220px 320px, rgba(210, 15, 15, 0.14) 320px 460px, transparent 460px 700px);
+  background-attachment: fixed;
+}
+
+body.makima-eye::before,
+body.makima-eye::after {
+  display: none;
+}
+
 h2, h3, h4 {
   font-family: "IBM Plex Serif", "Cormorant Garamond", serif;
 }
@@ -237,6 +249,20 @@ h2 {
   font-size: 13px;
   color: var(--muted);
   text-align: center;
+}
+
+.suspension-alert {
+  margin-top: 0;
+  background: #3b0b0b;
+  color: #ffd6d6;
+  border: 1px solid #7a1b1b;
+  border-radius: 12px;
+  padding: 10px 14px;
+  text-align: center;
+}
+
+.suspension-alert strong {
+  color: #ffe6e6;
 }
 
 .rate-box {

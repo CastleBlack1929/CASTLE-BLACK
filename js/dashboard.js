@@ -316,6 +316,7 @@ const getNivelFromPatrimonio = (patrimonioUsd) => {
 
 const MONTHLY_MARGIN_BY_YEAR = {
   2026: {
+    enero: 2.648,
     febrero: 0.95,
     marzo: 1.55
   }
@@ -364,7 +365,8 @@ const computeDerivedWithMonthlyRules = ({
   currentMonthIndex = 11,
   currentDay = null,
   startMonthKey = "febrero",
-  mergeFebToNext = false
+  mergeFebToNext = false,
+  respectManualPatrimonio = false
 }) => {
   let totalAporte = 0;
   let prevPatrimonio = Number(prevPatrInicial) || 0;
@@ -420,14 +422,17 @@ const computeDerivedWithMonthlyRules = ({
 
       const monthIdx = monthOrder.indexOf(mes);
       const applyRules = monthIdx >= effectiveStartIdx && monthIdx <= currentMonthIndex;
+      const hasManualPatrimonio = Number.isFinite(rawPatrimonio) && rawPatrimonio !== 0;
 
       if (applyRules) {
-        const base = prevPatrimonio + aporte;
-        const marginPct = getMonthlyMarginPercent(year, mes, { currentMonthIndex, currentDay });
-        const marginRate = Number.isFinite(marginPct) ? marginPct / 100 : 0;
-        patrimonio = base + (base * marginRate);
-        const deduction = getHonorarioDeductionForMonth(mes);
-        if (deduction) patrimonio -= deduction;
+        if (!(respectManualPatrimonio && hasManualPatrimonio)) {
+          const base = prevPatrimonio + aporte;
+          const marginPct = getMonthlyMarginPercent(year, mes, { currentMonthIndex, currentDay });
+          const marginRate = Number.isFinite(marginPct) ? marginPct / 100 : 0;
+          patrimonio = base + (base * marginRate);
+          const deduction = getHonorarioDeductionForMonth(mes);
+          if (deduction) patrimonio -= deduction;
+        }
       } else if (aporte === 0 && patrimonio === 0 && prevPatrimonio !== 0) {
         patrimonio = prevPatrimonio;
       }
@@ -707,6 +712,177 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     if (!validation.valid) {
       alert(`Datos del usuario incompletos: ${validation.errors.join(" ")}`);
       performLogout({ clearPrefs: false, silent: true });
+      return;
+    }
+
+    const populateHeader = (data) => {
+      if (nombreCliente) nombreCliente.textContent = data.nombre || data.socio || "Usuario";
+      if (nivelText) nivelText.textContent = data.nivel ? `Nivel: ${data.nivel}` : "";
+      if (idClienteHeader) idClienteHeader.textContent = data.idCliente ? `ID: ${data.idCliente}` : "";
+      if (menuCedula) menuCedula.textContent = data.cedula || "";
+      if (menuTelefono) menuTelefono.textContent = data.telefono || "";
+    };
+
+    const setupMenuControls = () => {
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => performLogout({ clearPrefs: false }));
+      }
+      if (menuBtn && menuDropdown) {
+        const getMenuItems = () =>
+          Array.from(menuDropdown.querySelectorAll(".menu-focusable, .menu-item"))
+            .filter((el) => el && el.offsetParent !== null && !el.disabled);
+        const setMenuOpen = (isOpen) => {
+          menuDropdown.classList.toggle("open", isOpen);
+          menuBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+          if (isOpen) {
+            menuDropdown.focus();
+          }
+        };
+        const isMenuOpen = () => menuDropdown.classList.contains("open");
+
+        const handleMenuKeydown = (event) => {
+          if (!isMenuOpen()) return;
+          if (event.key === "Escape") {
+            event.preventDefault();
+            setMenuOpen(false);
+            menuBtn.focus();
+            return;
+          }
+          if (event.key === "Tab") {
+            const focusables = getMenuItems();
+            if (!focusables.length) return;
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+              event.preventDefault();
+              last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+              event.preventDefault();
+              first.focus();
+            }
+          }
+        };
+
+        menuBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const shouldOpen = !isMenuOpen();
+          setMenuOpen(shouldOpen);
+          if (shouldOpen) {
+            const focusables = getMenuItems();
+            if (focusables.length) focusables[0].focus();
+          }
+        });
+
+        menuDropdown.addEventListener("click", (e) => e.stopPropagation());
+        menuDropdown.addEventListener("keydown", handleMenuKeydown);
+        document.addEventListener("keydown", handleMenuKeydown);
+        document.addEventListener("click", () => setMenuOpen(false));
+      }
+    };
+
+    const applyMakimaBackground = (data) => {
+      if (!document.body) return;
+      const username = String(data?.username || "").trim().toLowerCase();
+      const idCliente = String(data?.idCliente || "").trim();
+      const isSebastian = username === "srb2006" || idCliente === "17";
+      document.body.classList.toggle("makima-eye", isSebastian);
+    };
+
+    populateHeader(baseData);
+    setupMenuControls();
+    applyMakimaBackground(baseData);
+
+    const renderSuspensionNotice = (data) => {
+      const mainEl = document.querySelector("main");
+      const columns = document.querySelector(".dashboard-columns");
+      if (columns) columns.style.display = "none";
+      if (!mainEl) return;
+
+      const matchMov = (mov) => {
+        const clave = String(data?.username || "").trim().toLowerCase();
+        const idClienteData = String(data?.idCliente || "").trim().toLowerCase();
+        const cedulaData = String(data?.cedula || "").trim().toLowerCase();
+        const movUser = String(mov.username || "").trim().toLowerCase();
+        const movCliente = String(mov.cliente || "").trim().toLowerCase();
+        if (movUser || movCliente) {
+          return (movUser && movUser === clave) || (movCliente && idClienteData && movCliente === idClienteData);
+        }
+        const movCedula = String(mov.cedula || "").trim().toLowerCase();
+        return cedulaData && movCedula === cedulaData;
+      };
+      const toDateKey = (fecha) => {
+        const parts = String(fecha || "").split("/");
+        if (parts.length < 3) return "";
+        const [dd, mm, yy] = parts;
+        const year = yy.length === 4 ? yy : `20${yy}`;
+        return `${year}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
+      };
+      const allMovs = (typeof movimientosData !== "undefined" && Array.isArray(movimientosData))
+        ? [...movimientosData]
+            .filter(matchMov)
+            .sort((a, b) => String(toDateKey(b.fecha)).localeCompare(String(toDateKey(a.fecha))))
+        : [];
+
+      const notice = document.createElement("section");
+      notice.className = "resumen suspension-card";
+      notice.innerHTML = `
+        <p class="tabla-tip suspension-alert">
+          <strong>Cuenta en suspensión.</strong> La operación se detuvo a solicitud del titular y puede reactivarse en cualquier momento.
+          Mantendremos el historial registrado mientras la cuenta permanezca en este estado.
+        </p>
+      `;
+      if (columns) {
+        mainEl.insertBefore(notice, columns);
+      } else {
+        mainEl.appendChild(notice);
+      }
+
+      const movimientosTipEl = document.getElementById("movimientosTip");
+      if (movimientosTipEl) {
+        movimientosTipEl.textContent = "Historial completo de movimientos registrados de esta cuenta (solo consulta).";
+        movimientosTipEl.style.display = "";
+      }
+      const yearSelectEl = document.getElementById("yearSelect");
+      if (yearSelectEl) {
+        const yearSection = yearSelectEl.closest(".menu-info");
+        if (yearSection) yearSection.style.display = "none";
+      }
+      const downloadBtn = document.getElementById("downloadReportBtn");
+      if (downloadBtn) {
+        const downloadSection = downloadBtn.closest(".menu-info");
+        if (downloadSection) downloadSection.style.display = "none";
+      }
+      const movimientosBody = document.getElementById("tabla-movimientos");
+      if (movimientosBody) {
+        movimientosBody.innerHTML = "";
+        if (allMovs.length) {
+          allMovs.forEach((mov) => {
+            const row = document.createElement("tr");
+            const cantidad = Number.isFinite(toNumber(mov.cantidad)) ? formatNumber(mov.cantidad) : "--";
+            const tasa = Number.isFinite(toNumber(mov.tasa)) ? formatNumber(mov.tasa) : "--";
+            const cambio = Number.isFinite(toNumber(mov.cambio)) ? formatNumber(mov.cambio) : "--";
+            row.innerHTML = `
+              <td>${mov.recibo || ""}</td>
+              <td>${mov.fecha || ""}</td>
+              <td>$ ${cantidad}</td>
+              <td>${mov.tipo || ""}</td>
+              <td>${tasa}</td>
+              <td>$ ${cambio}</td>
+            `;
+            movimientosBody.appendChild(row);
+          });
+        } else {
+          const emptyRow = document.createElement("tr");
+          emptyRow.className = "empty-row";
+          emptyRow.innerHTML = `<td colspan="6">Sin movimientos registrados</td>`;
+          movimientosBody.appendChild(emptyRow);
+        }
+      }
+    };
+
+    if (baseData?.suspenderDashboard === true) {
+      if (nivelText) nivelText.textContent = "";
+      renderSuspensionNotice(baseData);
       return;
     }
 
@@ -990,6 +1166,37 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       return;
     }
     let derived = null;
+    const applyPatrimonioCeroDesde = (data, startMes) => {
+      if (!data || !startMes) return data;
+      const startIdx = monthOrder.indexOf(startMes);
+      if (startIdx === -1) return data;
+      let prevPatr = 0;
+      const updatedMonthly = data.monthly.map((item) => {
+        const mesIdx = monthOrder.indexOf(item.mes);
+        const aporte = Number.isFinite(item.aporte) ? item.aporte : 0;
+        let patrimonio = Number.isFinite(item.patrimonio) ? item.patrimonio : 0;
+        if (mesIdx >= startIdx) {
+          patrimonio = 0;
+        }
+        let g_p = patrimonio - prevPatr - aporte;
+        let margen = prevPatr !== 0 ? (g_p / Math.abs(prevPatr)) * 100 : 0;
+        if (mesIdx >= startIdx) {
+          const baseTotal = prevPatr + aporte;
+          if (baseTotal !== 0) {
+            margen = (g_p / Math.abs(baseTotal)) * 100;
+          }
+        }
+        if (patrimonio !== 0) prevPatr = patrimonio;
+        return { ...item, patrimonio, g_p, margen };
+      });
+      const lastItem = updatedMonthly[updatedMonthly.length - 1] || { patrimonio: 0, aporte: 0 };
+      let patrimonioActual = Number.isFinite(lastItem.patrimonio) ? lastItem.patrimonio : 0;
+      const totalAporte = Number.isFinite(data.totalAporte) ? data.totalAporte : 0;
+      const utilidadActual = patrimonioActual - totalAporte;
+      const crcmntActual = totalAporte !== 0 ? (utilidadActual / Math.abs(totalAporte)) * 100 : 0;
+      return { ...data, monthly: updatedMonthly, patrimonioActual, utilidadActual, crcmntActual };
+    };
+
     derivedData = derived;
     selectedUserData = userData;
     const disableHonorarios =
@@ -1000,7 +1207,9 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
     // Mostrar datos del usuario
     nombreCliente.textContent = userData.nombre || userData.socio || "Usuario";
-    nivelText.textContent = "Nivel: N/A";
+    if (nivelText) {
+      nivelText.textContent = userData.nivel ? `Nivel: ${userData.nivel}` : "";
+    }
     idClienteHeader.textContent = userData.idCliente ? `ID: ${userData.idCliente}` : "";
 
     const monthKeyFromFecha = (fecha) => {
@@ -1057,7 +1266,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const merged = { ...meses };
       keys.forEach((mesKey) => {
         const base = meses?.[mesKey] || {};
-        merged[mesKey] = { ...base, aporte: sums[mesKey] };
+        const aporteVal = Number.isFinite(sums[mesKey]) ? sums[mesKey] : (Number.isFinite(base.aporte) ? base.aporte : 0);
+        merged[mesKey] = { ...base, aporte: aporteVal };
       });
       return merged;
     };
@@ -1075,7 +1285,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const merged = { ...(data?.meses || {}) };
       Object.keys(sums).forEach((mesKey) => {
         const base = merged?.[mesKey] || {};
-        merged[mesKey] = { ...base, aporte: sums[mesKey] };
+        const aporteVal = Number.isFinite(sums[mesKey]) ? sums[mesKey] : (Number.isFinite(base.aporte) ? base.aporte : 0);
+        merged[mesKey] = { ...base, aporte: aporteVal };
       });
       return merged;
     };
@@ -1179,18 +1390,20 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             )
             : null;
           const mesesCalc = buildMesesWithMovAportesForUser(userInfo, currentYearNumber);
-          const derivedCurrent = computeDerivedWithMonthlyRules({
-            meses: mesesCalc,
-            prevPatrInicial: userPrevPatr,
-            useAporteAsPrev: userInfo.usarAporteComoPrev === true,
-            year: currentYearNumber,
-            corteAplicado: corte,
-            derivedPrevYear: derivedPrev,
-            disableHonorarios: false,
-            currentMonthIndex: currentMonthIdx,
-            currentDay: now.getDate(),
-            mergeFebToNext: String(userInfo.cortePrimerAno || "").trim().toUpperCase() === "FEB_MERGE_NEXT"
-          });
+        const derivedCurrent = computeDerivedWithMonthlyRules({
+          meses: mesesCalc,
+          prevPatrInicial: userPrevPatr,
+          useAporteAsPrev: userInfo.usarAporteComoPrev === true,
+          year: currentYearNumber,
+          corteAplicado: corte,
+          derivedPrevYear: derivedPrev,
+          disableHonorarios: false,
+          currentMonthIndex: currentMonthIdx,
+          currentDay: now.getDate(),
+          startMonthKey: userInfo?.inicioMargenMes,
+          respectManualPatrimonio: userInfo?.preservarPatrimonioManual === true,
+          mergeFebToNext: String(userInfo.cortePrimerAno || "").trim().toUpperCase() === "FEB_MERGE_NEXT"
+        });
           const deduction = computeHonorarioDeductionForMonth({
             derivedCurrent,
             derivedPrev,
@@ -1246,6 +1459,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const currentMonthIndex = currentDate.getMonth();
     const currentDay = currentDate.getDate();
     const isMonthlyRulesYear = isActualYear && Number(displayYear) === 2026;
+    const disableMonthlyRulesForUser = userData?.desactivarMargen === true;
     const mesesForCalc = buildMesesWithMovAportes(userData.meses || {}, displayYear);
     derived = isMonthlyRulesYear
       ? computeDerivedWithMonthlyRules({
@@ -1258,9 +1472,15 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         disableHonorarios,
         currentMonthIndex,
         currentDay,
+        startMonthKey: userData?.inicioMargenMes,
+        respectManualPatrimonio: userData?.preservarPatrimonioManual === true,
         mergeFebToNext: String(userData.cortePrimerAno || "").trim().toUpperCase() === "FEB_MERGE_NEXT"
       })
       : computeDerived(mesesForCalc, prevPatrInicial, useAporteAsPrev);
+    const patrimonioCeroDesdeMes = userData?.patrimonioCeroDesdeMes;
+    if (isActualYear && patrimonioCeroDesdeMes) {
+      derived = applyPatrimonioCeroDesde(derived, patrimonioCeroDesdeMes);
+    }
     derivedData = derived;
     const derivedMonthlyMap = derived.monthly.reduce((acc, item) => {
       acc[item.mes] = item;
@@ -1344,6 +1564,15 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const movimientosActual = movimientosYear.filter(
       (m) => matchMovimientoForUser(m) && Number(m.year) === currentYearNumber
     );
+    const toDateKey = (fecha) => {
+      const parts = String(fecha || "").split("/");
+      if (parts.length < 3) return "";
+      const [dd, mm, yy] = parts;
+      const year = yy.length === 4 ? yy : `20${yy}`;
+      return `${year}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
+    };
+    const sortMovsByDate = (list) =>
+      [...list].sort((a, b) => String(toDateKey(a.fecha)).localeCompare(String(toDateKey(b.fecha))));
     const sumMovUsd = movimientosActual.reduce((acc, mov) => {
       const rateFallback = currentRate || baseRate || safeTasaFallback || 0;
       return acc + getMovUsdValue(mov, rateFallback);
@@ -1356,6 +1585,49 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const localVal = usdToLocal(usd || 0, tasaMov);
       return acc + (localVal || 0);
     }, 0);
+    const resetRuleActive = Boolean(userData?.resetEstadoCuentaPorMovimientos) && isActualYear;
+    const basePatrReset = Number(derived?.patrimonioActual) || 0;
+    let resetDateKey = null;
+    if (resetRuleActive && basePatrReset > 0 && movimientosActual.length) {
+      const sortedMovs = sortMovsByDate(movimientosActual);
+      let acumuladoNet = 0;
+      const rateFallback = currentRate || baseRate || safeTasaFallback || 0;
+      for (const mov of sortedMovs) {
+        const usdVal = getMovUsdValue(mov, rateFallback);
+        acumuladoNet += Number.isFinite(usdVal) ? usdVal : 0;
+        if (acumuladoNet <= (-1 * basePatrReset)) {
+          resetDateKey = toDateKey(mov.fecha);
+          break;
+        }
+      }
+    }
+    const resetActivo = Boolean(resetDateKey);
+    const sumMovUsdPostReset = resetActivo
+      ? movimientosActual
+          .filter((m) => {
+            const key = toDateKey(m.fecha);
+            return key && key > resetDateKey;
+          })
+          .reduce((acc, mov) => {
+            const rateFallback = currentRate || baseRate || safeTasaFallback || 0;
+            return acc + getMovUsdValue(mov, rateFallback);
+          }, 0)
+      : sumMovUsd;
+    const sumMovCopPostReset = resetActivo
+      ? movimientosActual
+          .filter((m) => {
+            const key = toDateKey(m.fecha);
+            return key && key > resetDateKey;
+          })
+          .reduce((acc, mov) => {
+            const tipo = (mov.tipo || "").toUpperCase();
+            if (tipo === localCurrency) return acc + (toNumber(mov.cantidad) || 0);
+            const tasaMov = normalizeRate(toNumber(mov.tasa) || currentRate || baseRate || DEFAULT_RATE_BY_YEAR.actual || 1);
+            const usd = toNumber(mov.cambio) || toNumber(mov.cantidad) || 0;
+            const localVal = usdToLocal(usd || 0, tasaMov);
+            return acc + (localVal || 0);
+          }, 0)
+      : sumMovCop;
     const sumMovUsdGlobal = movimientosYear.reduce((acc, mov) => {
       const rateFallback = currentRate || baseRate || safeTasaFallback || 0;
       return acc + getMovUsdValue(mov, rateFallback);
@@ -1365,12 +1637,13 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     let totalAportesActual = derived.totalAporte || 0;
     let aportes2026 = 0;
     let patrimonioCalcUsd = derived.patrimonioActual || 0;
+    const ocultarPatrimonioEnDashboard = isActualYear && Boolean(userData?.patrimonioCeroDesdeMes);
     let utilidadUsd = 0;
 
     // Año actual: aporte USD = patrimonio dic-2025 + aportes 2026
     if (isActualYear) {
-      aportes2026 = sumMovUsd || 0;
-      totalAportesActual = prevClosingPatr + aportes2026;
+      aportes2026 = sumMovUsdPostReset || 0;
+      totalAportesActual = resetActivo ? aportes2026 : (prevClosingPatr + aportes2026);
     }
     if (!isActualYear && String(displayYear) === "2025") {
       totalAportesActual = prevClosingPatr + (sumMovUsd2025 || 0);
@@ -1417,16 +1690,30 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         patrimonioCalcUsd = monthPatr;
       }
     }
+    if (isActualYear && userData?.patrimonioCeroDesdeMes && currentMonthKey) {
+      const startIdx = monthOrder.indexOf(userData.patrimonioCeroDesdeMes);
+      const currentIdx = monthOrder.indexOf(currentMonthKey);
+      if (startIdx >= 0 && currentIdx >= startIdx) {
+        patrimonioCalcUsd = 0;
+      }
+    }
+    if (resetActivo) {
+      patrimonioCalcUsd = 0;
+    }
 
+    const ocultarAporteEnDashboard = isActualYear && Boolean(userData?.aporteCero);
+    const ocultarAporteLocalEnDashboard = isActualYear && Boolean(userData?.aporteLocalCero);
+    const ceroEstadoCuenta = (Boolean(userData?.ceroEstadoCuenta) && (isActualYear || String(displayYear) === "2026")) || resetActivo;
     utilidadUsd = patrimonioCalcUsd - totalAportesActual;
     const utilidadTotalUsd = utilidadUsd;
-    aporte.textContent = formatMoney(totalAportesActual);
+    const patrimonioDisplayUsd = (ocultarPatrimonioEnDashboard || ceroEstadoCuenta) ? 0 : patrimonioCalcUsd;
+    const ocultarCalculosEnDashboard = (ocultarPatrimonioEnDashboard && ocultarAporteEnDashboard) || ceroEstadoCuenta;
+    const utilidadDisplayUsd = ocultarCalculosEnDashboard ? 0 : (ocultarPatrimonioEnDashboard ? 0 : utilidadUsd);
+    const utilidadTotalDisplayUsd = ocultarCalculosEnDashboard ? 0 : (ocultarPatrimonioEnDashboard ? 0 : utilidadTotalUsd);
+    const crcmntDisplayUsd = ocultarCalculosEnDashboard ? 0 : (ocultarPatrimonioEnDashboard ? 0 : crcmntBaseUsd);
+    aporte.textContent = formatMoney((ocultarAporteEnDashboard || ceroEstadoCuenta) ? 0 : totalAportesActual);
     patrimonioCalc = patrimonioCalcUsd;
-    patrimonio.textContent = formatMoney(patrimonioCalcUsd);
-    if (nivelText) {
-      const nivelValue = (userData.nivel || getNivelFromPatrimonio(patrimonioCalcUsd) || "").trim();
-      nivelText.textContent = nivelValue ? `Nivel: ${nivelValue}` : "Nivel: N/A";
-    }
+    patrimonio.textContent = formatMoney(patrimonioDisplayUsd);
     utilCalcBase = utilidadUsd; // Utilidad R
     utilOsc = utilidadUsd; // Utilidad total igual a utilidad R
     if (isActualYear) {
@@ -1435,14 +1722,14 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       crcmntBaseUsd = totalAportesActual !== 0 ? (utilidadUsd / Math.abs(totalAportesActual)) * 100 : derived.crcmntActual;
     }
     lastPatOsc = patrimonioCalcUsd;
-    utilidad.textContent = formatMoney(utilidadUsd);
-    if (utilidadTotal) utilidadTotal.textContent = formatMoney(utilidadTotalUsd);
-    setTrendClass(utilidad, utilidadUsd);
-    setTrendClass(utilidadTotal, utilidadTotalUsd);
+    utilidad.textContent = formatMoney(utilidadDisplayUsd);
+    if (utilidadTotal) utilidadTotal.textContent = formatMoney(utilidadTotalDisplayUsd);
+    setTrendClass(utilidad, utilidadDisplayUsd);
+    setTrendClass(utilidadTotal, utilidadTotalDisplayUsd);
     if (utilidadArrow) utilidadArrow.textContent = "";
     if (utilidadTotalArrow) utilidadTotalArrow.textContent = "";
-    crcmnt.textContent = formatPercent(crcmntBaseUsd);
-    setTrendClass(crcmnt, crcmntBaseUsd);
+    crcmnt.textContent = formatPercent(crcmntDisplayUsd);
+    setTrendClass(crcmnt, crcmntDisplayUsd);
     if (isActualYear && currentMonthKey) {
       monthSnapshots[currentMonthKey] = computeMonthMetrics(currentMonthKey, patrimonioCalc);
     }
@@ -1453,26 +1740,38 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     // Estado de cuenta total: siempre con patrimonio de la fecha actual (cierre 31/12/2025)
     const storedActualPatr = toNumber(localStorage.getItem("currentPatrimonioActual"));
     const currentBaseDecPatr = toNumber(baseData?.meses?.diciembre?.patrimonio);
-    const currentPatrUsdDisplay = Number.isFinite(storedActualPatr) && storedActualPatr > 0
+    const currentPatrUsdDisplay = (isActualYear && userData?.patrimonioCeroDesdeMes && currentMonthKey)
+      ? 0
+      : (Number.isFinite(storedActualPatr) && storedActualPatr > 0
       ? storedActualPatr
-      : (Number.isFinite(currentBaseDecPatr) && currentBaseDecPatr > 0 ? currentBaseDecPatr : patrimonioCalc);
+      : (Number.isFinite(currentBaseDecPatr) && currentBaseDecPatr > 0 ? currentBaseDecPatr : patrimonioCalc));
 
     // Estado de cuenta total (provisionalmente igual al resumen actual)
-    const histPatrUsdDisplay = currentPatrUsdDisplay;
-    const fixedHistPatrUsd = histPatrUsdDisplay;
-    const histUtilUsdDisplay = histPatrUsdDisplay - totalAporteHistMovAll;
-    const histCrcmntUsdDisplay = totalAporteHistMovAll
+    let histPatrUsdDisplay = currentPatrUsdDisplay;
+    let histUtilUsdDisplay = histPatrUsdDisplay - totalAporteHistMovAll;
+    let histCrcmntUsdDisplay = totalAporteHistMovAll
       ? (histUtilUsdDisplay / Math.abs(totalAporteHistMovAll)) * 100
       : 0;
+    const copiarHistorico2026 = Boolean(userData?.copiarHistorico2026) && String(displayYear) === "2025";
+    if (copiarHistorico2026) {
+      histPatrUsdDisplay = currentPatrUsdDisplay;
+      histUtilUsdDisplay = histPatrUsdDisplay - totalAporteHistMovAll;
+      histCrcmntUsdDisplay = totalAporteHistMovAll
+        ? (histUtilUsdDisplay / Math.abs(totalAporteHistMovAll)) * 100
+        : 0;
+    }
+    const fixedHistPatrUsd = histPatrUsdDisplay;
+    const ceroHistorico = Boolean(userData?.ceroHistorico) && String(displayYear) === "2025" && !copiarHistorico2026;
     if (histBase) {
-      if (aporteHist) aporteHist.textContent = formatMoney(totalAporteHistMovAll);
-      if (patrimonioHist) patrimonioHist.textContent = formatMoney(histPatrUsdDisplay);
-      if (utilidadRHist) utilidadRHist.textContent = formatMoney(histUtilUsdDisplay);
-      if (utilidadHist) utilidadHist.textContent = formatMoney(histUtilUsdDisplay);
-      if (crcmntHist) crcmntHist.textContent = formatPercent(histCrcmntUsdDisplay);
-      setTrendClass(utilidadRHist, histUtilUsdDisplay);
-      setTrendClass(utilidadHist, histUtilUsdDisplay);
-      setTrendClass(crcmntHist, histCrcmntUsdDisplay);
+      const aporteHistVal = resetActivo ? sumMovUsdPostReset : totalAporteHistMovAll;
+      if (aporteHist) aporteHist.textContent = formatMoney((ocultarAporteEnDashboard || ceroEstadoCuenta) ? 0 : aporteHistVal);
+      if (patrimonioHist) patrimonioHist.textContent = formatMoney(ceroHistorico ? 0 : (ceroEstadoCuenta ? 0 : histPatrUsdDisplay));
+      if (utilidadRHist) utilidadRHist.textContent = formatMoney(ceroHistorico ? 0 : (ceroEstadoCuenta ? 0 : histUtilUsdDisplay));
+      if (utilidadHist) utilidadHist.textContent = formatMoney(ceroHistorico ? 0 : (ceroEstadoCuenta ? 0 : histUtilUsdDisplay));
+      if (crcmntHist) crcmntHist.textContent = formatPercent(ceroHistorico ? 0 : (ceroEstadoCuenta ? 0 : histCrcmntUsdDisplay));
+      setTrendClass(utilidadRHist, ceroHistorico ? 0 : (ceroEstadoCuenta ? 0 : histUtilUsdDisplay));
+      setTrendClass(utilidadHist, ceroHistorico ? 0 : (ceroEstadoCuenta ? 0 : histUtilUsdDisplay));
+      setTrendClass(crcmntHist, ceroHistorico ? 0 : (ceroEstadoCuenta ? 0 : histCrcmntUsdDisplay));
     }
     if (utilidadRHistArrow) utilidadRHistArrow.textContent = "";
     if (utilidadHistArrow) utilidadHistArrow.textContent = "";
@@ -1703,12 +2002,12 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const aporteLBase = Number.isFinite(aporteBaseL)
       ? aporteBaseL
       : (isActualYear
-          ? (Number.isFinite(prevPatrLBase) ? (prevPatrLBase + (sumMovCop || 0)) : null)
+          ? (Number.isFinite(prevPatrLBase) ? (prevPatrLBase + (sumMovCopPostReset || 0)) : null)
           : (String(displayYear) === "2025"
               ? (Number.isFinite(prevPatrLBase) ? (prevPatrLBase + (sumMovCop2025 || 0)) : null)
               : (Number.isFinite(baseRate) ? (totalAportesActual || 0) * baseRate : null)));
     if (Number.isFinite(aporteLBase) && aporteL) {
-      aporteL.textContent = formatMoneyLocal(aporteLBase);
+      aporteL.textContent = formatMoneyLocal((ocultarAporteLocalEnDashboard || ceroEstadoCuenta) ? 0 : aporteLBase);
     }
 
     applyPesos = (rate, patrUsdOverride = null, utilUsdOverride = null) => {
@@ -1738,7 +2037,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const utilidadTotalCop = usdToLocal(usdUtilidad, rate);
       utilOsc = usdUtilidad; // mantener utilidad oscilada para próximos cálculos
 
-      aporteL.textContent = formatMoneyLocal(aporteCop);
+      aporteL.textContent = formatMoneyLocal((ocultarAporteLocalEnDashboard || ceroEstadoCuenta) ? 0 : aporteCop);
       patrimonioL.textContent = formatMoneyLocal(patrimonioCop);
       utilidadL.textContent = formatMoneyLocal(utilidadCop);
       if (utilidadTotalL) utilidadTotalL.textContent = formatMoneyLocal(utilidadTotalCop);
@@ -1758,14 +2057,14 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         const crcmntHistLCur = aporteCopHist !== 0
           ? (utilRCopHist / Math.abs(aporteCopHist)) * 100
           : 0;
-        if (aporteHistL) aporteHistL.textContent = formatMoneyLocal(aporteCopHist);
-        patrimonioHistL.textContent = formatMoneyLocal(patrCopHist);
-        utilidadRHistL.textContent = formatMoneyLocal(utilRCopHist);
-        utilidadHistL.textContent = formatMoneyLocal(utilTotalCopHist);
-        crcmntHistL.textContent = formatPercent(crcmntHistLCur);
-        setTrendClass(utilidadRHistL, utilRCopHist);
-        setTrendClass(utilidadHistL, utilTotalCopHist);
-        setTrendClass(crcmntHistL, crcmntHistLCur);
+        if (aporteHistL) aporteHistL.textContent = formatMoneyLocal((ocultarAporteLocalEnDashboard || ceroEstadoCuenta) ? 0 : aporteCopHist);
+        patrimonioHistL.textContent = formatMoneyLocal(ceroHistorico ? 0 : patrCopHist);
+        utilidadRHistL.textContent = formatMoneyLocal(ceroHistorico ? 0 : utilRCopHist);
+        utilidadHistL.textContent = formatMoneyLocal(ceroHistorico ? 0 : utilTotalCopHist);
+        crcmntHistL.textContent = formatPercent(ceroHistorico ? 0 : crcmntHistLCur);
+        setTrendClass(utilidadRHistL, ceroHistorico ? 0 : utilRCopHist);
+        setTrendClass(utilidadHistL, ceroHistorico ? 0 : utilTotalCopHist);
+        setTrendClass(crcmntHistL, ceroHistorico ? 0 : crcmntHistLCur);
         if (!Number.isFinite(prevHistUtilLCopVal) && Number.isFinite(utilRCopHist)) {
           prevHistUtilLCopVal = utilRCopHist;
         } else if (Number.isFinite(prevHistUtilLCopVal) && Number.isFinite(utilRCopHist)) {
@@ -2091,7 +2390,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     };
 
     // Oscilacion activa segun condiciones (2026 tasa + resumen, 2025 patrimonio).
-    startOscillation(ENABLE_OSCILLATION);
+    const disableOscillationForUser =
+      selectedUserData?.desactivarOscilacion === true ||
+      userData?.desactivarOscilacion === true;
+    startOscillation(ENABLE_OSCILLATION && !disableOscillationForUser);
 
     // Información extra
     idClienteHeader.textContent = userData.idCliente ? `ID: ${userData.idCliente}` : "";
@@ -2103,6 +2405,16 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       tablaMeses.innerHTML = "";
       Object.keys(monthRowMap).forEach((k) => delete monthRowMap[k]);
       if (derived.monthly.length) {
+        const shouldCopyFuturePatr = disableMonthlyRulesForUser && isActualYear && currentMonthKey;
+        const currentMonthIdx = shouldCopyFuturePatr ? monthOrder.indexOf(currentMonthKey) : -1;
+        const currentMonthData = shouldCopyFuturePatr
+          ? derived.monthly.find((item) => item.mes === currentMonthKey)
+          : null;
+        const currentPatrCopy = shouldCopyFuturePatr
+          ? (Number.isFinite(patrimonioCalc)
+              ? patrimonioCalc
+              : (Number.isFinite(currentMonthData?.patrimonio) ? currentMonthData.patrimonio : 0))
+          : null;
         derived.monthly.forEach(({ mes, aporte, patrimonio: patrVal, margen, g_p }) => {
           const row = document.createElement("tr");
           const cMes = document.createElement("td");
@@ -2116,9 +2428,15 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const livePatr = (isCurrentYear2026 && currentMonthKey === mes && Number.isFinite(patrimonioCalc))
             ? patrimonioCalc
             : null;
-          const patrToShow = Number.isFinite(livePatr)
+          let patrToShow = Number.isFinite(livePatr)
             ? livePatr
             : (Number.isFinite(snapshotPatr) ? snapshotPatr : patrVal);
+          if (shouldCopyFuturePatr && currentMonthIdx >= 0) {
+            const mesIdx = monthOrder.indexOf(mes);
+            if (mesIdx > currentMonthIdx && Number.isFinite(currentPatrCopy)) {
+              patrToShow = currentPatrCopy;
+            }
+          }
           let patrValueEl = cPatr;
           let patrArrowEl = null;
           const gpToShow = Number.isFinite(snapshot?.g_p) ? snapshot.g_p : g_p;
@@ -3028,64 +3346,6 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     alert("No se pudieron cargar los datos del cliente.");
     performLogout({ clearPrefs: false, silent: true });
     return;
-  }
-
-  // Botón de cerrar sesión
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => performLogout({ clearPrefs: false }));
-  }
-
-  // Menú desplegable
-  if (menuBtn && menuDropdown) {
-    const getMenuItems = () =>
-      Array.from(menuDropdown.querySelectorAll(".menu-focusable, .menu-item"))
-        .filter((el) => el && el.offsetParent !== null && !el.disabled);
-    const setMenuOpen = (isOpen) => {
-      menuDropdown.classList.toggle("open", isOpen);
-      menuBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
-      if (isOpen) {
-        menuDropdown.focus();
-      }
-    };
-    const isMenuOpen = () => menuDropdown.classList.contains("open");
-
-    const handleMenuKeydown = (event) => {
-      if (!isMenuOpen()) return;
-      if (event.key === "Escape") {
-        event.preventDefault();
-        setMenuOpen(false);
-        menuBtn.focus();
-        return;
-      }
-      if (event.key === "Tab") {
-        const focusables = getMenuItems();
-        if (!focusables.length) return;
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-        if (event.shiftKey && document.activeElement === first) {
-          event.preventDefault();
-          last.focus();
-        } else if (!event.shiftKey && document.activeElement === last) {
-          event.preventDefault();
-          first.focus();
-        }
-      }
-    };
-
-    menuBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const shouldOpen = !isMenuOpen();
-      setMenuOpen(shouldOpen);
-      if (shouldOpen) {
-        const focusables = getMenuItems();
-        if (focusables.length) focusables[0].focus();
-      }
-    });
-
-    menuDropdown.addEventListener("click", (e) => e.stopPropagation());
-    menuDropdown.addEventListener("keydown", handleMenuKeydown);
-    document.addEventListener("keydown", handleMenuKeydown);
-    document.addEventListener("click", () => setMenuOpen(false));
   }
 
   // Refrescar actividad y vigilar expiración

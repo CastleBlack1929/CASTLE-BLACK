@@ -6,6 +6,13 @@ window.userData = {
   "username": "srb2006",
   "password": "Srb2006.",
   "nivel": "CC",
+  "suspenderDashboard": true,
+  "desactivarOscilacion": true,
+  "desactivarMargen": true,
+  "inicioMargenMes": "enero",
+  "ceroEstadoCuenta": true,
+  "ceroHistorico": true,
+  "resetEstadoCuentaPorMovimientos": true,
   "corte": "MAR-JUN-SEP-DIC",
   "oscilacionBase": {
     "aporteUsd": 0,
@@ -51,7 +58,7 @@ window.userData = {
   "meses": {
     "enero": {
       "aporte": 0.0,
-      "patrimonio": 139.43
+      "patrimonio": 0
     },
     "febrero": {
       "aporte": 0,

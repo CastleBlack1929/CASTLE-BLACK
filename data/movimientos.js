@@ -1,5 +1,59 @@
 const movimientosData = [
   {
+    "username": "cerg1980",
+    "cliente": "020",
+    "recibo": "118",
+    "fecha": "02/04/26",
+    "year": 2026,
+    "socio": "CARLOS EDUARDO RODRIGUEZ GONGARA",
+    "cedula": "2956858",
+    "cantidad": 488015,
+    "tipo": "COP",
+    "tasa": 3666,
+    "cambio": -132.78
+  },
+  {
+    "username": "srb2006",
+    "cliente": "017",
+    "recibo": "117",
+    "fecha": "02/04/26",
+    "year": 2026,
+    "socio": "SEBASTIAN RODRIGUEZ BALLEN",
+    "cedula": "1014479680",
+    "cantidad": 488674,
+    "tipo": "COP",
+    "tasa": 3675,
+    "cambio": -132.96
+  },
+  {
+    "username": "MATRIS",
+    "cliente": "A",
+    "recibo": "116",
+    "fecha": "01/04/26",
+    "year": 2026,
+    "socio": "CASTLE BLACK",
+    "cedula": "-",
+    "cantidad": 785880.0,
+    "tipo": "COP",
+    "tasa": 3637.0,
+    "cambio": 216.11,
+    "concepto": "HONORARIOS"
+  },
+  {
+    "username": "MATRIS",
+    "cliente": "A",
+    "recibo": "115",
+    "fecha": "01/03/26",
+    "year": 2026,
+    "socio": "CASTLE BLACK",
+    "cedula": "-",
+    "cantidad": 434633.0,
+    "tipo": "COP",
+    "tasa": 3637.0,
+    "cambio": 119.52,
+    "concepto": "HONORARIOS"
+  },
+  {
     "username": "JBP2002",
     "cliente": "023",
     "recibo": "114",
@@ -1194,19 +1248,6 @@ const movimientosData = [
     "tipo": "COP",
     "tasa": 4300.0,
     "cambio": 186.0
-  },
-  {
-    "username": "scgr1998",
-    "cliente": "004",
-    "recibo": "19",
-    "fecha": "28/12/23",
-    "year": 2024,
-    "socio": "SANDRA CAMILA GONZALEZ",
-    "cedula": "1016103922",
-    "cantidad": 430000.0,
-    "tipo": "COP",
-    "tasa": 3962.0,
-    "cambio": 108.0
   },
   {
     "username": "aygr1975",
