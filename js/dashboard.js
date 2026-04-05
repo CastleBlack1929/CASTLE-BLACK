@@ -318,7 +318,8 @@ const MONTHLY_MARGIN_BY_YEAR = {
   2026: {
     enero: 2.648,
     febrero: 0.95,
-    marzo: 1.55
+    marzo: 1.55,
+    abril: 1.25
   }
 };
 
