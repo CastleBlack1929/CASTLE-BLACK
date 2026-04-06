@@ -319,7 +319,7 @@ const MONTHLY_MARGIN_BY_YEAR = {
     enero: 2.648,
     febrero: 0.95,
     marzo: 1.55,
-    abril: 1.25
+    abril: 1.45
   }
 };
 

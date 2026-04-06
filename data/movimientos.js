@@ -1,5 +1,31 @@
 const movimientosData = [
   {
+    "username": "lmp1974",
+    "cliente": "022",
+    "recibo": "120",
+    "fecha": "06/04/26",
+    "year": 2026,
+    "socio": "LAZARO MARTIN PERALTA",
+    "cedula": "324033",
+    "cantidad": 10000000.0,
+    "tipo": "COP",
+    "tasa": 3631.0,
+    "cambio": 2753.87
+  },
+  {
+    "username": "ylgr1973",
+    "cliente": "012",
+    "recibo": "119",
+    "fecha": "06/04/26",
+    "year": 2026,
+    "socio": "YAMILE LEONOR GONZALEZ RODRIGUEZ",
+    "cedula": "52562291",
+    "cantidad": 10000000.0,
+    "tipo": "COP",
+    "tasa": 3627.0,
+    "cambio": 2756.91
+  },
+  {
     "username": "cerg1980",
     "cliente": "020",
     "recibo": "118",
