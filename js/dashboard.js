@@ -1711,7 +1711,6 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const ocultarCalculosEnDashboard = (ocultarPatrimonioEnDashboard && ocultarAporteEnDashboard) || ceroEstadoCuenta;
     const utilidadDisplayUsd = ocultarCalculosEnDashboard ? 0 : (ocultarPatrimonioEnDashboard ? 0 : utilidadUsd);
     const utilidadTotalDisplayUsd = ocultarCalculosEnDashboard ? 0 : (ocultarPatrimonioEnDashboard ? 0 : utilidadTotalUsd);
-    const crcmntDisplayUsd = ocultarCalculosEnDashboard ? 0 : (ocultarPatrimonioEnDashboard ? 0 : crcmntBaseUsd);
     aporte.textContent = formatMoney((ocultarAporteEnDashboard || ceroEstadoCuenta) ? 0 : totalAportesActual);
     patrimonioCalc = patrimonioCalcUsd;
     patrimonio.textContent = formatMoney(patrimonioDisplayUsd);
@@ -1722,6 +1721,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     } else {
       crcmntBaseUsd = totalAportesActual !== 0 ? (utilidadUsd / Math.abs(totalAportesActual)) * 100 : derived.crcmntActual;
     }
+    const crcmntDisplayUsd = ocultarCalculosEnDashboard ? 0 : (ocultarPatrimonioEnDashboard ? 0 : crcmntBaseUsd);
     lastPatOsc = patrimonioCalcUsd;
     utilidad.textContent = formatMoney(utilidadDisplayUsd);
     if (utilidadTotal) utilidadTotal.textContent = formatMoney(utilidadTotalDisplayUsd);
@@ -1958,9 +1958,16 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       baseRate = DEFAULT_RATE_BY_YEAR.actual || 1;
       currentRate = baseRate;
       histRateLive = currentRate;
+      const allowBootSummary = String(userData?.username || "").trim().toLowerCase() === "fgm1965";
       if (rateBootstrapping) {
-        if (rateValue) rateValue.textContent = "...";
-        toggleCopSummaryVisibility(false);
+        if (allowBootSummary) {
+          updateRateDisplay(currentRate);
+          applyPesos(currentRate);
+          toggleCopSummaryVisibility(true);
+        } else {
+          if (rateValue) rateValue.textContent = "...";
+          toggleCopSummaryVisibility(false);
+        }
       } else {
         updateRateDisplay(currentRate);
         applyPesos(currentRate);
