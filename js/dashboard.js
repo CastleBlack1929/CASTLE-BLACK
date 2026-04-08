@@ -1203,6 +1203,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const disableHonorarios =
       claveUsuario === "jfpg2006" ||
       claveUsuario === "matris" ||
+      claveUsuario === "matrix" ||
       String(userData.socio || "").trim().toUpperCase() === "CASTLE BLACK";
     const corteAplicado = (userData.corte || baseData.corte || "MAR-JUN-SEP-DIC").trim().toUpperCase();
 
@@ -1353,7 +1354,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       return tarifa.valor || 0;
     };
     const ensureCastleBlackHonorariosMovement = async () => {
-      const isCastleBlack = claveUsuario === "matris" || String(baseData.socio || "").trim().toUpperCase() === "CASTLE BLACK";
+    const isCastleBlack = claveUsuario === "matris" || claveUsuario === "matrix" || String(baseData.socio || "").trim().toUpperCase() === "CASTLE BLACK";
       if (!isCastleBlack || !isActualYear || Number(displayYear) !== currentYearNumber) return;
       const now = new Date();
       const currentMonthIdx = now.getMonth();
@@ -1423,7 +1424,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         const monthNum = pad2(monthIdx + 1);
         const fecha = `01/${monthNum}/${yearShort}`;
         const exists = movimientosData.some((m) =>
-          String(m.username || "").toLowerCase() === "matris" &&
+          String(m.username || "").toLowerCase() === "matrix" &&
           String(m.fecha || "") === fecha &&
           String(m.concepto || "") === "HONORARIOS"
         );
@@ -1436,7 +1437,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         }, 0);
         const nuevoRecibo = String(maxRecibo + 1);
         movimientosData.unshift({
-          "username": "MATRIS",
+          "username": "MATRIX",
           "cliente": "A",
           "recibo": nuevoRecibo,
           "fecha": fecha,

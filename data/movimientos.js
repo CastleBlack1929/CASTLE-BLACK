@@ -1,6 +1,6 @@
 const movimientosData = [
   {
-    "username": "MATRIS",
+    "username": "MATRIX",
     "cliente": "A",
     "recibo": "124",
     "fecha": "07/04/26",
@@ -104,7 +104,7 @@ const movimientosData = [
     "cambio": -132.96
   },
   {
-    "username": "MATRIS",
+    "username": "MATRIX",
     "cliente": "A",
     "recibo": "116",
     "fecha": "01/04/26",
@@ -118,7 +118,7 @@ const movimientosData = [
     "concepto": "HONORARIOS"
   },
   {
-    "username": "MATRIS",
+    "username": "MATRIX",
     "cliente": "A",
     "recibo": "115",
     "fecha": "01/03/26",
@@ -262,7 +262,7 @@ const movimientosData = [
     "cambio": 1307.17
   },
   {
-    "username": "MATRIS",
+    "username": "MATRIX",
     "cliente": "A",
     "recibo": "90",
     "fecha": "02/12/25",
@@ -314,7 +314,7 @@ const movimientosData = [
     "cambio": 79.95
   },
   {
-    "username": "MATRIS",
+    "username": "MATRIX",
     "cliente": "A",
     "recibo": "86",
     "fecha": "02/11/25",
@@ -444,7 +444,7 @@ const movimientosData = [
     "cambio": 153.0
   },
   {
-    "username": "MATRIS",
+    "username": "MATRIX",
     "cliente": "A",
     "recibo": "76",
     "fecha": "03/10/25",
@@ -457,7 +457,7 @@ const movimientosData = [
     "cambio": 121.91
   },
   {
-    "username": "MATRIS",
+    "username": "MATRIX",
     "cliente": "A",
     "recibo": "75",
     "fecha": "30/09/25",
@@ -483,7 +483,7 @@ const movimientosData = [
     "cambio": -1126.0
   },
   {
-    "username": "MATRIS",
+    "username": "MATRIX",
     "cliente": "A",
     "recibo": "73",
     "fecha": "17/09/25",
@@ -548,7 +548,7 @@ const movimientosData = [
     "cambio": 1280.14
   },
   {
-    "username": "MATRIS",
+    "username": "MATRIX",
     "cliente": "A",
     "recibo": "68",
     "fecha": "09/09/25",
@@ -574,7 +574,7 @@ const movimientosData = [
     "cambio": 772.0
   },
   {
-    "username": "MATRIS",
+    "username": "MATRIX",
     "cliente": "A",
     "recibo": "66",
     "fecha": "07/09/25",
@@ -613,7 +613,7 @@ const movimientosData = [
     "cambio": 37.65
   },
   {
-    "username": "MATRIS",
+    "username": "MATRIX",
     "cliente": "A",
     "recibo": "63",
     "fecha": "02/09/25",
@@ -626,7 +626,7 @@ const movimientosData = [
     "cambio": 121.6
   },
   {
-    "username": "MATRIS",
+    "username": "MATRIX",
     "cliente": "A",
     "recibo": "62",
     "fecha": "01/09/25",
@@ -639,7 +639,7 @@ const movimientosData = [
     "cambio": 24.77
   },
   {
-    "username": "MATRIS",
+    "username": "MATRIX",
     "cliente": "A",
     "recibo": "61",
     "fecha": "28/08/25",
@@ -652,7 +652,7 @@ const movimientosData = [
     "cambio": 22.7
   },
   {
-    "username": "MATRIS",
+    "username": "MATRIX",
     "cliente": "A",
     "recibo": "60",
     "fecha": "28/08/25",
@@ -1419,7 +1419,7 @@ const movimientosData = [
     "cambio": 2170.74
   },
   {
-    "username": "MATRIS",
+    "username": "MATRIX",
     "cliente": "A",
     "recibo": "111",
     "fecha": "06/02/26",
@@ -1445,7 +1445,7 @@ const movimientosData = [
     "cambio": 52.68
   },
   {
-    "username": "MATRIS",
+    "username": "MATRIX",
     "cliente": "A",
     "recibo": "109",
     "fecha": "01/02/26",
@@ -1511,7 +1511,7 @@ const movimientosData = [
     "cambio": 265.19
   },
   {
-    "username": "MATRIS",
+    "username": "MATRIX",
     "cliente": "A",
     "recibo": "99",
     "fecha": "01/01/26",

@@ -1,7 +1,7 @@
 const users = [
   {
-    "username": "MATRIS",
-    "password": "MATRIS",
+    "username": "MATRIX",
+    "password": "MATRIX",
     "dataFile": "data/usuarios/A.js"
   },
   {
