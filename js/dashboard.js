@@ -570,6 +570,10 @@ const initDashboard = async () => {
   const resumenTip = document.getElementById("resumenTip");
   const movimientosTip = document.getElementById("movimientosTip");
   const yearSelect = document.getElementById("yearSelect");
+  const activosBubbles = document.getElementById("activosBubbles");
+  const activosPanel = document.querySelector(".activos-panel");
+  const rateBox = document.querySelector(".rate-box");
+  const movimientosSection = document.querySelector(".movimientos");
 
   const setLoadingValue = (el) => {
     if (!el) return;
@@ -618,6 +622,26 @@ let sessionExpired = false;
 let currentRate = null;
 let baseRate = null;
   let applyPesos = () => {};
+
+  const placeAssetsByLayout = () => {
+    if (!activosPanel) return;
+    const isDesktop = window.matchMedia("(min-width: 950px)").matches;
+    if (isDesktop && movimientosSection) {
+      const parent = movimientosSection.parentElement;
+      if (parent) {
+        parent.insertBefore(activosPanel, movimientosSection);
+      }
+      return;
+    }
+    if (rateBox && rateBox.parentElement) {
+      rateBox.parentElement.insertBefore(activosPanel, rateBox.nextSibling);
+    }
+  };
+  placeAssetsByLayout();
+  window.addEventListener("resize", () => {
+    placeAssetsByLayout();
+    renderAssetsSection();
+  });
   let crcmntBaseL = 0;
 let crcmntBaseUsd = 0;
 let utilCalcBase = 0;
@@ -781,6 +805,179 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       }
     };
 
+    const ASSET_BUBBLES = [
+      {
+        name: "Coca-Cola Consolidated, Inc.",
+        ticker: "COKE",
+        percent: 20,
+        type: "Acción",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/d/dd/Coca-Cola_logo_white.png",
+        legend: "Consumo defensivo con presencia global."
+      },
+      {
+        name: "Apple Inc.",
+        ticker: "AAPL",
+        percent: 20,
+        type: "Acción",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Apple_Logo.svg/960px-Apple_Logo.svg.png",
+        invert: true,
+        legend: "Tecnología premium y ecosistema de alto margen."
+      },
+      {
+        name: "Microsoft",
+        ticker: "MSFT",
+        percent: 20,
+        type: "Acción",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/3/35/Microsoft_logo.png",
+        invert: true,
+        legend: "Infraestructura cloud y software empresarial."
+      },
+      {
+        name: "Berkshire Hathaway Inc. Class B",
+        ticker: "BRK.B",
+        percent: 30,
+        type: "Acción",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Berkshire-Hathaway-Logo.svg/1200px-Berkshire-Hathaway-Logo.svg.png",
+        invert: true,
+        legend: "Holding diversificado con enfoque value."
+      },
+      {
+        name: "Gold",
+        ticker: "GOLD",
+        percent: 10,
+        type: "Commodity",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/c/c2/Gold_ingot_icon.png",
+        legend: "Cobertura defensiva ante volatilidad."
+      },
+      {
+        name: "Bitcoin",
+        ticker: "BTC",
+        percent: 20,
+        type: "Cripto",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Bitcoin_Logo.png",
+        legend: "Exposición a activos digitales."
+      }
+    ];
+    const ASSET_POSITIONS = [
+      { x: 0.18, y: 0.32 },
+      { x: 0.45, y: 0.18 },
+      { x: 0.75, y: 0.32 },
+      { x: 0.35, y: 0.7 },
+      { x: 0.62, y: 0.72 },
+      { x: 0.85, y: 0.6 }
+    ];
+    let activeAssetIndex = null;
+    let assetsClickBound = false;
+    const renderAssetsSection = () => {
+      if (!activosBubbles) return;
+      activosBubbles.innerHTML = "";
+      const maxPct = ASSET_BUBBLES.reduce((max, item) => Math.max(max, item.percent || 0), 0) || 1;
+      const minSize = 70;
+      const maxSize = 140;
+      const isDesktop = window.matchMedia("(min-width: 950px)").matches;
+      const isMobile = window.matchMedia("(max-width: 949px)").matches;
+      const activeScale = isDesktop ? 1.25 : 1.45;
+      const bubbles = [];
+      const getMobileRadius = () => {
+        const rect = activosBubbles.getBoundingClientRect();
+        return Math.min(rect.width, rect.height) * 0.35;
+      };
+      const setActiveBubble = (activeIndex) => {
+        activeAssetIndex = Number.isInteger(activeIndex) ? activeIndex : null;
+        bubbles.forEach(({ el, baseSize }, idx) => {
+          const isActive = activeAssetIndex !== null && idx === activeAssetIndex;
+          el.classList.toggle("is-active", isActive);
+          const size = isActive ? baseSize * activeScale : baseSize;
+          el.style.width = `${size}px`;
+          el.style.height = `${size}px`;
+          const desc = el.querySelector(".asset-desc");
+          if (desc) desc.style.display = isActive ? "block" : "none";
+        });
+        if (isMobile && activeAssetIndex !== null) {
+          const rect = activosBubbles.getBoundingClientRect();
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const radius = getMobileRadius();
+          const others = bubbles.filter((_, idx) => idx !== activeIndex);
+          others.forEach(({ el }, posIdx) => {
+            const angle = (Math.PI * 2 * posIdx) / others.length - Math.PI / 2;
+            const x = centerX + radius * Math.cos(angle);
+            const y = centerY + radius * Math.sin(angle);
+            el.style.left = `${x}px`;
+            el.style.top = `${y}px`;
+            el.style.transform = "translate(-50%, -50%)";
+          });
+          const activeEl = bubbles[activeIndex]?.el;
+          if (activeEl) {
+            activeEl.style.left = `${centerX}px`;
+            activeEl.style.top = `${centerY}px`;
+            activeEl.style.transform = "translate(-50%, -50%)";
+          }
+        }
+      };
+      ASSET_BUBBLES.forEach((asset, idx) => {
+        const size = isDesktop
+          ? (minSize + (asset.percent / maxPct) * (maxSize - minSize))
+          : 110;
+        const bubble = document.createElement("button");
+        bubble.type = "button";
+        bubble.className = "asset-bubble";
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        if (isMobile) {
+          bubble.style.left = "50%";
+          bubble.style.top = "50%";
+        }
+        bubble.style.setProperty("--float-delay", `${idx * 0.4}s`);
+        bubble.innerHTML = `
+          <img class="asset-logo ${asset.invert ? "logo-invert" : ""}" src="${asset.logo}" alt="${asset.name} logo">
+          <span class="asset-pct">${asset.percent}%</span>
+          <span class="asset-ticker">${asset.ticker}</span>
+          <span class="asset-desc">${asset.legend}</span>
+        `;
+        bubble.addEventListener("click", () => {
+          setActiveBubble(idx);
+        });
+        activosBubbles.appendChild(bubble);
+        bubbles.push({ el: bubble, baseSize: size });
+      });
+      if (isMobile && activeAssetIndex === null && ASSET_BUBBLES.length) {
+        activeAssetIndex = Math.floor(Math.random() * ASSET_BUBBLES.length);
+      }
+      setActiveBubble(activeAssetIndex);
+
+      if (!assetsClickBound) {
+        assetsClickBound = true;
+        document.addEventListener("click", (event) => {
+          const target = event.target;
+          if (target && target.closest && target.closest(".asset-bubble")) return;
+        });
+      }
+
+      if (isMobile) {
+        activosBubbles.classList.add("activos-circular");
+        requestAnimationFrame(() => {
+          const rect = activosBubbles.getBoundingClientRect();
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const radius = getMobileRadius();
+          bubbles.forEach(({ el }, idx) => {
+            const angle = (Math.PI * 2 * idx) / bubbles.length - Math.PI / 2;
+            const x = centerX + radius * Math.cos(angle);
+            const y = centerY + radius * Math.sin(angle);
+            el.style.left = `${x}px`;
+            el.style.top = `${y}px`;
+            el.style.transform = "translate(-50%, -50%)";
+          });
+          if (activeAssetIndex !== null) {
+            setActiveBubble(activeAssetIndex);
+          }
+        });
+      } else {
+        activosBubbles.classList.remove("activos-circular");
+      }
+    };
+
     const applyMakimaBackground = (data) => {
       if (!document.body) return;
       const username = String(data?.username || "").trim().toLowerCase();
@@ -886,6 +1083,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       renderSuspensionNotice(baseData);
       return;
     }
+
+    renderAssetsSection();
 
     const claveUsuario = (baseData.username || "").toLowerCase();
     const idCliente = String(baseData.idCliente || "").trim().toLowerCase();
