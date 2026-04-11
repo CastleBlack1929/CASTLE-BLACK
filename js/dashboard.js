@@ -846,7 +846,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         ticker: "GOLD",
         percent: 10,
         type: "Commodity",
-        logo: "https://upload.wikimedia.org/wikipedia/commons/c/c2/Gold_ingot_icon.png",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/0/07/Gold_bar.png",
         detail: "GOLD: reserva de valor ante inflación y crisis. Peso moderado como cobertura."
       },
       {
