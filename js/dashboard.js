@@ -812,7 +812,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         percent: 20,
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/d/dd/Coca-Cola_logo_white.png",
-        legend: "Consumo defensivo con presencia global."
+        detail: "COKE: mayor embotellador independiente en EE. UU., flujos estables en consumo básico. Peso para estabilidad y baja volatilidad."
       },
       {
         name: "Apple Inc.",
@@ -821,7 +821,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Apple_Logo.svg/960px-Apple_Logo.svg.png",
         invert: true,
-        legend: "Tecnología premium y ecosistema de alto margen."
+        detail: "AAPL: ecosistema premium y servicios de alto margen. Peso por crecimiento sólido con disciplina financiera."
       },
       {
         name: "Microsoft",
@@ -830,7 +830,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/3/35/Microsoft_logo.png",
         invert: true,
-        legend: "Infraestructura cloud y software empresarial."
+        detail: "MSFT: liderazgo en cloud y software empresarial con ingresos recurrentes. Peso por resiliencia y tendencia tecnológica."
       },
       {
         name: "Berkshire Hathaway Inc. Class B",
@@ -839,7 +839,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Berkshire-Hathaway-Logo.svg/1200px-Berkshire-Hathaway-Logo.svg.png",
         invert: true,
-        legend: "Holding diversificado con enfoque value."
+        detail: "BRK.B: holding diversificado con value probado. Mayor peso por estabilidad y gestión de capital de largo plazo."
       },
       {
         name: "Gold",
@@ -847,7 +847,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         percent: 10,
         type: "Commodity",
         logo: "https://upload.wikimedia.org/wikipedia/commons/c/c2/Gold_ingot_icon.png",
-        legend: "Cobertura defensiva ante volatilidad."
+        detail: "GOLD: reserva de valor ante inflación y crisis. Peso moderado como cobertura."
       },
       {
         name: "Bitcoin",
@@ -855,7 +855,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         percent: 20,
         type: "Cripto",
         logo: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Bitcoin_Logo.png",
-        legend: "Exposición a activos digitales."
+        detail: "BTC: activo digital líder con alto potencial. Peso para crecimiento agresivo y diversificación."
       }
     ];
     const ASSET_POSITIONS = [
@@ -876,7 +876,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const maxSize = 140;
       const isDesktop = window.matchMedia("(min-width: 950px)").matches;
       const isMobile = window.matchMedia("(max-width: 949px)").matches;
-      const activeScale = isDesktop ? 1.25 : 1.45;
+      const activeScale = isDesktop ? 1.3 : 1.6;
       const bubbles = [];
       const getMobileRadius = () => {
         const rect = activosBubbles.getBoundingClientRect();
@@ -892,6 +892,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           el.style.height = `${size}px`;
           const desc = el.querySelector(".asset-desc");
           if (desc) desc.style.display = isActive ? "block" : "none";
+          const ticker = el.querySelector(".asset-ticker");
+          if (ticker) ticker.style.display = isActive ? "none" : "block";
         });
         if (isMobile && activeAssetIndex !== null) {
           const rect = activosBubbles.getBoundingClientRect();
@@ -933,7 +935,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           <img class="asset-logo ${asset.invert ? "logo-invert" : ""}" src="${asset.logo}" alt="${asset.name} logo">
           <span class="asset-pct">${asset.percent}%</span>
           <span class="asset-ticker">${asset.ticker}</span>
-          <span class="asset-desc">${asset.legend}</span>
+          <span class="asset-desc">${asset.detail}</span>
         `;
         bubble.addEventListener("click", () => {
           setActiveBubble(idx);
