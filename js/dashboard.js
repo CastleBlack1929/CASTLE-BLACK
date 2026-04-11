@@ -878,6 +878,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const isMobile = window.matchMedia("(max-width: 949px)").matches;
       const activeScale = isDesktop ? 1.3 : 1.6;
       const bubbles = [];
+      let maxBaseSize = 0;
       const getMobileRadius = () => {
         const rect = activosBubbles.getBoundingClientRect();
         return Math.min(rect.width, rect.height) * 0.35;
@@ -941,6 +942,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           setActiveBubble(idx);
         });
         activosBubbles.appendChild(bubble);
+        if (size > maxBaseSize) maxBaseSize = size;
         bubbles.push({ el: bubble, baseSize: size });
       });
       if (isMobile && activeAssetIndex === null && ASSET_BUBBLES.length) {
@@ -962,7 +964,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const rect = activosBubbles.getBoundingClientRect();
           const centerX = rect.width / 2;
           const centerY = rect.height / 2;
-          const radius = getMobileRadius();
+          const radius = getMobileRadius() + maxBaseSize * 0.6;
           bubbles.forEach(({ el }, idx) => {
             const angle = (Math.PI * 2 * idx) / bubbles.length - Math.PI / 2;
             const x = centerX + radius * Math.cos(angle);
