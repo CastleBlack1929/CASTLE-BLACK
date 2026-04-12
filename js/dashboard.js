@@ -809,7 +809,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       {
         name: "Coca-Cola Consolidated, Inc.",
         ticker: "COKE",
-        percent: 20,
+        percent: 10,
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/d/dd/Coca-Cola_logo_white.png",
         detail: "Coca-Cola: consumo defensivo"
@@ -835,7 +835,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       {
         name: "Berkshire Hathaway Inc. Class B",
         ticker: "BRK.B",
-        percent: 30,
+        percent: 20,
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Berkshire-Hathaway-Logo.svg/1200px-Berkshire-Hathaway-Logo.svg.png",
         invert: true,
@@ -845,17 +845,34 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         name: "Gold",
         ticker: "GOLD",
         percent: 10,
-        type: "Commodity",
+        type: "Comodity",
         logo: "https://upload.wikimedia.org/wikipedia/commons/0/07/Gold_bar.png",
         detail: "Gold: refugio anticrisis"
       },
       {
         name: "Bitcoin",
         ticker: "BTC",
-        percent: 20,
+        percent: 10,
         type: "Cripto",
         logo: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Bitcoin_Logo.png",
         detail: "Bitcoin: líder digital"
+      },
+      {
+        name: "Money United State of America",
+        ticker: "USD",
+        percent: 5,
+        type: "Comodity",
+        logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><circle cx='60' cy='60' r='58' fill='%230b0b0b' stroke='white' stroke-width='2'/><text x='50%25' y='68%25' text-anchor='middle' font-family='IBM Plex Sans, Arial, sans-serif' font-size='64' fill='white'>$</text></svg>",
+        detail: "USD: liquidez base"
+      },
+      {
+        name: "Others",
+        ticker: "OTHERS",
+        percent: 5,
+        type: "Others",
+        logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'><circle cx='30' cy='70' r='10' fill='white'/><circle cx='70' cy='30' r='10' fill='white'/><circle cx='110' cy='70' r='10' fill='white'/><circle cx='70' cy='110' r='10' fill='white'/><line x1='30' y1='70' x2='70' y2='30' stroke='white' stroke-width='4'/><line x1='70' y1='30' x2='110' y2='70' stroke='white' stroke-width='4'/><line x1='110' y1='70' x2='70' y2='110' stroke='white' stroke-width='4'/><line x1='70' y1='110' x2='30' y2='70' stroke='white' stroke-width='4'/></svg>",
+        invert: false,
+        detail: "Others: diversificación"
       }
     ];
     const ASSET_POSITIONS = [
