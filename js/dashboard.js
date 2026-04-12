@@ -916,9 +916,9 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const centerX = rect.width / 2;
           const centerY = rect.height / 2;
           const radius = mobileRadius;
-          const others = bubbles.filter((_, idx) => idx !== activeIndex);
-          others.forEach(({ el }, posIdx) => {
-            const angle = (Math.PI * 2 * posIdx) / others.length - Math.PI / 2;
+          bubbles.forEach(({ el }, idx) => {
+            if (idx === activeIndex) return;
+            const angle = (Math.PI * 2 * idx) / bubbles.length - Math.PI / 2;
             const x = centerX + radius * Math.cos(angle);
             const y = centerY + radius * Math.sin(angle);
             el.style.left = `${x}px`;
