@@ -812,7 +812,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         percent: 20,
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/d/dd/Coca-Cola_logo_white.png",
-        detail: "COKE: mayor embotellador independiente en EE. UU., flujos estables en consumo básico. Peso para estabilidad y baja volatilidad."
+        detail: "Consumo básico defensivo"
       },
       {
         name: "Apple Inc.",
@@ -821,7 +821,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Apple_Logo.svg/960px-Apple_Logo.svg.png",
         invert: true,
-        detail: "AAPL: ecosistema premium y servicios de alto margen. Peso por crecimiento sólido con disciplina financiera."
+        detail: "Mega tecnología premium"
       },
       {
         name: "Microsoft",
@@ -830,7 +830,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/3/35/Microsoft_logo.png",
         invert: true,
-        detail: "MSFT: liderazgo en cloud y software empresarial con ingresos recurrentes. Peso por resiliencia y tendencia tecnológica."
+        detail: "Tecnología empresarial nube"
       },
       {
         name: "Berkshire Hathaway Inc. Class B",
@@ -839,7 +839,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Berkshire-Hathaway-Logo.svg/1200px-Berkshire-Hathaway-Logo.svg.png",
         invert: true,
-        detail: "BRK.B: holding diversificado con value probado. Mayor peso por estabilidad y gestión de capital de largo plazo."
+        detail: "Holding diversificado estable"
       },
       {
         name: "Gold",
@@ -847,7 +847,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         percent: 10,
         type: "Commodity",
         logo: "https://upload.wikimedia.org/wikipedia/commons/0/07/Gold_bar.png",
-        detail: "GOLD: reserva de valor ante inflación y crisis. Peso moderado como cobertura."
+        detail: "Refugio anticrisis"
       },
       {
         name: "Bitcoin",
@@ -855,7 +855,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         percent: 20,
         type: "Cripto",
         logo: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Bitcoin_Logo.png",
-        detail: "BTC: activo digital líder con alto potencial. Peso para crecimiento agresivo y diversificación."
+        detail: "Activo digital líder"
       }
     ];
     const ASSET_POSITIONS = [
