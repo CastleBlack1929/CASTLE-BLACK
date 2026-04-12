@@ -837,7 +837,7 @@ table tr:hover {
   }
 
   .activos-bubbles {
-    min-height: 480px;
+    min-height: 420px;
     display: block;
     position: relative;
   }
