@@ -812,7 +812,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         percent: 20,
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/d/dd/Coca-Cola_logo_white.png",
-        detail: "Consumo básico defensivo"
+        detail: "Coca-Cola: consumo defensivo"
       },
       {
         name: "Apple Inc.",
@@ -821,7 +821,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Apple_Logo.svg/960px-Apple_Logo.svg.png",
         invert: true,
-        detail: "Mega tecnología premium"
+        detail: "Apple: mega tecnología"
       },
       {
         name: "Microsoft",
@@ -830,7 +830,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/3/35/Microsoft_logo.png",
         invert: true,
-        detail: "Tecnología empresarial nube"
+        detail: "Microsoft: nube empresarial"
       },
       {
         name: "Berkshire Hathaway Inc. Class B",
@@ -839,7 +839,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Berkshire-Hathaway-Logo.svg/1200px-Berkshire-Hathaway-Logo.svg.png",
         invert: true,
-        detail: "Holding diversificado estable"
+        detail: "Berkshire: holding estable"
       },
       {
         name: "Gold",
@@ -847,7 +847,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         percent: 10,
         type: "Commodity",
         logo: "https://upload.wikimedia.org/wikipedia/commons/0/07/Gold_bar.png",
-        detail: "Refugio anticrisis"
+        detail: "Gold: refugio anticrisis"
       },
       {
         name: "Bitcoin",
@@ -855,7 +855,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         percent: 20,
         type: "Cripto",
         logo: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Bitcoin_Logo.png",
-        detail: "Activo digital líder"
+        detail: "Bitcoin: líder digital"
       }
     ];
     const ASSET_POSITIONS = [
