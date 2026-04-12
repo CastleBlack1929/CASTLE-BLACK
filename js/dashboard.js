@@ -876,7 +876,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const maxSize = 140;
       const isDesktop = window.matchMedia("(min-width: 950px)").matches;
       const isMobile = window.matchMedia("(max-width: 949px)").matches;
-      const activeScale = isDesktop ? 1.3 : 1.4;
+      const activeScale = isDesktop ? 1.3 : 1.55;
       const bubbles = [];
       let maxBaseSize = 0;
       const setActiveBubble = (activeIndex) => {
