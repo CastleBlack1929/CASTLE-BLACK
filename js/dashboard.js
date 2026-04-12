@@ -879,9 +879,11 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const activeScale = isDesktop ? 1.3 : 1.6;
       const bubbles = [];
       let maxBaseSize = 0;
-      const getMobileRadius = () => {
+      const getMobileRadius = (maxSize) => {
         const rect = activosBubbles.getBoundingClientRect();
-        return Math.min(rect.width, rect.height) * 0.35;
+        const minSide = Math.min(rect.width, rect.height);
+        const safe = Math.max(0, (minSide / 2) - (maxSize / 2) - 8);
+        return Math.min(minSide * 0.42, safe);
       };
       const setActiveBubble = (activeIndex) => {
         activeAssetIndex = Number.isInteger(activeIndex) ? activeIndex : null;
@@ -900,7 +902,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const rect = activosBubbles.getBoundingClientRect();
           const centerX = rect.width / 2;
           const centerY = rect.height / 2;
-          const radius = getMobileRadius();
+          const maxSize = maxBaseSize * activeScale;
+          const radius = getMobileRadius(maxSize);
           const others = bubbles.filter((_, idx) => idx !== activeIndex);
           others.forEach(({ el }, posIdx) => {
             const angle = (Math.PI * 2 * posIdx) / others.length - Math.PI / 2;
@@ -964,7 +967,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const rect = activosBubbles.getBoundingClientRect();
           const centerX = rect.width / 2;
           const centerY = rect.height / 2;
-          const radius = getMobileRadius() + maxBaseSize * 0.6;
+          const maxSize = maxBaseSize * activeScale;
+          const radius = getMobileRadius(maxSize);
           bubbles.forEach(({ el }, idx) => {
             const angle = (Math.PI * 2 * idx) / bubbles.length - Math.PI / 2;
             const x = centerX + radius * Math.cos(angle);
