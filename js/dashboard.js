@@ -876,40 +876,16 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const maxSize = 140;
       const isDesktop = window.matchMedia("(min-width: 950px)").matches;
       const isMobile = window.matchMedia("(max-width: 949px)").matches;
-      const activeScale = isDesktop ? 1.3 : 1.6;
+      const activeScale = isDesktop ? 1.3 : 1.35;
       const bubbles = [];
       let maxBaseSize = 0;
-      const getMobileRadius = (maxSize) => {
-        const rect = activosBubbles.getBoundingClientRect();
-        const minSide = Math.min(rect.width, rect.height);
-        const safe = Math.max(0, (minSide / 2) - (maxSize / 2) - 8);
-        return Math.min(minSide * 0.42, safe);
-      };
+      let mobilePositions = [];
       const setActiveBubble = (activeIndex) => {
         activeAssetIndex = Number.isInteger(activeIndex) ? activeIndex : null;
-        let mobileScale = 1;
-        let mobileRadius = 0;
-        if (isMobile && activeAssetIndex !== null) {
-          const rect = activosBubbles.getBoundingClientRect();
-          const minSide = Math.min(rect.width, rect.height);
-          const gap = 6;
-          const nOuter = Math.max(bubbles.length - 1, 1);
-          const maxOther = maxBaseSize || 1;
-          const activeSize = (maxBaseSize || 1) * activeScale;
-          const requiredByCenter = activeSize / 2 + maxOther / 2 + gap;
-          const requiredByOuter = (maxOther + gap) / (2 * Math.sin(Math.PI / nOuter));
-          const required = Math.max(requiredByCenter, requiredByOuter);
-          const allowed = Math.max(0, (minSide / 2) - (Math.max(activeSize, maxOther) / 2) - gap);
-          if (required > 0 && allowed > 0 && required > allowed) {
-            mobileScale = allowed / required;
-          }
-          mobileRadius = required * mobileScale;
-        }
-
         bubbles.forEach(({ el, baseSize }, idx) => {
           const isActive = activeAssetIndex !== null && idx === activeAssetIndex;
           el.classList.toggle("is-active", isActive);
-          const sizeBase = isMobile ? baseSize * mobileScale : baseSize;
+          const sizeBase = baseSize;
           const size = isActive ? sizeBase * activeScale : sizeBase;
           el.style.width = `${size}px`;
           el.style.height = `${size}px`;
@@ -922,14 +898,11 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const rect = activosBubbles.getBoundingClientRect();
           const centerX = rect.width / 2;
           const centerY = rect.height / 2;
-          const radius = mobileRadius || getMobileRadius(maxBaseSize * activeScale);
           const others = bubbles.filter((_, idx) => idx !== activeIndex);
           others.forEach(({ el }, posIdx) => {
-            const angle = (Math.PI * 2 * posIdx) / others.length - Math.PI / 2;
-            const x = centerX + radius * Math.cos(angle);
-            const y = centerY + radius * Math.sin(angle);
-            el.style.left = `${x}px`;
-            el.style.top = `${y}px`;
+            const pos = mobilePositions[posIdx] || { x: centerX, y: centerY };
+            el.style.left = `${pos.x}px`;
+            el.style.top = `${pos.y}px`;
             el.style.transform = "translate(-50%, -50%)";
           });
           const activeEl = bubbles[activeIndex]?.el;
@@ -986,12 +959,13 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const rect = activosBubbles.getBoundingClientRect();
           const centerX = rect.width / 2;
           const centerY = rect.height / 2;
-          const maxSize = maxBaseSize * activeScale;
-          const radius = getMobileRadius(maxSize);
+          const radius = Math.min(rect.width, rect.height) * 0.42;
+          mobilePositions = [];
           bubbles.forEach(({ el }, idx) => {
             const angle = (Math.PI * 2 * idx) / bubbles.length - Math.PI / 2;
             const x = centerX + radius * Math.cos(angle);
             const y = centerY + radius * Math.sin(angle);
+            mobilePositions.push({ x, y });
             el.style.left = `${x}px`;
             el.style.top = `${y}px`;
             el.style.transform = "translate(-50%, -50%)";
