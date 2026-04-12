@@ -887,10 +887,30 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       };
       const setActiveBubble = (activeIndex) => {
         activeAssetIndex = Number.isInteger(activeIndex) ? activeIndex : null;
+        let mobileScale = 1;
+        let mobileRadius = 0;
+        if (isMobile && activeAssetIndex !== null) {
+          const rect = activosBubbles.getBoundingClientRect();
+          const minSide = Math.min(rect.width, rect.height);
+          const gap = 6;
+          const nOuter = Math.max(bubbles.length - 1, 1);
+          const maxOther = maxBaseSize || 1;
+          const activeSize = (maxBaseSize || 1) * activeScale;
+          const requiredByCenter = activeSize / 2 + maxOther / 2 + gap;
+          const requiredByOuter = (maxOther + gap) / (2 * Math.sin(Math.PI / nOuter));
+          const required = Math.max(requiredByCenter, requiredByOuter);
+          const allowed = Math.max(0, (minSide / 2) - (Math.max(activeSize, maxOther) / 2) - gap);
+          if (required > 0 && allowed > 0 && required > allowed) {
+            mobileScale = allowed / required;
+          }
+          mobileRadius = required * mobileScale;
+        }
+
         bubbles.forEach(({ el, baseSize }, idx) => {
           const isActive = activeAssetIndex !== null && idx === activeAssetIndex;
           el.classList.toggle("is-active", isActive);
-          const size = isActive ? baseSize * activeScale : baseSize;
+          const sizeBase = isMobile ? baseSize * mobileScale : baseSize;
+          const size = isActive ? sizeBase * activeScale : sizeBase;
           el.style.width = `${size}px`;
           el.style.height = `${size}px`;
           const desc = el.querySelector(".asset-desc");
@@ -902,8 +922,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const rect = activosBubbles.getBoundingClientRect();
           const centerX = rect.width / 2;
           const centerY = rect.height / 2;
-          const maxSize = maxBaseSize * activeScale;
-          const radius = getMobileRadius(maxSize);
+          const radius = mobileRadius || getMobileRadius(maxBaseSize * activeScale);
           const others = bubbles.filter((_, idx) => idx !== activeIndex);
           others.forEach(({ el }, posIdx) => {
             const angle = (Math.PI * 2 * posIdx) / others.length - Math.PI / 2;
