@@ -896,6 +896,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const activeScale = isDesktop ? 1.3 : 1.55;
       const bubbles = [];
       let maxBaseSize = 0;
+      let mobilePositions = [];
+      let ghostBubble = null;
       const setActiveBubble = (activeIndex) => {
         activeAssetIndex = Number.isInteger(activeIndex) ? activeIndex : null;
         let mobileScale = 1;
@@ -933,13 +935,17 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const centerX = rect.width / 2;
           const centerY = rect.height / 2;
           const radius = mobileRadius;
+          if (!ghostBubble) {
+            ghostBubble = document.createElement("div");
+            ghostBubble.className = "asset-ghost";
+            activosBubbles.appendChild(ghostBubble);
+          }
           bubbles.forEach(({ el }, idx) => {
             if (idx === activeIndex) return;
-            const angle = (Math.PI * 2 * idx) / bubbles.length - Math.PI / 2;
-            const x = centerX + radius * Math.cos(angle);
-            const y = centerY + radius * Math.sin(angle);
-            el.style.left = `${x}px`;
-            el.style.top = `${y}px`;
+            const pos = mobilePositions[idx];
+            if (!pos) return;
+            el.style.left = `${pos.x}px`;
+            el.style.top = `${pos.y}px`;
             el.style.transform = "translate(-50%, -50%)";
           });
           const activeEl = bubbles[activeIndex]?.el;
@@ -948,6 +954,21 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             activeEl.style.top = `${centerY}px`;
             activeEl.style.transform = "translate(-50%, -50%)";
           }
+          const ghostPos = mobilePositions[activeIndex];
+          if (ghostBubble && ghostPos) {
+            const baseSize = bubbles[activeIndex]?.baseSize || maxBaseSize || 1;
+            const sizeBase = baseSize * mobileScale;
+            ghostBubble.style.width = `${sizeBase}px`;
+            ghostBubble.style.height = `${sizeBase}px`;
+            ghostBubble.style.left = `${ghostPos.x}px`;
+            ghostBubble.style.top = `${ghostPos.y}px`;
+            ghostBubble.style.transform = "translate(-50%, -50%)";
+            ghostBubble.style.display = "block";
+          } else if (ghostBubble) {
+            ghostBubble.style.display = "none";
+          }
+        } else if (ghostBubble) {
+          ghostBubble.style.display = "none";
         }
       };
       ASSET_BUBBLES.forEach((asset, idx) => {
@@ -998,10 +1019,12 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const centerX = rect.width / 2;
           const centerY = rect.height / 2;
           const radius = Math.min(rect.width, rect.height) * 0.38;
+          mobilePositions = [];
           bubbles.forEach(({ el }, idx) => {
             const angle = (Math.PI * 2 * idx) / bubbles.length - Math.PI / 2;
             const x = centerX + radius * Math.cos(angle);
             const y = centerY + radius * Math.sin(angle);
+            mobilePositions.push({ x, y });
             el.style.left = `${x}px`;
             el.style.top = `${y}px`;
             el.style.transform = "translate(-50%, -50%)";

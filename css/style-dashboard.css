@@ -299,6 +299,15 @@ h2 {
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35), 0 18px 42px rgba(0, 0, 0, 0.55);
 }
 
+.asset-ghost {
+  position: absolute;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  pointer-events: none;
+  z-index: 0;
+}
+
 .asset-logo {
   width: 62%;
   height: 62%;
@@ -925,7 +934,7 @@ table tr:hover {
     min-height: 0;
     display: flex;
     flex-wrap: nowrap;
-    gap: 8px;
+    gap: 0;
     justify-content: center;
     align-items: center;
     position: static;
