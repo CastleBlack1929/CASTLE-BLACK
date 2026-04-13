@@ -3127,10 +3127,11 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const marginX = 14;
           const lineGap = 6;
           const tablePaddingY = 6;
+          let footerReserve = 12;
           let y = 18;
 
           const ensureSpace = (needed = 12) => {
-            if (y + needed > pageHeight - 12) {
+            if (y + needed > pageHeight - footerReserve) {
               doc.addPage();
               y = 18;
             }
@@ -3550,6 +3551,58 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             movimientosRows
           );
 
+          y += 8;
+          footerReserve = 28;
+          addLine("Activos en cartera", 12, 8, "bold");
+          addParagraph("El portafolio propuesto está estructurado con un criterio de diversificación deliberada entre acciones de alta calidad, activos refugio, exposición tecnológica, criptomonedas y una porción de liquidez táctica. La distribución no responde solamente a una preferencia subjetiva, sino a una lógica de equilibrio entre estabilidad, crecimiento, cobertura y flexibilidad operativa. En este caso, la cartera se compone de Coca-Cola Consolidated, Inc. con 10%, Apple Inc. con 20%, Microsoft con 20%, Berkshire Hathaway Inc. Class B con 20%, oro con 10%, Bitcoin con 10%, liquidez en dólares estadounidenses con 5% y una categoría complementaria denominada “Others” con 5%.");
+
+          addLine("Coca-Cola Consolidated, Inc. (10%)", 11, 6, "bold");
+          addParagraph("Coca-Cola Consolidated, Inc. ocupa un 10% del portafolio porque cumple una función principalmente defensiva. Se trata del mayor embotellador independiente de productos de The Coca-Cola Company en Estados Unidos, lo que lo vincula a un negocio de consumo básico con demanda históricamente estable. En una cartera bien construida, este tipo de activo no suele recibir el mayor peso cuando el objetivo incluye crecimiento, pero sí merece una presencia importante por su capacidad de amortiguar volatilidad y aportar resiliencia en entornos económicos inciertos. Su asignación del 10% refleja precisamente eso: no es el principal motor de apreciación de capital, pero sí una base sólida que contribuye a la estabilidad general del portafolio. Desde un punto de vista estratégico, Coca-Cola Consolidated representa exposición a una compañía con fundamentos operativos consistentes, una actividad ligada al consumo recurrente y un perfil menos agresivo que otros nombres de la cartera.");
+
+          addLine("Apple Inc. (20%)", 11, 6, "bold");
+          addParagraph("Apple Inc. recibe un 20% debido a que representa una de las piezas centrales de crecimiento del portafolio. Apple es una de las empresas tecnológicas más relevantes del mundo y su fortaleza no depende únicamente de un producto específico, sino de un ecosistema altamente integrado de hardware, software y servicios. Esto le permite sostener altos márgenes, fidelización de clientes y una capacidad extraordinaria de monetización. Dentro de una asignación patrimonial, Apple justifica un peso alto porque combina tres cualidades difíciles de encontrar simultáneamente: escala global, fortaleza de marca y posición financiera excepcional. El 20% asignado responde a la idea de que Apple no solo ofrece potencial de crecimiento, sino también una relativa estabilidad para tratarse de una empresa tecnológica. Es decir, cumple una doble función: impulsar rentabilidad esperada y, al mismo tiempo, mantener un estándar de calidad empresarial muy alto dentro del bloque accionario.");
+
+          addLine("Microsoft (20%)", 11, 6, "bold");
+          addParagraph("Microsoft también tiene un 20%, y esa distribución se explica por razones similares aunque con una naturaleza empresarial distinta. Microsoft ha evolucionado desde una compañía dominante en software tradicional a una plataforma global con gran presencia en servicios corporativos, computación en la nube, productividad empresarial e inteligencia artificial. Su negocio está ampliamente diversificado y una parte importante de sus ingresos proviene de suscripciones y contratos empresariales, lo que le da una previsibilidad notable. En términos de construcción de cartera, Microsoft representa exposición a la digitalización estructural de la economía mundial. El 20% asignado refleja la convicción de que sigue siendo una empresa de crecimiento, pero con una base operativa lo suficientemente madura y estable como para sostener un peso relevante a largo plazo. Además, su perfil complementa al de Apple: ambas son tecnológicas, pero una está más vinculada al ecosistema de consumo y la otra al entorno corporativo y de infraestructura digital.");
+
+          addLine("Berkshire Hathaway Inc. Class B (20%)", 11, 6, "bold");
+          addParagraph("Berkshire Hathaway Inc. Class B también recibe un 20%, pero por una razón distinta: su función es actuar como una especie de bloque de estabilidad diversificada dentro de una sola acción. Berkshire no es una empresa tradicional de un solo sector, sino un conglomerado con exposición a seguros, energía, transporte, industria y participaciones en negocios de gran calidad. Su trayectoria histórica bajo la filosofía de asignación de capital de Warren Buffett la ha convertido en una de las referencias mundiales de inversión prudente y disciplinada. Darle un 20% dentro del portafolio tiene sentido porque reduce el riesgo de concentración sectorial sin renunciar a la renta variable. En otras palabras, Berkshire aporta diversificación interna, solidez financiera y una cultura empresarial enfocada en largo plazo. No se le asigna un peso superior en esta versión del portafolio porque la estructura busca mantener balance con el bloque tecnológico, pero sí se le da una participación central por su rol estabilizador y su historial de preservación y crecimiento del capital.");
+
+          addLine("Oro (10%)", 11, 6, "bold");
+          addParagraph("El oro representa el 10% del portafolio y su inclusión responde a una lógica de protección. A diferencia de las acciones, el oro no se incorpora principalmente por crecimiento operativo ni por expansión de beneficios empresariales, sino por su papel histórico como reserva de valor y cobertura frente a inflación, estrés financiero o pérdida de confianza en activos de mayor riesgo. En una cartera que ya contiene exposición a tecnología y criptoactivos, el oro funciona como contrapeso. El 10% asignado es suficiente para que tenga un impacto real en contextos adversos, pero no tan alto como para restarle dinamismo al portafolio. Su presencia mejora el perfil de riesgo agregado porque reduce dependencia exclusiva de la renta variable y agrega una capa de defensa patrimonial.");
+
+          addLine("Bitcoin (10%)", 11, 6, "bold");
+          addParagraph("Bitcoin ocupa otro 10%, lo cual indica una postura de apertura al crecimiento agresivo, pero con control de riesgo. Bitcoin es el principal activo digital del ecosistema cripto y su tesis se apoya en la escasez programada, la descentralización y su progresiva legitimación institucional. Sin embargo, su volatilidad sigue siendo considerablemente superior a la de los activos tradicionales. Por eso, una ponderación del 10% luce coherente para capturar una porción del potencial alcista sin exponer el conjunto de la cartera a una dependencia excesiva del ciclo cripto. En términos de arquitectura de portafolio, Bitcoin es la pieza de mayor agresividad relativa, por lo que su porcentaje debe ser lo bastante significativo para aportar rendimiento potencial, pero lo bastante moderado para no desestabilizar todo el conjunto.");
+
+          addLine("Liquidez USD (5%)", 11, 6, "bold");
+          addParagraph("La posición denominada “Money United State of America”, que en términos prácticos debe entenderse como liquidez o efectivo denominado en dólares estadounidenses, recibe un 5%. Esta porción tiene una utilidad táctica. La liquidez no compite con los activos de crecimiento, pero cumple un papel muy importante: ofrecer capacidad de reacción, permitir entradas oportunas en momentos de corrección y reducir la necesidad de liquidar posiciones estratégicas en condiciones desfavorables. Mantener un 5% en liquidez es una decisión conservadora e inteligente cuando se desea combinar visión de largo plazo con margen operativo de corto plazo.");
+
+          addLine("Others (5%)", 11, 6, "bold");
+          addParagraph("La categoría “Others”, también con 5%, funciona como un espacio de flexibilidad para activos complementarios, posiciones especiales o ideas tácticas que no encajan dentro de los grandes bloques del portafolio. Esta categoría permite mantener abierta la posibilidad de incorporar oportunidades adicionales sin alterar el equilibrio central de la cartera. Desde el punto de vista de gestión, ese 5% puede servir para explorar nuevas tesis de inversión o para diversificación adicional de manera controlada.");
+
+          y += 6;
+          addLine("Marco regulatorio y brokers", 12, 8, "bold");
+          addLine("Hapi", 11, 6, "bold");
+          addParagraph("Hapi informa en su sitio oficial que está regulado por la SEC, es miembro de FINRA y ofrece protección SIPC para valores hasta 500.000 dólares, con custodia a través de Apex Clearing. También aclara que la protección SIPC aplica a valores como acciones y ETFs, no a criptoactivos. Esto significa que, para operaciones sobre acciones estadounidenses, Hapi se presenta bajo un marco regulatorio de mercado de valores de Estados Unidos, pero el usuario debe entender que esa protección no equivale a cobertura contra pérdidas de mercado, sino a un esquema orientado a la custodia y restitución en ciertos supuestos de insolvencia del intermediario.");
+
+          addLine("Interactive Brokers", 11, 6, "bold");
+          addParagraph("Interactive Brokers es uno de los brokers con mayor infraestructura regulatoria internacional. En sus divulgaciones oficiales señala supervisión por parte de la SEC, FINRA, NYSE y otros organismos regulatorios, y además detalla que distintas filiales están autorizadas y supervisadas por reguladores como la FCA en Reino Unido y el Central Bank of Ireland en Irlanda. Para un inversor, esto implica que Interactive Brokers opera bajo un entorno regulatorio robusto y segmentado por jurisdicción. La consecuencia práctica es que las reglas de protección del cliente, segregación de fondos, esquemas de compensación y condiciones operativas pueden variar según la entidad con la que se abra la cuenta. En términos generales, Interactive Brokers es percibido como un broker institucionalmente fuerte, pero esa fortaleza no elimina la necesidad de revisar exactamente qué filial presta el servicio.");
+
+          addLine("eToro", 11, 6, "bold");
+          addParagraph("eToro opera mediante distintas entidades reguladas. En su documentación oficial indica que eToro Europe está regulada por CySEC bajo licencia 109/10, eToro UK por la FCA, eToro Australia por ASIC, y además mantiene otras autorizaciones en jurisdicciones específicas como Abu Dhabi Global Market. Esto es relevante porque eToro combina servicios de inversión y, según país y producto, puede ofrecer acciones, CFDs o criptoactivos bajo marcos regulatorios diferentes. Para el usuario, la principal implicación es que no todos los productos tienen la misma protección ni la misma naturaleza jurídica. Una acción al contado no debe evaluarse igual que un CFD, y un criptoactivo tampoco necesariamente queda cubierto bajo los mismos mecanismos de protección que un valor tradicional.");
+
+          addLine("Binance", 11, 6, "bold");
+          addParagraph("Binance pertenece al universo de criptointermediarios y su estructura regulatoria es más fragmentada y dependiente de licencias locales. En publicaciones oficiales recientes, Binance afirma contar con licencias, registros o autorizaciones en 20 jurisdicciones y destaca una autorización integral bajo el marco de la FSRA de ADGM, indicando que allí está habilitada para operar como exchange, broker-dealer y custodio. Al mismo tiempo, la propia comunicación de Binance insiste en la importancia de verificar licencias y regulaciones aplicables según el mercado concreto. La lectura prudente aquí es que Binance ha avanzado de forma visible en su estrategia de cumplimiento, pero la experiencia regulatoria del usuario todavía depende mucho del país desde donde opera, del tipo de producto usado y de la entidad específica que le presta el servicio. A diferencia de un broker clásico de acciones regulado bajo marcos bien consolidados de custodia de valores, en cripto el nivel de protección legal y operativa puede ser más heterogéneo.");
+
+          addLine("Fuentes", 11, 6, "bold");
+          addParagraph("Hapi: https://hapi.trade/en");
+          addParagraph("Interactive Brokers: https://www.interactivebrokers.com/en/general/about/info-and-history.php");
+          addParagraph("Interactive Brokers (home): https://www.interactivebrokers.com/");
+          addParagraph("eToro: https://www.etoro.com/customer-service/regulation-license/");
+          addParagraph("eToro (protección): https://www.etoro.com/customer-service/account-and-money-protection/");
+          addParagraph("Binance: https://www.binance.com/en/square/post/298285753287218");
+          addParagraph("Binance: https://www.binance.com/en/square/post/27459429566010");
+
           y += 6;
           addParagraph("Si tiene alguna pregunta, inquietud o desea revisar en mayor profundidad el desempeño de su portafolio, no dude en ponerse en contacto con nosotros. Estaremos encantados de atenderle y brindarle el acompañamiento necesario para resolver cualquier duda o analizar nuevas oportunidades de crecimiento. Agradecemos sinceramente su confianza en Castle Black. Para nosotros es un honor acompañarlo en la gestión de su patrimonio, y seguiremos trabajando con compromiso y transparencia para construir juntos un futuro financiero sólido, estable y exitoso.");
 
@@ -3568,7 +3621,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             doc.setFont("times", "italic");
             doc.setFontSize(9);
             const footerText = `Página ${i} de ${pageCount}`;
-            doc.text(footerText, marginX, pageHeight - 10, { align: "left" });
+            doc.text(footerText, marginX, pageHeight - 14, { align: "left" });
           }
 
           doc.save(fileName);
