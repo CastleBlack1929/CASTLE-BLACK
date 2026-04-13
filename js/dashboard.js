@@ -884,10 +884,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       { x: 0.85, y: 0.6 }
     ];
     let activeAssetIndex = null;
-    let assetsClickBound = false;
     const renderAssetsSection = () => {
       if (!activosBubbles) return;
       activosBubbles.innerHTML = "";
+      activeAssetIndex = null;
       const maxPct = ASSET_BUBBLES.reduce((max, item) => Math.max(max, item.percent || 0), 0) || 1;
       const minSize = 70;
       const maxSize = 140;
@@ -990,7 +990,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         if (size > maxBaseSize) maxBaseSize = size;
         bubbles.push({ el: bubble, baseSize: size });
       });
-      if (isMobile && activeAssetIndex === null && ASSET_BUBBLES.length) {
+      if (isMobile && ASSET_BUBBLES.length) {
         activeAssetIndex = Math.floor(Math.random() * ASSET_BUBBLES.length);
       }
       if (isMobile) {
@@ -999,14 +999,6 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         });
       } else {
         setActiveBubble(activeAssetIndex);
-      }
-
-      if (!assetsClickBound) {
-        assetsClickBound = true;
-        document.addEventListener("click", (event) => {
-          const target = event.target;
-          if (target && target.closest && target.closest(".asset-bubble")) return;
-        });
       }
 
       if (isMobile) {
