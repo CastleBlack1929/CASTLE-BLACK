@@ -677,6 +677,7 @@ let chartUtilidades = null;
   let layoutResizeObserver = null;
   let liveRateTimer = null;
   let liveRate = null;
+  let assetsYear = new Date().getFullYear();
   const monthRowMap = {};
   const monthSnapshots = {};
   const USE_AUTO_PORTFOLIO = false;
@@ -805,7 +806,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       }
     };
 
-    const ASSET_BUBBLES = [
+    const ASSET_BUBBLES_2024_2025 = [
       {
         name: "Coca-Cola Consolidated, Inc.",
         ticker: "COKE",
@@ -828,8 +829,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         ticker: "MSFT",
         percent: 20,
         type: "Acción",
-        logo: "https://upload.wikimedia.org/wikipedia/commons/3/35/Microsoft_logo.png",
-        invert: true,
+        logo: "https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg",
+        invert: false,
         detail: "Microsoft: nube empresarial"
       },
       {
@@ -837,7 +838,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         ticker: "BRK.B",
         percent: 20,
         type: "Acción",
-        logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Berkshire-Hathaway-Logo.svg/1200px-Berkshire-Hathaway-Logo.svg.png",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Berkshire-Hathaway-Logo.svg",
         invert: true,
         detail: "Berkshire: holding estable"
       },
@@ -862,7 +863,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         ticker: "USD",
         percent: 5,
         type: "Comodity",
-        logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><circle cx='60' cy='60' r='58' fill='%230b0b0b' stroke='white' stroke-width='2'/><text x='50%25' y='68%25' text-anchor='middle' font-family='IBM Plex Sans, Arial, sans-serif' font-size='64' fill='white'>$</text></svg>",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/2/23/US_one_dollar_bill%2C_obverse%2C_series_2009.jpg",
         detail: "USD: liquidez base"
       },
       {
@@ -875,6 +876,102 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         detail: "Others: diversificación"
       }
     ];
+    const ASSET_BUBBLES_2026 = [
+      {
+        name: "Microsoft",
+        ticker: "MSFT",
+        percent: 15,
+        type: "Acción",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg",
+        invert: false,
+        detail: "Microsoft: nube empresarial"
+      },
+      {
+        name: "NVIDIA",
+        ticker: "NVDA",
+        percent: 15,
+        type: "Acción",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/a/a4/NVIDIA_logo.svg",
+        invert: false,
+        detail: "NVIDIA: IA y chips"
+      },
+      {
+        name: "Alphabet",
+        ticker: "GOOGL",
+        percent: 10,
+        type: "Acción",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg",
+        invert: false,
+        detail: "Alphabet: datos globales"
+      },
+      {
+        name: "Amazon",
+        ticker: "AMZN",
+        percent: 10,
+        type: "Acción",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
+        invert: false,
+        detail: "Amazon: comercio nube"
+      },
+      {
+        name: "Bitcoin",
+        ticker: "BTC",
+        percent: 15,
+        type: "Cripto",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Bitcoin_Logo.png",
+        detail: "Bitcoin: líder digital"
+      },
+      {
+        name: "Berkshire Hathaway Inc. Class B",
+        ticker: "BRK.B",
+        percent: 10,
+        type: "Acción",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Berkshire-Hathaway-Logo.svg",
+        invert: true,
+        detail: "Berkshire: holding estable"
+      },
+      {
+        name: "JPMorgan Chase",
+        ticker: "JPM",
+        percent: 10,
+        type: "Acción",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/c/c9/Logo_of_JPMorganChase_2024.svg",
+        invert: true,
+        detail: "JPM: banca global"
+      },
+      {
+        name: "Occidental Petroleum",
+        ticker: "OXY",
+        percent: 5,
+        type: "Acción",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/3/37/Occidental-Petroleum-Logo.svg",
+        invert: false,
+        detail: "OXY: energía táctica"
+      },
+      {
+        name: "Semiconductor ETF",
+        ticker: "SOXX",
+        percent: 5,
+        type: "Acción",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/d/d8/Logo-ishares_2019.svg",
+        invert: true,
+        detail: "SOXX: semiconductores"
+      },
+      {
+        name: "Cash",
+        ticker: "CASH",
+        percent: 5,
+        type: "Liquidez",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/2/23/US_one_dollar_bill%2C_obverse%2C_series_2009.jpg",
+        detail: "Cash: liquidez"
+      }
+    ];
+    const getAssetSetForYear = (yearValue) => {
+      const yearNum = Number(yearValue);
+      if (yearNum === 2024 || yearNum === 2025) return ASSET_BUBBLES_2024_2025;
+      if (yearNum === 2026) return ASSET_BUBBLES_2026;
+      return ASSET_BUBBLES_2026;
+    };
     const ASSET_POSITIONS = [
       { x: 0.18, y: 0.32 },
       { x: 0.45, y: 0.18 },
@@ -888,7 +985,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       if (!activosBubbles) return;
       activosBubbles.innerHTML = "";
       activeAssetIndex = null;
-      const maxPct = ASSET_BUBBLES.reduce((max, item) => Math.max(max, item.percent || 0), 0) || 1;
+      const assetSet = getAssetSetForYear(assetsYear);
+      const maxPct = assetSet.reduce((max, item) => Math.max(max, item.percent || 0), 0) || 1;
       const minSize = 70;
       const maxSize = 140;
       const isDesktop = window.matchMedia("(min-width: 950px)").matches;
@@ -962,7 +1060,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           void ghostPos;
         }
       };
-      ASSET_BUBBLES.forEach((asset, idx) => {
+      assetSet.forEach((asset, idx) => {
         const size = isDesktop
           ? (minSize + (asset.percent / maxPct) * (maxSize - minSize))
           : 90;
@@ -990,8 +1088,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         if (size > maxBaseSize) maxBaseSize = size;
         bubbles.push({ el: bubble, baseSize: size });
       });
-      if (isMobile && ASSET_BUBBLES.length) {
-        activeAssetIndex = Math.floor(Math.random() * ASSET_BUBBLES.length);
+      if (isMobile && assetSet.length) {
+        activeAssetIndex = Math.floor(Math.random() * assetSet.length);
       }
       if (isMobile) {
         requestAnimationFrame(() => {
@@ -1114,8 +1212,6 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       return;
     }
 
-    renderAssetsSection();
-
     const claveUsuario = (baseData.username || "").toLowerCase();
     const idCliente = String(baseData.idCliente || "").trim().toLowerCase();
     const cedula = String(baseData.cedula || "").trim().toLowerCase();
@@ -1154,6 +1250,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const yearLabel = selectedYear !== "actual" ? selectedYear : currentYearNumber;
     const displayYear = yearLabel;
     reportYearText = isActualYear ? `${displayYear} (Actual)` : `${selectedYear}`;
+    assetsYear = Number(yearLabel) || currentYearNumber;
+    renderAssetsSection();
 
     const toggleYearArrows = (show) => {
       [utilidadArrow, utilidadTotalArrow, utilidadLArrow, utilidadTotalLArrow].forEach((el) => {
@@ -3553,32 +3651,73 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
           y += 8;
           footerReserve = 28;
+          const portfolioYear = Number(reportYearNumber || displayYear || new Date().getFullYear());
+          const assetsForPdf = getAssetSetForYear(portfolioYear);
           addLine("Activos en cartera", 12, 8, "bold");
-          addParagraph("El portafolio propuesto está estructurado con un criterio de diversificación deliberada entre acciones de alta calidad, activos refugio, exposición tecnológica, criptomonedas y una porción de liquidez táctica. La distribución no responde solamente a una preferencia subjetiva, sino a una lógica de equilibrio entre estabilidad, crecimiento, cobertura y flexibilidad operativa. En este caso, la cartera se compone de Coca-Cola Consolidated, Inc. con 10%, Apple Inc. con 20%, Microsoft con 20%, Berkshire Hathaway Inc. Class B con 20%, oro con 10%, Bitcoin con 10%, liquidez en dólares estadounidenses con 5% y una categoría complementaria denominada “Others” con 5%.");
+          if (portfolioYear === 2024 || portfolioYear === 2025) {
+            addParagraph("El portafolio propuesto está estructurado con un criterio de diversificación deliberada entre acciones de alta calidad, activos refugio, exposición tecnológica, criptomonedas y una porción de liquidez táctica. La distribución no responde solamente a una preferencia subjetiva, sino a una lógica de equilibrio entre estabilidad, crecimiento, cobertura y flexibilidad operativa. En este caso, la cartera se compone de Coca-Cola Consolidated, Inc. con 10%, Apple Inc. con 20%, Microsoft con 20%, Berkshire Hathaway Inc. Class B con 20%, oro con 10%, Bitcoin con 10%, liquidez en dólares estadounidenses con 5% y una categoría complementaria denominada “Others” con 5%.");
 
-          addLine("Coca-Cola Consolidated, Inc. (10%)", 11, 6, "bold");
-          addParagraph("Coca-Cola Consolidated, Inc. ocupa un 10% del portafolio porque cumple una función principalmente defensiva. Se trata del mayor embotellador independiente de productos de The Coca-Cola Company en Estados Unidos, lo que lo vincula a un negocio de consumo básico con demanda históricamente estable. En una cartera bien construida, este tipo de activo no suele recibir el mayor peso cuando el objetivo incluye crecimiento, pero sí merece una presencia importante por su capacidad de amortiguar volatilidad y aportar resiliencia en entornos económicos inciertos. Su asignación del 10% refleja precisamente eso: no es el principal motor de apreciación de capital, pero sí una base sólida que contribuye a la estabilidad general del portafolio. Desde un punto de vista estratégico, Coca-Cola Consolidated representa exposición a una compañía con fundamentos operativos consistentes, una actividad ligada al consumo recurrente y un perfil menos agresivo que otros nombres de la cartera.");
+            addLine("Coca-Cola Consolidated, Inc. (10%)", 11, 6, "bold");
+            addParagraph("Coca-Cola Consolidated, Inc. ocupa un 10% del portafolio porque cumple una función principalmente defensiva. Se trata del mayor embotellador independiente de productos de The Coca-Cola Company en Estados Unidos, lo que lo vincula a un negocio de consumo básico con demanda históricamente estable. En una cartera bien construida, este tipo de activo no suele recibir el mayor peso cuando el objetivo incluye crecimiento, pero sí merece una presencia importante por su capacidad de amortiguar volatilidad y aportar resiliencia en entornos económicos inciertos. Su asignación del 10% refleja precisamente eso: no es el principal motor de apreciación de capital, pero sí una base sólida que contribuye a la estabilidad general del portafolio. Desde un punto de vista estratégico, Coca-Cola Consolidated representa exposición a una compañía con fundamentos operativos consistentes, una actividad ligada al consumo recurrente y un perfil menos agresivo que otros nombres de la cartera.");
 
-          addLine("Apple Inc. (20%)", 11, 6, "bold");
-          addParagraph("Apple Inc. recibe un 20% debido a que representa una de las piezas centrales de crecimiento del portafolio. Apple es una de las empresas tecnológicas más relevantes del mundo y su fortaleza no depende únicamente de un producto específico, sino de un ecosistema altamente integrado de hardware, software y servicios. Esto le permite sostener altos márgenes, fidelización de clientes y una capacidad extraordinaria de monetización. Dentro de una asignación patrimonial, Apple justifica un peso alto porque combina tres cualidades difíciles de encontrar simultáneamente: escala global, fortaleza de marca y posición financiera excepcional. El 20% asignado responde a la idea de que Apple no solo ofrece potencial de crecimiento, sino también una relativa estabilidad para tratarse de una empresa tecnológica. Es decir, cumple una doble función: impulsar rentabilidad esperada y, al mismo tiempo, mantener un estándar de calidad empresarial muy alto dentro del bloque accionario.");
+            addLine("Apple Inc. (20%)", 11, 6, "bold");
+            addParagraph("Apple Inc. recibe un 20% debido a que representa una de las piezas centrales de crecimiento del portafolio. Apple es una de las empresas tecnológicas más relevantes del mundo y su fortaleza no depende únicamente de un producto específico, sino de un ecosistema altamente integrado de hardware, software y servicios. Esto le permite sostener altos márgenes, fidelización de clientes y una capacidad extraordinaria de monetización. Dentro de una asignación patrimonial, Apple justifica un peso alto porque combina tres cualidades difíciles de encontrar simultáneamente: escala global, fortaleza de marca y posición financiera excepcional. El 20% asignado responde a la idea de que Apple no solo ofrece potencial de crecimiento, sino también una relativa estabilidad para tratarse de una empresa tecnológica. Es decir, cumple una doble función: impulsar rentabilidad esperada y, al mismo tiempo, mantener un estándar de calidad empresarial muy alto dentro del bloque accionario.");
 
-          addLine("Microsoft (20%)", 11, 6, "bold");
-          addParagraph("Microsoft también tiene un 20%, y esa distribución se explica por razones similares aunque con una naturaleza empresarial distinta. Microsoft ha evolucionado desde una compañía dominante en software tradicional a una plataforma global con gran presencia en servicios corporativos, computación en la nube, productividad empresarial e inteligencia artificial. Su negocio está ampliamente diversificado y una parte importante de sus ingresos proviene de suscripciones y contratos empresariales, lo que le da una previsibilidad notable. En términos de construcción de cartera, Microsoft representa exposición a la digitalización estructural de la economía mundial. El 20% asignado refleja la convicción de que sigue siendo una empresa de crecimiento, pero con una base operativa lo suficientemente madura y estable como para sostener un peso relevante a largo plazo. Además, su perfil complementa al de Apple: ambas son tecnológicas, pero una está más vinculada al ecosistema de consumo y la otra al entorno corporativo y de infraestructura digital.");
+            addLine("Microsoft (20%)", 11, 6, "bold");
+            addParagraph("Microsoft también tiene un 20%, y esa distribución se explica por razones similares aunque con una naturaleza empresarial distinta. Microsoft ha evolucionado desde una compañía dominante en software tradicional a una plataforma global con gran presencia en servicios corporativos, computación en la nube, productividad empresarial e inteligencia artificial. Su negocio está ampliamente diversificado y una parte importante de sus ingresos proviene de suscripciones y contratos empresariales, lo que le da una previsibilidad notable. En términos de construcción de cartera, Microsoft representa exposición a la digitalización estructural de la economía mundial. El 20% asignado refleja la convicción de que sigue siendo una empresa de crecimiento, pero con una base operativa lo suficientemente madura y estable como para sostener un peso relevante a largo plazo. Además, su perfil complementa al de Apple: ambas son tecnológicas, pero una está más vinculada al ecosistema de consumo y la otra al entorno corporativo y de infraestructura digital.");
 
-          addLine("Berkshire Hathaway Inc. Class B (20%)", 11, 6, "bold");
-          addParagraph("Berkshire Hathaway Inc. Class B también recibe un 20%, pero por una razón distinta: su función es actuar como una especie de bloque de estabilidad diversificada dentro de una sola acción. Berkshire no es una empresa tradicional de un solo sector, sino un conglomerado con exposición a seguros, energía, transporte, industria y participaciones en negocios de gran calidad. Su trayectoria histórica bajo la filosofía de asignación de capital de Warren Buffett la ha convertido en una de las referencias mundiales de inversión prudente y disciplinada. Darle un 20% dentro del portafolio tiene sentido porque reduce el riesgo de concentración sectorial sin renunciar a la renta variable. En otras palabras, Berkshire aporta diversificación interna, solidez financiera y una cultura empresarial enfocada en largo plazo. No se le asigna un peso superior en esta versión del portafolio porque la estructura busca mantener balance con el bloque tecnológico, pero sí se le da una participación central por su rol estabilizador y su historial de preservación y crecimiento del capital.");
+            addLine("Berkshire Hathaway Inc. Class B (20%)", 11, 6, "bold");
+            addParagraph("Berkshire Hathaway Inc. Class B también recibe un 20%, pero por una razón distinta: su función es actuar como una especie de bloque de estabilidad diversificada dentro de una sola acción. Berkshire no es una empresa tradicional de un solo sector, sino un conglomerado con exposición a seguros, energía, transporte, industria y participaciones en negocios de gran calidad. Su trayectoria histórica bajo la filosofía de asignación de capital de Warren Buffett la ha convertido en una de las referencias mundiales de inversión prudente y disciplinada. Darle un 20% dentro del portafolio tiene sentido porque reduce el riesgo de concentración sectorial sin renunciar a la renta variable. En otras palabras, Berkshire aporta diversificación interna, solidez financiera y una cultura empresarial enfocada en largo plazo. No se le asigna un peso superior en esta versión del portafolio porque la estructura busca mantener balance con el bloque tecnológico, pero sí se le da una participación central por su rol estabilizador y su historial de preservación y crecimiento del capital.");
 
-          addLine("Oro (10%)", 11, 6, "bold");
-          addParagraph("El oro representa el 10% del portafolio y su inclusión responde a una lógica de protección. A diferencia de las acciones, el oro no se incorpora principalmente por crecimiento operativo ni por expansión de beneficios empresariales, sino por su papel histórico como reserva de valor y cobertura frente a inflación, estrés financiero o pérdida de confianza en activos de mayor riesgo. En una cartera que ya contiene exposición a tecnología y criptoactivos, el oro funciona como contrapeso. El 10% asignado es suficiente para que tenga un impacto real en contextos adversos, pero no tan alto como para restarle dinamismo al portafolio. Su presencia mejora el perfil de riesgo agregado porque reduce dependencia exclusiva de la renta variable y agrega una capa de defensa patrimonial.");
+            addLine("Oro (10%)", 11, 6, "bold");
+            addParagraph("El oro representa el 10% del portafolio y su inclusión responde a una lógica de protección. A diferencia de las acciones, el oro no se incorpora principalmente por crecimiento operativo ni por expansión de beneficios empresariales, sino por su papel histórico como reserva de valor y cobertura frente a inflación, estrés financiero o pérdida de confianza en activos de mayor riesgo. En una cartera que ya contiene exposición a tecnología y criptoactivos, el oro funciona como contrapeso. El 10% asignado es suficiente para que tenga un impacto real en contextos adversos, pero no tan alto como para restarle dinamismo al portafolio. Su presencia mejora el perfil de riesgo agregado porque reduce dependencia exclusiva de la renta variable y agrega una capa de defensa patrimonial.");
 
-          addLine("Bitcoin (10%)", 11, 6, "bold");
-          addParagraph("Bitcoin ocupa otro 10%, lo cual indica una postura de apertura al crecimiento agresivo, pero con control de riesgo. Bitcoin es el principal activo digital del ecosistema cripto y su tesis se apoya en la escasez programada, la descentralización y su progresiva legitimación institucional. Sin embargo, su volatilidad sigue siendo considerablemente superior a la de los activos tradicionales. Por eso, una ponderación del 10% luce coherente para capturar una porción del potencial alcista sin exponer el conjunto de la cartera a una dependencia excesiva del ciclo cripto. En términos de arquitectura de portafolio, Bitcoin es la pieza de mayor agresividad relativa, por lo que su porcentaje debe ser lo bastante significativo para aportar rendimiento potencial, pero lo bastante moderado para no desestabilizar todo el conjunto.");
+            addLine("Bitcoin (10%)", 11, 6, "bold");
+            addParagraph("Bitcoin ocupa otro 10%, lo cual indica una postura de apertura al crecimiento agresivo, pero con control de riesgo. Bitcoin es el principal activo digital del ecosistema cripto y su tesis se apoya en la escasez programada, la descentralización y su progresiva legitimación institucional. Sin embargo, su volatilidad sigue siendo considerablemente superior a la de los activos tradicionales. Por eso, una ponderación del 10% luce coherente para capturar una porción del potencial alcista sin exponer el conjunto de la cartera a una dependencia excesiva del ciclo cripto. En términos de arquitectura de portafolio, Bitcoin es la pieza de mayor agresividad relativa, por lo que su porcentaje debe ser lo bastante significativo para aportar rendimiento potencial, pero lo bastante moderado para no desestabilizar todo el conjunto.");
 
-          addLine("Liquidez USD (5%)", 11, 6, "bold");
-          addParagraph("La posición denominada “Money United State of America”, que en términos prácticos debe entenderse como liquidez o efectivo denominado en dólares estadounidenses, recibe un 5%. Esta porción tiene una utilidad táctica. La liquidez no compite con los activos de crecimiento, pero cumple un papel muy importante: ofrecer capacidad de reacción, permitir entradas oportunas en momentos de corrección y reducir la necesidad de liquidar posiciones estratégicas en condiciones desfavorables. Mantener un 5% en liquidez es una decisión conservadora e inteligente cuando se desea combinar visión de largo plazo con margen operativo de corto plazo.");
+            addLine("Liquidez USD (5%)", 11, 6, "bold");
+            addParagraph("La posición denominada “Money United State of America”, que en términos prácticos debe entenderse como liquidez o efectivo denominado en dólares estadounidenses, recibe un 5%. Esta porción tiene una utilidad táctica. La liquidez no compite con los activos de crecimiento, pero cumple un papel muy importante: ofrecer capacidad de reacción, permitir entradas oportunas en momentos de corrección y reducir la necesidad de liquidar posiciones estratégicas en condiciones desfavorables. Mantener un 5% en liquidez es una decisión conservadora e inteligente cuando se desea combinar visión de largo plazo con margen operativo de corto plazo.");
 
-          addLine("Others (5%)", 11, 6, "bold");
-          addParagraph("La categoría “Others”, también con 5%, funciona como un espacio de flexibilidad para activos complementarios, posiciones especiales o ideas tácticas que no encajan dentro de los grandes bloques del portafolio. Esta categoría permite mantener abierta la posibilidad de incorporar oportunidades adicionales sin alterar el equilibrio central de la cartera. Desde el punto de vista de gestión, ese 5% puede servir para explorar nuevas tesis de inversión o para diversificación adicional de manera controlada.");
+            addLine("Others (5%)", 11, 6, "bold");
+            addParagraph("La categoría “Others”, también con 5%, funciona como un espacio de flexibilidad para activos complementarios, posiciones especiales o ideas tácticas que no encajan dentro de los grandes bloques del portafolio. Esta categoría permite mantener abierta la posibilidad de incorporar oportunidades adicionales sin alterar el equilibrio central de la cartera. Desde el punto de vista de gestión, ese 5% puede servir para explorar nuevas tesis de inversión o para diversificación adicional de manera controlada.");
+          } else {
+            addLine("DOCUMENTO – ESTRATEGIA DE PORTAFOLIO 2026 (CASTLE BLACK ALPHA)", 11, 6, "bold");
+            addParagraph("El presente portafolio ha sido diseñado bajo un enfoque estratégico orientado a maximizar el rendimiento esperado en el corto y mediano plazo, manteniendo al mismo tiempo un control estructurado del riesgo. La distribución de activos responde a las principales tendencias macroeconómicas actuales, destacando la inteligencia artificial, la digitalización global, los ciclos energéticos, la política monetaria y la adopción de activos digitales.");
+            addParagraph("La composición del portafolio incluye activos tecnológicos de alto crecimiento, empresas consolidadas con fuerte generación de valor, exposición al sector energético, participación en el sistema financiero, infraestructura digital y una porción en activos alternativos como Bitcoin, además de liquidez estratégica.");
+
+            addLine("Microsoft Corporation (MSFT) – 15%", 11, 6, "bold");
+            addParagraph("Microsoft representa uno de los pilares fundamentales del portafolio debido a su posicionamiento dominante en la transformación digital global. La compañía ha evolucionado hacia un modelo basado en ingresos recurrentes mediante servicios en la nube (Azure), software empresarial (Office 365) y soluciones avanzadas de inteligencia artificial. Su asociación con OpenAI y su integración de herramientas de IA en productos empresariales y de consumo la colocan en el centro de la revolución tecnológica actual. Además, cuenta con una base de clientes altamente diversificada, lo que le permite mantener estabilidad en sus ingresos incluso en escenarios económicos adversos. La asignación del 15% responde a su capacidad de combinar crecimiento sostenido, liderazgo tecnológico y resiliencia operativa, siendo uno de los activos más confiables dentro del segmento tecnológico.");
+
+            addLine("NVIDIA Corporation (NVDA) – 15%", 11, 6, "bold");
+            addParagraph("NVIDIA es considerada el principal proveedor de infraestructura para inteligencia artificial a nivel global. Sus unidades de procesamiento gráfico (GPUs) son esenciales para el entrenamiento de modelos de IA, centros de datos y aplicaciones de alto rendimiento. El crecimiento exponencial de la demanda de inteligencia artificial ha impulsado a NVIDIA a convertirse en una de las empresas más influyentes del mercado. Su ventaja competitiva radica en su liderazgo tecnológico y en la alta barrera de entrada para nuevos competidores. El 15% asignado refleja una alta convicción en el crecimiento del sector de inteligencia artificial, posicionando a NVIDIA como uno de los principales motores de rendimiento del portafolio.");
+
+            addLine("Alphabet Inc. (GOOGL) – 10%", 11, 6, "bold");
+            addParagraph("Alphabet, matriz de Google, es una empresa clave en el ecosistema digital global, con dominio en motores de búsqueda, publicidad digital, inteligencia artificial y servicios en la nube. Su acceso a grandes volúmenes de datos y su inversión constante en desarrollo tecnológico la posicionan como un actor estratégico en la evolución de la inteligencia artificial. A diferencia de otras compañías tecnológicas, Alphabet aún presenta potencial de expansión en múltiples áreas, incluyendo cloud computing y automatización. Se le asigna un 10% por su equilibrio entre crecimiento, diversificación de ingresos y posicionamiento en tendencias estructurales de largo plazo.");
+
+            addLine("Amazon (AMZN) – 10%", 11, 6, "bold");
+            addParagraph("Amazon es una de las compañías más diversificadas del mundo, con operaciones en comercio electrónico, logística global y servicios en la nube a través de AWS. AWS representa una de las principales fuentes de ingresos y crecimiento, siendo fundamental para la infraestructura digital de empresas y gobiernos. Además, Amazon continúa expandiendo su presencia en inteligencia artificial, automatización y servicios digitales. El 10% asignado responde a su papel como empresa híbrida entre tecnología, infraestructura y consumo, con alto potencial de crecimiento sostenido.");
+
+            addLine("Bitcoin (BTC) – 15%", 11, 6, "bold");
+            addParagraph("Bitcoin es el principal activo digital descentralizado y una de las innovaciones más disruptivas del sistema financiero moderno. Su oferta limitada y creciente adopción institucional lo posicionan como una alternativa de reserva de valor frente a sistemas monetarios tradicionales. Eventos como el halving y la aprobación de ETFs han incrementado su legitimidad y atractivo para inversores institucionales. A pesar de su volatilidad, su potencial de apreciación es significativamente superior al de activos tradicionales. Se le asigna un 15% como componente de alto crecimiento, equilibrando el riesgo con activos más estables dentro del portafolio.");
+
+            addLine("Berkshire Hathaway (BRK.B) – 10%", 11, 6, "bold");
+            addParagraph("Berkshire Hathaway actúa como un componente de estabilidad dentro del portafolio. Su estructura como conglomerado le permite diversificación interna en múltiples sectores, incluyendo seguros, energía y consumo. La filosofía de inversión basada en valor y la gestión eficiente del capital han permitido a la compañía generar retornos consistentes a lo largo del tiempo. Su presencia reduce la volatilidad del portafolio sin sacrificar completamente el crecimiento. El 10% asignado refleja su rol como estabilizador estratégico.");
+
+            addLine("JPMorgan Chase (JPM) – 10%", 11, 6, "bold");
+            addParagraph("JPMorgan es uno de los bancos más importantes del mundo y representa una exposición directa al sistema financiero global. Su desempeño está estrechamente ligado a las tasas de interés, la actividad económica y la estabilidad del sistema bancario. En entornos de tasas elevadas, los bancos tienden a mejorar sus márgenes de beneficio, lo que convierte a JPMorgan en un activo atractivo en el contexto actual. El 10% asignado permite capturar el rendimiento del sector financiero y diversificar el portafolio más allá de tecnología y activos alternativos.");
+
+            addLine("Occidental Petroleum (OXY) – 5%", 11, 6, "bold");
+            addParagraph("Occidental Petroleum es una empresa energética enfocada en la producción de petróleo y gas, con fuerte presencia en Estados Unidos. Su desempeño está directamente relacionado con los precios de la energía y factores geopolíticos. Además, la compañía ha incursionado en tecnologías de captura de carbono, lo que podría representar una ventaja competitiva a futuro. El 5% asignado responde a su carácter cíclico, manteniendo exposición al sector energético sin generar sobredependencia.");
+
+            addLine("iShares Semiconductor ETF (SOXX) – 5%", 11, 6, "bold");
+            addParagraph("SOXX es un fondo que agrupa empresas líderes en la fabricación de semiconductores, incluyendo NVIDIA, AMD, Intel y Broadcom. Este sector es esencial para el funcionamiento de la economía moderna, siendo la base de tecnologías como inteligencia artificial, computación en la nube y dispositivos electrónicos. El ETF permite diversificación dentro del sector sin depender de una sola compañía, reduciendo riesgos específicos. Se le asigna un 5% como complemento estratégico para reforzar la exposición tecnológica del portafolio.");
+
+            addLine("Liquidez (USD) – 5%", 11, 6, "bold");
+            addParagraph("La liquidez en dólares cumple una función táctica dentro del portafolio, permitiendo aprovechar oportunidades de mercado y gestionar riesgos sin necesidad de liquidar posiciones estratégicas. El 5% asignado proporciona flexibilidad operativa y capacidad de respuesta ante cambios en el entorno económico.");
+
+            addLine("Conclusión estratégica", 11, 6, "bold");
+            addParagraph("El portafolio está diseñado bajo un enfoque equilibrado entre crecimiento agresivo (NVIDIA, Bitcoin, tecnología), estabilidad estructural (Microsoft, Berkshire), exposición macro (JPM, OXY), infraestructura tecnológica (SOXX) y flexibilidad (liquidez). Esta combinación permite capturar oportunidades en los sectores con mayor proyección de crecimiento global, manteniendo al mismo tiempo un control adecuado del riesgo.");
+          }
 
           y += 6;
           addLine("Marco regulatorio y brokers", 12, 8, "bold");
