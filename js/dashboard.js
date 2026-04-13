@@ -902,20 +902,21 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         activeAssetIndex = Number.isInteger(activeIndex) ? activeIndex : null;
         let mobileScale = 1;
         let mobileRadius = 0;
+        let mobileOtherSize = 0;
         if (isMobile && activeAssetIndex !== null) {
           const rect = activosBubbles.getBoundingClientRect();
           const minSide = Math.min(rect.width, rect.height);
-          const gap = 6;
-          const nOuter = Math.max(bubbles.length - 1, 1);
+          const gap = 8;
+          const nOuter = Math.max(bubbles.length, 1);
           const maxOther = maxBaseSize || 1;
-          const activeSize = (maxBaseSize || 1) * activeScale;
-          const requiredByCenter = activeSize / 2 + maxOther / 2 + gap;
           const requiredByOuter = (maxOther + gap) / (2 * Math.sin(Math.PI / nOuter));
-          const required = Math.max(requiredByCenter, requiredByOuter);
-          const allowed = Math.max(0, (minSide / 2) - (Math.max(activeSize, maxOther) / 2) - gap);
+          const requiredByCenter = (maxOther * activeScale) / 2 + maxOther / 2 + gap;
+          const required = Math.max(requiredByOuter, requiredByCenter);
+          const allowed = Math.max(0, (minSide / 2) - (maxOther / 2) - gap);
           if (required > 0 && allowed > 0 && required > allowed) {
             mobileScale = allowed / required;
           }
+          mobileOtherSize = maxOther * mobileScale;
           mobileRadius = required * mobileScale;
         }
         bubbles.forEach(({ el, baseSize }, idx) => {
@@ -935,17 +936,15 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const centerX = rect.width / 2;
           const centerY = rect.height / 2;
           const radius = mobileRadius;
-          if (!ghostBubble) {
-            ghostBubble = document.createElement("div");
-            ghostBubble.className = "asset-ghost";
-            activosBubbles.appendChild(ghostBubble);
-          }
+          mobilePositions = [];
           bubbles.forEach(({ el }, idx) => {
+            const angle = (Math.PI * 2 * idx) / bubbles.length - Math.PI / 2;
+            const x = centerX + radius * Math.cos(angle);
+            const y = centerY + radius * Math.sin(angle);
+            mobilePositions.push({ x, y });
             if (idx === activeIndex) return;
-            const pos = mobilePositions[idx];
-            if (!pos) return;
-            el.style.left = `${pos.x}px`;
-            el.style.top = `${pos.y}px`;
+            el.style.left = `${x}px`;
+            el.style.top = `${y}px`;
             el.style.transform = "translate(-50%, -50%)";
           });
           const activeEl = bubbles[activeIndex]?.el;
@@ -954,10 +953,16 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             activeEl.style.top = `${centerY}px`;
             activeEl.style.transform = "translate(-50%, -50%)";
           }
+          if (!ghostBubble) {
+            ghostBubble = document.createElement("div");
+            ghostBubble.className = "asset-ghost";
+            activosBubbles.appendChild(ghostBubble);
+          }
           const ghostPos = mobilePositions[activeIndex];
           if (ghostBubble && ghostPos) {
-            const baseSize = bubbles[activeIndex]?.baseSize || maxBaseSize || 1;
-            const sizeBase = baseSize * mobileScale;
+            const sizeBase = bubbles[activeIndex]?.baseSize
+              ? bubbles[activeIndex].baseSize * mobileScale
+              : mobileOtherSize || maxBaseSize || 1;
             ghostBubble.style.width = `${sizeBase}px`;
             ghostBubble.style.height = `${sizeBase}px`;
             ghostBubble.style.left = `${ghostPos.x}px`;
@@ -1002,7 +1007,13 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       if (isMobile && activeAssetIndex === null && ASSET_BUBBLES.length) {
         activeAssetIndex = Math.floor(Math.random() * ASSET_BUBBLES.length);
       }
-      setActiveBubble(activeAssetIndex);
+      if (isMobile) {
+        requestAnimationFrame(() => {
+          setActiveBubble(activeAssetIndex);
+        });
+      } else {
+        setActiveBubble(activeAssetIndex);
+      }
 
       if (!assetsClickBound) {
         assetsClickBound = true;
@@ -1014,25 +1025,6 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
       if (isMobile) {
         activosBubbles.classList.add("activos-circular");
-        requestAnimationFrame(() => {
-          const rect = activosBubbles.getBoundingClientRect();
-          const centerX = rect.width / 2;
-          const centerY = rect.height / 2;
-          const radius = Math.min(rect.width, rect.height) * 0.38;
-          mobilePositions = [];
-          bubbles.forEach(({ el }, idx) => {
-            const angle = (Math.PI * 2 * idx) / bubbles.length - Math.PI / 2;
-            const x = centerX + radius * Math.cos(angle);
-            const y = centerY + radius * Math.sin(angle);
-            mobilePositions.push({ x, y });
-            el.style.left = `${x}px`;
-            el.style.top = `${y}px`;
-            el.style.transform = "translate(-50%, -50%)";
-          });
-          if (activeAssetIndex !== null) {
-            setActiveBubble(activeAssetIndex);
-          }
-        });
       } else {
         activosBubbles.classList.remove("activos-circular");
       }
