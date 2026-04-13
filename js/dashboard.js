@@ -937,12 +937,17 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const centerY = rect.height / 2;
           const radius = mobileRadius;
           mobilePositions = [];
-          bubbles.forEach(({ el }, idx) => {
-            const angle = (Math.PI * 2 * idx) / bubbles.length - Math.PI / 2;
+          const otherIdx = bubbles
+            .map((_, idx) => idx)
+            .filter((idx) => idx !== activeIndex);
+          const slots = Math.max(otherIdx.length, 1);
+          otherIdx.forEach((idx, pos) => {
+            const angle = (Math.PI * 2 * pos) / slots - Math.PI / 2;
             const x = centerX + radius * Math.cos(angle);
             const y = centerY + radius * Math.sin(angle);
-            mobilePositions.push({ x, y });
-            if (idx === activeIndex) return;
+            mobilePositions[idx] = { x, y };
+            const el = bubbles[idx]?.el;
+            if (!el) return;
             el.style.left = `${x}px`;
             el.style.top = `${y}px`;
             el.style.transform = "translate(-50%, -50%)";
@@ -953,27 +958,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             activeEl.style.top = `${centerY}px`;
             activeEl.style.transform = "translate(-50%, -50%)";
           }
-          if (!ghostBubble) {
-            ghostBubble = document.createElement("div");
-            ghostBubble.className = "asset-ghost";
-            activosBubbles.appendChild(ghostBubble);
-          }
           const ghostPos = mobilePositions[activeIndex];
-          if (ghostBubble && ghostPos) {
-            const sizeBase = bubbles[activeIndex]?.baseSize
-              ? bubbles[activeIndex].baseSize * mobileScale
-              : mobileOtherSize || maxBaseSize || 1;
-            ghostBubble.style.width = `${sizeBase}px`;
-            ghostBubble.style.height = `${sizeBase}px`;
-            ghostBubble.style.left = `${ghostPos.x}px`;
-            ghostBubble.style.top = `${ghostPos.y}px`;
-            ghostBubble.style.transform = "translate(-50%, -50%)";
-            ghostBubble.style.display = "block";
-          } else if (ghostBubble) {
-            ghostBubble.style.display = "none";
-          }
-        } else if (ghostBubble) {
-          ghostBubble.style.display = "none";
+          void ghostPos;
         }
       };
       ASSET_BUBBLES.forEach((asset, idx) => {
