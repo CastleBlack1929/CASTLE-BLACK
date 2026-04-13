@@ -851,6 +851,13 @@ table tr:hover {
     animation-delay: var(--float-delay, 0s);
   }
 
+  .asset-bubble.is-active {
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    animation: none !important;
+  }
+
   .movimientos {
     margin-top: 16px;
   }
