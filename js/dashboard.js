@@ -1377,6 +1377,28 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         "linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.78))";
       overlay.style.pointerEvents = "none";
 
+      // Viñeta (oscurecer esquinas) para dar foco al centro
+      const vignette = document.createElement("div");
+      vignette.style.position = "absolute";
+      vignette.style.inset = "0";
+      vignette.style.pointerEvents = "none";
+      vignette.style.background =
+        "radial-gradient(circle at 50% 42%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.82) 100%)";
+
+      // Grano/ruido sutil (tipo película) para textura
+      const grain = document.createElement("div");
+      grain.style.position = "absolute";
+      grain.style.inset = "0";
+      grain.style.pointerEvents = "none";
+      grain.style.opacity = "0.12";
+      grain.style.mixBlendMode = "overlay";
+      grain.style.backgroundImage =
+        "repeating-linear-gradient(0deg, rgba(255,255,255,0.04), rgba(255,255,255,0.04) 1px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 3px), " +
+        "repeating-linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.03) 1px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 3px)";
+      grain.style.filter = "contrast(140%) brightness(110%)";
+      // Leve movimiento para que no parezca patrón fijo
+      grain.style.animation = "makima-grain 3.5s steps(2, end) infinite";
+
       // Quitar efectos de “lluvia” si quedaron montados de antes (Makima)
       document.querySelectorAll(".blood-rain-screen,.blood-origin-screen").forEach((n) => n.remove());
 
@@ -1391,6 +1413,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       poem.style.filter = "drop-shadow(0 0 10px rgba(255,45,45,0.55)) drop-shadow(0 0 22px rgba(255,0,0,0.35))";
       // Sin recuadro: texto directo sobre el fondo, con sombra para legibilidad.
       poem.style.textShadow = "0 2px 14px rgba(0,0,0,0.85)";
+      // Parpadeo leve (1–2%) para dar vida sin distraer
+      poem.style.animation = "makima-red-pulse 2.8s ease-in-out infinite";
       poem.textContent =
         "叫ぶ必要はない。\n" +
         "反響は、生まれる前から従っている。\n\n" +
@@ -1423,10 +1447,14 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
       // Asegurar capas: overlay < poema (la lluvia es fija y va por detrás del texto)
       overlay.style.zIndex = "1";
+      vignette.style.zIndex = "2";
       poem.style.position = "relative";
-      poem.style.zIndex = "3";
+      grain.style.zIndex = "3";
+      poem.style.zIndex = "4";
 
       wrap.appendChild(overlay);
+      wrap.appendChild(vignette);
+      wrap.appendChild(grain);
       wrap.appendChild(poem);
       mainEl.appendChild(wrap);
     };

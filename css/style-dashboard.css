@@ -492,6 +492,40 @@ footer {
   border-top: 1px solid var(--line);
 }
 
+@keyframes makima-grain {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  20% {
+    transform: translate3d(-1px, 1px, 0);
+  }
+  40% {
+    transform: translate3d(1px, -1px, 0);
+  }
+  60% {
+    transform: translate3d(-2px, 0px, 0);
+  }
+  80% {
+    transform: translate3d(2px, 2px, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes makima-red-pulse {
+  0% {
+    filter: drop-shadow(0 0 10px rgba(255,45,45,0.55)) drop-shadow(0 0 22px rgba(255,0,0,0.35));
+  }
+  50% {
+    /* Intensidad muy leve */
+    filter: drop-shadow(0 0 12px rgba(255,55,55,0.62)) drop-shadow(0 0 24px rgba(255,0,0,0.40));
+  }
+  100% {
+    filter: drop-shadow(0 0 10px rgba(255,45,45,0.55)) drop-shadow(0 0 22px rgba(255,0,0,0.35));
+  }
+}
+
 /* Reportes */
 .reportes {
   margin-top: 30px;
