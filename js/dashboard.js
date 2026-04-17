@@ -1273,7 +1273,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           filter.Q.value = 0.6;
 
           const g = ctx.createGain();
-          g.gain.value = 0.018; // bajo, de fondo
+          g.gain.value = 0.008; // más bajo, de fondo
 
           src.connect(filter);
           filter.connect(g);
@@ -1293,7 +1293,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
           const now = ctx.currentTime;
           const master = ctx.createGain();
-          master.gain.setValueAtTime(0.35, now);
+          // En móvil suele percibirse más bajo; subimos un poco.
+          master.gain.setValueAtTime(0.55, now);
           const comp = ctx.createDynamicsCompressor();
           comp.threshold.setValueAtTime(-24, now);
           comp.knee.setValueAtTime(20, now);
@@ -1347,8 +1348,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         window.__makimaAudioTimer = window.setInterval(playCryptic, 5_000);
       };
 
-      // Intentamos capturar interacción en varios eventos (móvil/desktop)
+      // Intentamos capturar interacción en varios eventos (iOS a veces no dispara pointerdown)
       document.addEventListener("pointerdown", enableMakimaAudio, { once: true });
+      document.addEventListener("touchstart", enableMakimaAudio, { once: true, passive: true });
+      document.addEventListener("click", enableMakimaAudio, { once: true });
       document.addEventListener("keydown", enableMakimaAudio, { once: true });
 
       // Si el login marcó auto-audio, intentamos arrancar ya.
@@ -1408,8 +1411,9 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       wrap.className = "suspension-card";
       // Imagen reducida dentro de un card, con fondo del sitio completamente negro.
       wrap.style.maxWidth = "820px";
-      wrap.style.width = "calc(100% - 28px)";
-      wrap.style.margin = "22px auto 0 auto";
+      // Un poco más ancho en móvil
+      wrap.style.width = "calc(100% - 16px)";
+      wrap.style.margin = "14px auto 0 auto";
       wrap.style.display = "flex";
       wrap.style.flexDirection = "column";
       wrap.style.justifyContent = "center";
