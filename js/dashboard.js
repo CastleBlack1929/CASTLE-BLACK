@@ -1288,6 +1288,68 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         "linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.78))";
       overlay.style.pointerEvents = "none";
 
+      // Lluvia de “gotas” alrededor de la imagen (solo formato horizontal/desktop)
+      // Nota: se mantiene como efecto decorativo y no afecta otros perfiles.
+      const bloodRain = document.createElement("div");
+      bloodRain.className = "blood-rain blood-rain-screen";
+      // Inline styles para garantizar visibilidad aunque falle el CSS externo.
+      // Pantalla completa (viewport), solo decorativo.
+      bloodRain.style.position = "fixed";
+      bloodRain.style.inset = "0";
+      bloodRain.style.width = "100vw";
+      bloodRain.style.height = "100vh";
+      bloodRain.style.pointerEvents = "none";
+      bloodRain.style.overflow = "hidden";
+      bloodRain.style.borderRadius = "0";
+      bloodRain.style.zIndex = "2";
+      const drops = [
+        { left: 6, delay: 0.0, dur: 3.6, s: 0.9 },
+        { left: 14, delay: 1.2, dur: 4.1, s: 0.7 },
+        { left: 22, delay: 0.5, dur: 3.2, s: 1.0 },
+        { left: 31, delay: 2.1, dur: 4.4, s: 0.8 },
+        { left: 39, delay: 0.9, dur: 3.8, s: 0.65 },
+        { left: 47, delay: 1.8, dur: 4.7, s: 0.95 },
+        { left: 55, delay: 0.2, dur: 3.0, s: 0.75 },
+        { left: 63, delay: 1.0, dur: 4.0, s: 0.85 },
+        { left: 71, delay: 2.6, dur: 5.1, s: 0.7 },
+        { left: 79, delay: 0.7, dur: 3.4, s: 0.9 },
+        { left: 87, delay: 1.6, dur: 4.6, s: 0.8 },
+        { left: 94, delay: 2.9, dur: 5.4, s: 0.65 },
+      ];
+      drops.forEach((d) => {
+        const drop = document.createElement("span");
+        drop.className = "blood-drop";
+        drop.style.position = "absolute";
+        drop.style.top = "-30px";
+        drop.style.width = "14px";
+        drop.style.height = "22px";
+        drop.style.transform = `translateX(-50%) scale(${d.s})`;
+        drop.style.background =
+          "linear-gradient(180deg, rgba(110,0,24,0.98), rgba(50,0,18,0.98))";
+        drop.style.borderRadius = "999px";
+        drop.style.opacity = "0.95";
+        drop.style.filter = "drop-shadow(0 8px 14px rgba(0,0,0,0.65))";
+        drop.style.animationName = "blood-fall";
+        drop.style.animationTimingFunction = "linear";
+        drop.style.animationIterationCount = "infinite";
+        drop.style.left = `${d.left}%`;
+        drop.style.animationDelay = `${d.delay}s`;
+        drop.style.animationDuration = `${d.dur}s`;
+        drop.style.setProperty("--drop-scale", String(d.s));
+        bloodRain.appendChild(drop);
+      });
+
+      // “Origen” de sangre (para que se note de dónde escurre)
+      const bloodOrigin = document.createElement("div");
+      bloodOrigin.className = "blood-origin blood-origin-screen";
+      bloodOrigin.style.position = "fixed";
+      bloodOrigin.style.left = "0";
+      bloodOrigin.style.top = "0";
+      bloodOrigin.style.width = "100vw";
+      bloodOrigin.style.height = "64px";
+      bloodOrigin.style.pointerEvents = "none";
+      bloodOrigin.style.zIndex = "2";
+
       const poem = document.createElement("div");
       poem.style.margin = "18px 14px";
       poem.style.maxWidth = "680px";
@@ -1329,9 +1391,22 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         "決められていた通りに\n" +
         "動いていた。";
 
+      // Asegurar capas: overlay < poema (la lluvia es fija y va por detrás del texto)
+      overlay.style.zIndex = "1";
+      poem.style.position = "relative";
+      poem.style.zIndex = "3";
+
       wrap.appendChild(overlay);
       wrap.appendChild(poem);
       mainEl.appendChild(wrap);
+
+      // Lluvia en toda la pantalla (solo para Makima). Evita duplicados si el usuario recarga parcial.
+      const existingRain = document.querySelector(".blood-rain-screen");
+      if (existingRain) existingRain.remove();
+      const existingOrigin = document.querySelector(".blood-origin-screen");
+      if (existingOrigin) existingOrigin.remove();
+      document.body.appendChild(bloodRain);
+      document.body.appendChild(bloodOrigin);
     };
 
     if (String(baseData?.easterEgg || "").toLowerCase() === "makima") {
