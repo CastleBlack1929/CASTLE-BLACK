@@ -1220,6 +1220,125 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       return;
     }
 
+    const renderMakimaEasterEgg = () => {
+      const mainEl = document.querySelector("main");
+      const columns = document.querySelector(".dashboard-columns");
+      if (columns) columns.style.display = "none";
+      if (!mainEl) return;
+
+      // Japonés para este perfil
+      try {
+        document.documentElement.lang = "ja";
+      } catch {}
+
+      if (nombreCliente) nombreCliente.textContent = "MAKIMA";
+      if (idClienteHeader) idClienteHeader.textContent = "";
+      if (nivelText) nivelText.textContent = "";
+      if (datetimeEl) datetimeEl.textContent = "";
+
+      // Quitar logo + nombre del header (solo para Makima)
+      const headerLogo = document.querySelector("header .logo");
+      if (headerLogo) headerLogo.style.display = "none";
+      if (nombreCliente) nombreCliente.style.display = "none";
+      const userMeta = document.querySelector("header .user-meta");
+      if (userMeta) userMeta.style.display = "none";
+
+      // Ocultar paneles normales por si acaso
+      const movBox = document.querySelector(".movimientos");
+      if (movBox) movBox.style.display = "none";
+      const activosBox = document.querySelector(".activos-panel");
+      if (activosBox) activosBox.style.display = "none";
+      const chartsBox = document.querySelector(".graficos-panel");
+      if (chartsBox) chartsBox.style.display = "none";
+
+      // Menú mínimo: solo logout, en japonés
+      if (menuCedula) menuCedula.textContent = "";
+      if (menuTelefono) menuTelefono.textContent = "";
+      if (logoutBtn) logoutBtn.textContent = "ログアウト";
+      if (menuDropdown) {
+        menuDropdown.setAttribute("aria-label", "アカウントメニュー");
+        menuDropdown.querySelectorAll(".menu-info").forEach((el) => {
+          el.style.display = "none";
+        });
+      }
+      const footerCopy = document.querySelector("footer p");
+      if (footerCopy) footerCopy.textContent = "© Castle Black 2026（日本語）";
+
+      const wrap = document.createElement("section");
+      wrap.className = "suspension-card";
+      wrap.style.maxWidth = "820px";
+      wrap.style.margin = "22px auto 0 auto";
+      wrap.style.display = "flex";
+      wrap.style.flexDirection = "column";
+      wrap.style.justifyContent = "center";
+      wrap.style.alignItems = "center";
+      wrap.style.minHeight = "420px";
+      wrap.style.position = "relative";
+      wrap.style.overflow = "hidden";
+      wrap.style.backgroundImage = "url('img/easter-eggs/MAKIMA.jpeg')";
+      wrap.style.backgroundSize = "cover";
+      wrap.style.backgroundPosition = "center";
+      wrap.style.border = "1px solid rgba(255,255,255,0.10)";
+
+      // Overlay sutil para legibilidad del texto
+      const overlay = document.createElement("div");
+      overlay.style.position = "absolute";
+      overlay.style.inset = "0";
+      overlay.style.background =
+        "linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.78))";
+      overlay.style.pointerEvents = "none";
+
+      const poem = document.createElement("div");
+      poem.style.margin = "18px 14px";
+      poem.style.maxWidth = "680px";
+      poem.style.whiteSpace = "pre-wrap";
+      poem.style.textAlign = "center";
+      poem.style.lineHeight = "1.65";
+      poem.style.fontSize = "14px";
+      poem.style.color = "#ff2b2b";
+      poem.style.filter = "drop-shadow(0 0 10px rgba(255,45,45,0.55)) drop-shadow(0 0 22px rgba(255,0,0,0.35))";
+      // Sin recuadro: texto directo sobre el fondo, con sombra para legibilidad.
+      poem.style.textShadow = "0 2px 14px rgba(0,0,0,0.85)";
+      poem.textContent =
+        "叫ぶ必要はない。\n" +
+        "反響は、生まれる前から従っている。\n\n" +
+        "ほんのわずかな仕草、\n" +
+        "まばたきひとつで――\n" +
+        "世界は理由もなく傾いていく。\n\n" +
+        "見えない糸を引く。\n" +
+        "それを人はこう呼ぶ――\n" +
+        "運命、偶然、必然。\n\n" +
+        "私はただ、方向を整えるだけ。\n\n" +
+        "押しはしない。\n" +
+        "命じもしない。\n" +
+        "避けられない流れを、そっと示すだけ。\n\n" +
+        "駒はひとりでに動く、\n" +
+        "自分の意志だと信じながら。\n" +
+        "選んだつもりの道は、\n" +
+        "最初から描かれていた。\n\n" +
+        "操るのは粗雑だ。\n" +
+        "支配とは――見えないもの。\n\n" +
+        "そして最後、\n" +
+        "すべてが完璧に収まった時、\n" +
+        "誰も影を振り返らない。\n\n" +
+        "なぜなら影には、\n" +
+        "音などない――\n" +
+        "あるのは、意志だけ。\n\n" +
+        "そして君は気づかないまま、\n" +
+        "すでに、\n" +
+        "決められていた通りに\n" +
+        "動いていた。";
+
+      wrap.appendChild(overlay);
+      wrap.appendChild(poem);
+      mainEl.appendChild(wrap);
+    };
+
+    if (String(baseData?.easterEgg || "").toLowerCase() === "makima") {
+      renderMakimaEasterEgg();
+      return;
+    }
+
     const renderSuspensionNotice = (data) => {
       const mainEl = document.querySelector("main");
       const columns = document.querySelector(".dashboard-columns");
