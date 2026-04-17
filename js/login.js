@@ -48,8 +48,10 @@ function login(event) {
   const isMakima =
     String(user.username || "").toLowerCase() === "makima" ||
     String(user.dataFile || "").toLowerCase().includes("makima");
+  // En iPhone, el ancho CSS puede reportar valores altos; detectar por capacidades.
   const isMobile =
-    !!(window.matchMedia && window.matchMedia("(max-width: 949px)").matches);
+    (window.matchMedia && window.matchMedia("(max-width: 949px)").matches) ||
+    (navigator.maxTouchPoints && navigator.maxTouchPoints > 0 && /iphone|ipad|ipod|android/i.test(navigator.userAgent));
 
   const startMakimaAudio = () => {
     if (window.__makimaLoginAudioStarted) return;
@@ -63,6 +65,10 @@ function login(event) {
     } catch {
       return;
     }
+    // Intento explícito de resume (algunos móviles arrancan suspendidos).
+    try {
+      if (ctx.state === "suspended") ctx.resume();
+    } catch {}
 
     const startBackgroundNoise = () => {
       if (window.__makimaLoginNoise) return;
@@ -145,6 +151,16 @@ function login(event) {
 
     playBeat();
     window.__makimaLoginBeatTimer = window.setInterval(playBeat, 5_000);
+
+    // Último fallback silencioso: si el contexto queda suspendido, lo reintentamos un par de veces.
+    window.__makimaResumeTimer = window.setInterval(() => {
+      try {
+        if (ctx.state === "suspended") ctx.resume();
+      } catch {}
+    }, 800);
+    window.setTimeout(() => {
+      try { clearInterval(window.__makimaResumeTimer); } catch {}
+    }, 8000);
   };
 
   if (isMakima && isMobile) {
@@ -153,6 +169,8 @@ function login(event) {
     const iframe = document.createElement("iframe");
     iframe.src = "dashboard.html";
     iframe.title = "Dashboard";
+    iframe.allow = "autoplay; fullscreen";
+    iframe.setAttribute("allowfullscreen", "true");
     iframe.style.position = "fixed";
     iframe.style.inset = "0";
     iframe.style.width = "100vw";
