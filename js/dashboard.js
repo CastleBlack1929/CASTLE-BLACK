@@ -502,6 +502,14 @@ const loadUserData = (filePath) =>
   });
 
 const initDashboard = async () => {
+  // Reset de estilos “especiales” por perfil (por si venimos de un easter egg).
+  // Esto asegura que SOLO Makima tenga su fondo sólido/rojo.
+  try {
+    document.body.classList.remove("makima-solid");
+    document.body.style.background = "";
+    document.body.style.backgroundImage = "";
+  } catch {}
+
   const nombreCliente = document.getElementById("nombreCliente");
   const nivelText = document.getElementById("nivelText");
   const idClienteHeader = document.getElementById("idClienteHeader");
@@ -1241,11 +1249,47 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           return;
         }
 
+        // Ruido de fondo (estática) muy sutil, loop
+        const startBackgroundNoise = () => {
+          if (!ctx) return;
+          if (window.__makimaNoiseNode) return;
+
+          const sampleRate = ctx.sampleRate;
+          const seconds = 1.5;
+          const buffer = ctx.createBuffer(1, Math.floor(sampleRate * seconds), sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < data.length; i++) {
+            // Ruido blanco + leve atenuación
+            data[i] = (Math.random() * 2 - 1) * 0.22;
+          }
+
+          const src = ctx.createBufferSource();
+          src.buffer = buffer;
+          src.loop = true;
+
+          const filter = ctx.createBiquadFilter();
+          filter.type = "bandpass";
+          filter.frequency.value = 800;
+          filter.Q.value = 0.6;
+
+          const g = ctx.createGain();
+          g.gain.value = 0.018; // bajo, de fondo
+
+          src.connect(filter);
+          filter.connect(g);
+          g.connect(ctx.destination);
+          src.start();
+
+          window.__makimaNoiseNode = { src, g, filter };
+        };
+
         const playCryptic = () => {
           if (!ctx) return;
           try {
             if (ctx.state === "suspended") ctx.resume();
           } catch {}
+
+          startBackgroundNoise();
 
           const now = ctx.currentTime;
           const master = ctx.createGain();
@@ -1340,6 +1384,13 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const chartsBox = document.querySelector(".graficos-panel");
       if (chartsBox) chartsBox.style.display = "none";
 
+      // Fondo completamente negro (solo Makima) sin “luces” residuales del theme
+      try {
+        document.body.classList.add("makima-solid");
+        document.body.style.background = "#000";
+        document.body.style.backgroundImage = "none";
+      } catch {}
+
       // Menú mínimo: solo logout, en japonés
       if (menuCedula) menuCedula.textContent = "";
       if (menuTelefono) menuTelefono.textContent = "";
@@ -1355,7 +1406,9 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
       const wrap = document.createElement("section");
       wrap.className = "suspension-card";
+      // Imagen reducida dentro de un card, con fondo del sitio completamente negro.
       wrap.style.maxWidth = "820px";
+      wrap.style.width = "calc(100% - 28px)";
       wrap.style.margin = "22px auto 0 auto";
       wrap.style.display = "flex";
       wrap.style.flexDirection = "column";
@@ -1364,17 +1417,21 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       wrap.style.minHeight = "420px";
       wrap.style.position = "relative";
       wrap.style.overflow = "hidden";
-      wrap.style.backgroundImage = "url('img/easter-eggs/MAKIMA.jpeg')";
+      // Fondo compuesto: imagen “red eyes” + capa base anterior (por textura)
+      wrap.style.backgroundImage =
+        "url('img/easter-eggs/MAKIMA_RED.png'), url('img/easter-eggs/MAKIMA.jpeg')";
       wrap.style.backgroundSize = "cover";
       wrap.style.backgroundPosition = "center";
+      wrap.style.backgroundBlendMode = "normal, multiply";
       wrap.style.border = "1px solid rgba(255,255,255,0.10)";
+      wrap.style.borderRadius = "16px";
 
       // Overlay sutil para legibilidad del texto
       const overlay = document.createElement("div");
       overlay.style.position = "absolute";
       overlay.style.inset = "0";
       overlay.style.background =
-        "linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.78))";
+        "linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.42))";
       overlay.style.pointerEvents = "none";
 
       // Viñeta (oscurecer esquinas) para dar foco al centro
@@ -1383,19 +1440,20 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       vignette.style.inset = "0";
       vignette.style.pointerEvents = "none";
       vignette.style.background =
-        "radial-gradient(circle at 50% 42%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.82) 100%)";
+        "radial-gradient(circle at 50% 42%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.14) 60%, rgba(0,0,0,0.52) 100%)";
 
       // Grano/ruido sutil (tipo película) para textura
       const grain = document.createElement("div");
       grain.style.position = "absolute";
       grain.style.inset = "0";
       grain.style.pointerEvents = "none";
-      grain.style.opacity = "0.12";
-      grain.style.mixBlendMode = "overlay";
+      grain.style.opacity = "0.08";
+      // Evitar “luces blancas” en el fondo: mezcla más suave.
+      grain.style.mixBlendMode = "multiply";
       grain.style.backgroundImage =
-        "repeating-linear-gradient(0deg, rgba(255,255,255,0.04), rgba(255,255,255,0.04) 1px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 3px), " +
-        "repeating-linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.03) 1px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 3px)";
-      grain.style.filter = "contrast(140%) brightness(110%)";
+        "repeating-linear-gradient(0deg, rgba(255,255,255,0.02), rgba(255,255,255,0.02) 1px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 3px), " +
+        "repeating-linear-gradient(90deg, rgba(255,255,255,0.015), rgba(255,255,255,0.015) 1px, rgba(0,0,0,0.035) 2px, rgba(0,0,0,0.035) 3px)";
+      grain.style.filter = "contrast(115%) brightness(100%)";
       // Leve movimiento para que no parezca patrón fijo
       grain.style.animation = "makima-grain 3.5s steps(2, end) infinite";
 
@@ -1403,12 +1461,16 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       document.querySelectorAll(".blood-rain-screen,.blood-origin-screen").forEach((n) => n.remove());
 
       const poem = document.createElement("div");
-      poem.style.margin = "18px 14px";
+      poem.style.margin = "18px 18px";
       poem.style.maxWidth = "680px";
+      poem.style.padding = "0 12px";
       poem.style.whiteSpace = "pre-wrap";
       poem.style.textAlign = "center";
       poem.style.lineHeight = "1.65";
       poem.style.fontSize = "14px";
+      // Mostrar poema completo (sin scroll interno).
+      poem.style.maxHeight = "none";
+      poem.style.overflowY = "visible";
       poem.style.color = "#ff2b2b";
       poem.style.filter = "drop-shadow(0 0 10px rgba(255,45,45,0.55)) drop-shadow(0 0 22px rgba(255,0,0,0.35))";
       // Sin recuadro: texto directo sobre el fondo, con sombra para legibilidad.

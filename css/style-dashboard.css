@@ -43,6 +43,47 @@ body::after {
   background: radial-gradient(circle, rgba(143, 152, 163, 0.18), transparent 60%);
 }
 
+/* Makima: fondo sólido sin halos/luces del theme */
+body.makima-solid {
+  background-color: #000 !important;
+  background-image: none !important;
+}
+
+body.makima-solid::before,
+body.makima-solid::after {
+  display: none !important;
+}
+
+/* Makima: botón de acción + footer en rojo */
+body.makima-solid #logoutBtn {
+  background:
+    linear-gradient(180deg, rgba(255, 0, 40, 0.22), rgba(0, 0, 0, 0) 55%),
+    #000;
+  color: #ff2b2b;
+  box-shadow: 0 10px 24px rgba(255, 0, 40, 0.22);
+  border: 1px solid rgba(255, 0, 40, 0.28);
+  box-shadow:
+    0 10px 24px rgba(255, 0, 40, 0.18),
+    inset 0 1px 0 rgba(255, 0, 40, 0.35);
+}
+body.makima-solid #logoutBtn:hover {
+  filter: brightness(1.05);
+}
+
+body.makima-solid .menu-btn {
+  background: #1a0006;
+  border-color: rgba(255, 0, 40, 0.22);
+}
+body.makima-solid .menu-btn:hover {
+  background: #24000a;
+}
+
+body.makima-solid footer {
+  background: #000;
+  border-top-color: rgba(255, 0, 40, 0.28);
+  color: rgba(255, 40, 40, 0.92);
+}
+
 body.makima-eye {
   background-color: #000;
   background-image:
