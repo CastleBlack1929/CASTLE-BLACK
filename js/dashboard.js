@@ -1421,12 +1421,11 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       wrap.style.minHeight = "420px";
       wrap.style.position = "relative";
       wrap.style.overflow = "hidden";
-      // Fondo compuesto: imagen “red eyes” + capa base anterior (por textura)
-      wrap.style.backgroundImage =
-        "url('img/easter-eggs/MAKIMA_RED.png'), url('img/easter-eggs/MAKIMA.jpeg')";
+      // Fondo: solo imagen final (sin rastros de la anterior)
+      wrap.style.backgroundImage = "url('img/easter-eggs/MAKIMA_RED.png')";
       wrap.style.backgroundSize = "cover";
       wrap.style.backgroundPosition = "center";
-      wrap.style.backgroundBlendMode = "normal, multiply";
+      wrap.style.backgroundBlendMode = "normal";
       wrap.style.border = "1px solid rgba(255,255,255,0.10)";
       wrap.style.borderRadius = "16px";
 
