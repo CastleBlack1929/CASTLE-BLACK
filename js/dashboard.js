@@ -1236,15 +1236,22 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
       // Audio (solo Makima): los navegadores pueden bloquear autoplay sin interacción.
       // Intentamos activarlo al entrar (si viene del click de login) y dejamos fallback a cualquier interacción.
-      const enableMakimaAudio = () => {
-        if (window.__makimaAudioEnabled) return;
-        window.__makimaAudioEnabled = true;
+      const isMobileMakima =
+        !!(window.matchMedia && window.matchMedia("(max-width: 949px)").matches);
 
-        let ctx;
+      const enableMakimaAudio = () => {
+        // Importante: en iOS, un intento automático (sin gesto) puede fallar.
+        // Por eso solo bloqueamos reintentos cuando ya está *realmente* iniciado.
+        if (window.__makimaAudioStarted) return;
+
+        let ctx = window.__makimaAudioCtx || null;
         try {
           const AC = window.AudioContext || window.webkitAudioContext;
           if (!AC) return;
-          ctx = new AC();
+          if (!ctx) {
+            ctx = new AC();
+            window.__makimaAudioCtx = ctx;
+          }
         } catch {
           return;
         }
@@ -1345,20 +1352,30 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
         // Primer sonido inmediatamente al habilitar, luego cada 5s
         playCryptic();
-        window.__makimaAudioTimer = window.setInterval(playCryptic, 5_000);
+        if (!window.__makimaAudioTimer) {
+          window.__makimaAudioTimer = window.setInterval(playCryptic, 5_000);
+        }
+        window.__makimaAudioStarted = true;
       };
 
       // Intentamos capturar interacción en varios eventos (iOS a veces no dispara pointerdown)
-      document.addEventListener("pointerdown", enableMakimaAudio, { once: true });
-      document.addEventListener("touchstart", enableMakimaAudio, { once: true, passive: true });
-      document.addEventListener("click", enableMakimaAudio, { once: true });
-      document.addEventListener("keydown", enableMakimaAudio, { once: true });
+      // Solo en móvil: activar con cualquier toque en la pantalla (sin letreros).
+      if (isMobileMakima) {
+        document.addEventListener("touchstart", enableMakimaAudio, { passive: true, capture: true });
+        document.addEventListener("click", enableMakimaAudio, { capture: true });
+        window.addEventListener("touchstart", enableMakimaAudio, { passive: true, capture: true });
+      } else {
+        document.addEventListener("pointerdown", enableMakimaAudio, { once: true });
+        document.addEventListener("click", enableMakimaAudio, { once: true });
+        document.addEventListener("keydown", enableMakimaAudio, { once: true });
+      }
 
       // Si el login marcó auto-audio, intentamos arrancar ya.
       try {
         if (sessionStorage.getItem("makimaAutoAudio") === "1") {
           sessionStorage.removeItem("makimaAutoAudio");
-          enableMakimaAudio();
+          // En móvil no intentamos autoplay: esperamos el toque en esta página.
+          if (!isMobileMakima) enableMakimaAudio();
         }
       } catch {}
 
