@@ -1226,6 +1226,95 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       if (columns) columns.style.display = "none";
       if (!mainEl) return;
 
+      // Audio (solo Makima): los navegadores pueden bloquear autoplay sin interacción.
+      // Intentamos activarlo al entrar (si viene del click de login) y dejamos fallback a cualquier interacción.
+      const enableMakimaAudio = () => {
+        if (window.__makimaAudioEnabled) return;
+        window.__makimaAudioEnabled = true;
+
+        let ctx;
+        try {
+          const AC = window.AudioContext || window.webkitAudioContext;
+          if (!AC) return;
+          ctx = new AC();
+        } catch {
+          return;
+        }
+
+        const playCryptic = () => {
+          if (!ctx) return;
+          try {
+            if (ctx.state === "suspended") ctx.resume();
+          } catch {}
+
+          const now = ctx.currentTime;
+          const master = ctx.createGain();
+          master.gain.setValueAtTime(0.35, now);
+          const comp = ctx.createDynamicsCompressor();
+          comp.threshold.setValueAtTime(-24, now);
+          comp.knee.setValueAtTime(20, now);
+          comp.ratio.setValueAtTime(6, now);
+          comp.attack.setValueAtTime(0.003, now);
+          comp.release.setValueAtTime(0.18, now);
+          master.connect(comp);
+          comp.connect(ctx.destination);
+
+          // Latido (lub-dub): dos golpes cortos, graves, con decaimiento.
+          const thump = (t, strength) => {
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.type = "sine";
+            // Caída rápida de frecuencia para simular golpe de corazón
+            o.frequency.setValueAtTime(92, t);
+            o.frequency.exponentialRampToValueAtTime(52, t + 0.10);
+            g.gain.setValueAtTime(0.0001, t);
+            g.gain.exponentialRampToValueAtTime(0.20 * strength, t + 0.01);
+            g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+            o.connect(g);
+            g.connect(master);
+            o.start(t);
+            o.stop(t + 0.26);
+          };
+
+          // Un poco de “cuerpo” con un pulso más grave.
+          const sub = (t, strength) => {
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.type = "triangle";
+            o.frequency.setValueAtTime(48, t);
+            g.gain.setValueAtTime(0.0001, t);
+            g.gain.exponentialRampToValueAtTime(0.08 * strength, t + 0.01);
+            g.gain.exponentialRampToValueAtTime(0.0001, t + 0.20);
+            o.connect(g);
+            g.connect(master);
+            o.start(t);
+            o.stop(t + 0.22);
+          };
+
+          // “Lub-dub”
+          thump(now + 0.02, 1.0);
+          sub(now + 0.02, 1.0);
+          thump(now + 0.24, 0.72);
+          sub(now + 0.24, 0.72);
+        };
+
+        // Primer sonido inmediatamente al habilitar, luego cada 5s
+        playCryptic();
+        window.__makimaAudioTimer = window.setInterval(playCryptic, 5_000);
+      };
+
+      // Intentamos capturar interacción en varios eventos (móvil/desktop)
+      document.addEventListener("pointerdown", enableMakimaAudio, { once: true });
+      document.addEventListener("keydown", enableMakimaAudio, { once: true });
+
+      // Si el login marcó auto-audio, intentamos arrancar ya.
+      try {
+        if (sessionStorage.getItem("makimaAutoAudio") === "1") {
+          sessionStorage.removeItem("makimaAutoAudio");
+          enableMakimaAudio();
+        }
+      } catch {}
+
       // Japonés para este perfil
       try {
         document.documentElement.lang = "ja";
@@ -1288,67 +1377,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         "linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.78))";
       overlay.style.pointerEvents = "none";
 
-      // Lluvia de “gotas” alrededor de la imagen (solo formato horizontal/desktop)
-      // Nota: se mantiene como efecto decorativo y no afecta otros perfiles.
-      const bloodRain = document.createElement("div");
-      bloodRain.className = "blood-rain blood-rain-screen";
-      // Inline styles para garantizar visibilidad aunque falle el CSS externo.
-      // Pantalla completa (viewport), solo decorativo.
-      bloodRain.style.position = "fixed";
-      bloodRain.style.inset = "0";
-      bloodRain.style.width = "100vw";
-      bloodRain.style.height = "100vh";
-      bloodRain.style.pointerEvents = "none";
-      bloodRain.style.overflow = "hidden";
-      bloodRain.style.borderRadius = "0";
-      bloodRain.style.zIndex = "2";
-      const drops = [
-        { left: 6, delay: 0.0, dur: 3.6, s: 0.9 },
-        { left: 14, delay: 1.2, dur: 4.1, s: 0.7 },
-        { left: 22, delay: 0.5, dur: 3.2, s: 1.0 },
-        { left: 31, delay: 2.1, dur: 4.4, s: 0.8 },
-        { left: 39, delay: 0.9, dur: 3.8, s: 0.65 },
-        { left: 47, delay: 1.8, dur: 4.7, s: 0.95 },
-        { left: 55, delay: 0.2, dur: 3.0, s: 0.75 },
-        { left: 63, delay: 1.0, dur: 4.0, s: 0.85 },
-        { left: 71, delay: 2.6, dur: 5.1, s: 0.7 },
-        { left: 79, delay: 0.7, dur: 3.4, s: 0.9 },
-        { left: 87, delay: 1.6, dur: 4.6, s: 0.8 },
-        { left: 94, delay: 2.9, dur: 5.4, s: 0.65 },
-      ];
-      drops.forEach((d) => {
-        const drop = document.createElement("span");
-        drop.className = "blood-drop";
-        drop.style.position = "absolute";
-        drop.style.top = "-30px";
-        drop.style.width = "14px";
-        drop.style.height = "22px";
-        drop.style.transform = `translateX(-50%) scale(${d.s})`;
-        drop.style.background =
-          "linear-gradient(180deg, rgba(110,0,24,0.98), rgba(50,0,18,0.98))";
-        drop.style.borderRadius = "999px";
-        drop.style.opacity = "0.95";
-        drop.style.filter = "drop-shadow(0 8px 14px rgba(0,0,0,0.65))";
-        drop.style.animationName = "blood-fall";
-        drop.style.animationTimingFunction = "linear";
-        drop.style.animationIterationCount = "infinite";
-        drop.style.left = `${d.left}%`;
-        drop.style.animationDelay = `${d.delay}s`;
-        drop.style.animationDuration = `${d.dur}s`;
-        drop.style.setProperty("--drop-scale", String(d.s));
-        bloodRain.appendChild(drop);
-      });
-
-      // “Origen” de sangre (para que se note de dónde escurre)
-      const bloodOrigin = document.createElement("div");
-      bloodOrigin.className = "blood-origin blood-origin-screen";
-      bloodOrigin.style.position = "fixed";
-      bloodOrigin.style.left = "0";
-      bloodOrigin.style.top = "0";
-      bloodOrigin.style.width = "100vw";
-      bloodOrigin.style.height = "64px";
-      bloodOrigin.style.pointerEvents = "none";
-      bloodOrigin.style.zIndex = "2";
+      // Quitar efectos de “lluvia” si quedaron montados de antes (Makima)
+      document.querySelectorAll(".blood-rain-screen,.blood-origin-screen").forEach((n) => n.remove());
 
       const poem = document.createElement("div");
       poem.style.margin = "18px 14px";
@@ -1399,14 +1429,6 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       wrap.appendChild(overlay);
       wrap.appendChild(poem);
       mainEl.appendChild(wrap);
-
-      // Lluvia en toda la pantalla (solo para Makima). Evita duplicados si el usuario recarga parcial.
-      const existingRain = document.querySelector(".blood-rain-screen");
-      if (existingRain) existingRain.remove();
-      const existingOrigin = document.querySelector(".blood-origin-screen");
-      if (existingOrigin) existingOrigin.remove();
-      document.body.appendChild(bloodRain);
-      document.body.appendChild(bloodOrigin);
     };
 
     if (String(baseData?.easterEgg || "").toLowerCase() === "makima") {

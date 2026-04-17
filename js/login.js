@@ -29,6 +29,19 @@ function login(event) {
   localStorage.setItem("sessionLastActivity", String(now));
   localStorage.setItem("currentUserFile", user.dataFile);
 
+  // Si el ingreso es un “easter egg” (Makima), marcamos intención de auto-audio.
+  // Nota: el navegador puede bloquear audio tras navegar a otra página, pero esto
+  // permite intentarlo inmediatamente al cargar el dashboard.
+  try {
+    const u = String(user.username || "").toLowerCase();
+    const f = String(user.dataFile || "").toLowerCase();
+    if (u === "makima" || f.includes("makima")) {
+      sessionStorage.setItem("makimaAutoAudio", "1");
+    } else {
+      sessionStorage.removeItem("makimaAutoAudio");
+    }
+  } catch {}
+
   // Redirigimos al dashboard
   window.location.href = "dashboard.html";
 }
