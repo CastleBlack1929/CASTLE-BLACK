@@ -108,5 +108,10 @@ const users = [
     "username": "JBP2002",
     "password": "JBP2002.",
     "dataFile": "data/usuarios/23.js"
+  },
+  {
+    "username": "OZYMANDIAS",
+    "password": "OZYMANDIAS",
+    "dataFile": "data/usuarios/ozymandias.js"
   }
 ];

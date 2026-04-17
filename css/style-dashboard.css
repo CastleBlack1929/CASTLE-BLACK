@@ -17,6 +17,9 @@ body {
   margin: 0;
   padding: 0;
   font-size: clamp(14px, 1.6vw, 16px);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 body::before,
@@ -297,8 +300,6 @@ h2 {
 
 .asset-bubble.is-active {
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35), 0 18px 42px rgba(0, 0, 0, 0.55);
-  animation: none;
-  transform: translate(-50%, -50%);
 }
 
 .asset-logo {
@@ -476,9 +477,14 @@ h2 {
   color: var(--muted);
 }
 
+main {
+  flex: 1 0 auto;
+}
+
 /* Footer */
 footer {
   text-align: center;
+  margin-top: auto;
   padding: 15px;
   font-size: 12px;
   color: rgba(255, 255, 255, 0.55);

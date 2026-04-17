@@ -1118,6 +1118,108 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     setupMenuControls();
     applyMakimaBackground(baseData);
 
+    const renderOzymandiasEasterEgg = () => {
+      const mainEl = document.querySelector("main");
+      const columns = document.querySelector(".dashboard-columns");
+      if (columns) columns.style.display = "none";
+      if (!mainEl) return;
+
+      if (idClienteHeader) idClienteHeader.textContent = "";
+      if (nivelText) nivelText.textContent = "";
+
+      const movBox = document.querySelector(".movimientos");
+      if (movBox) movBox.style.display = "none";
+      const activosBox = document.querySelector(".activos-panel");
+      if (activosBox) activosBox.style.display = "none";
+      const chartsBox = document.querySelector(".graficos-panel");
+      if (chartsBox) chartsBox.style.display = "none";
+
+      const menuYear = document.getElementById("yearSelect");
+      if (menuCedula) menuCedula.textContent = "";
+      if (menuTelefono) menuTelefono.textContent = "";
+      if (menuDropdown) {
+        menuDropdown.querySelectorAll(".menu-info").forEach((el) => {
+          el.style.display = "none";
+        });
+      } else {
+        if (menuYear) {
+          const yearSection = menuYear.closest(".menu-info");
+          if (yearSection) yearSection.style.display = "none";
+        }
+        const downloadBtn = document.getElementById("downloadReportBtn");
+        if (downloadBtn) {
+          const downloadSection = downloadBtn.closest(".menu-info");
+          if (downloadSection) downloadSection.style.display = "none";
+        }
+        const support = document.querySelector(".menu-support");
+        if (support) support.style.display = "none";
+        const cuenta = document.querySelector("#menuCedula")?.closest(".menu-info");
+        if (cuenta) cuenta.style.display = "none";
+      }
+
+      const wrap = document.createElement("section");
+      wrap.className = "suspension-card";
+      wrap.style.maxWidth = "820px";
+      wrap.style.margin = "22px auto 0 auto";
+
+      const poem = document.createElement("div");
+      const icon = document.createElement("div");
+      icon.style.display = "flex";
+      icon.style.justifyContent = "center";
+      icon.style.margin = "2px 0 14px 0";
+      icon.innerHTML =
+        "<svg xmlns='http://www.w3.org/2000/svg' width='46' height='46' viewBox='0 0 100 100' aria-label='Corona' role='img'>" +
+        "<defs>" +
+        "<linearGradient id='metal' x1='0%25' y1='0%25' x2='100%25' y2='100%25'>" +
+        "<stop offset='0%25' stop-color='rgba(255,255,255,0.38)'/>" +
+        "<stop offset='45%25' stop-color='rgba(210,210,210,0.18)'/>" +
+        "<stop offset='100%25' stop-color='rgba(255,255,255,0.28)'/>" +
+        "</linearGradient>" +
+        "<filter id='rough' x='-20%25' y='-20%25' width='140%25' height='140%25'>" +
+        "<feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3' result='n'/>" +
+        "<feColorMatrix in='n' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .45 0' result='a'/>" +
+        "<feComposite in='a' in2='SourceGraphic' operator='in'/>" +
+        "</filter>" +
+        "</defs>" +
+        "<path d='M20 62 L28 30 L44 52 L50 30 L56 52 L72 30 L80 62 Z' fill='none' stroke='rgba(255,255,255,0.30)' stroke-width='3' stroke-linejoin='round'/>" +
+        "<path d='M22 62 L30 34 L44 54 L50 34 L56 54 L70 34 L78 62 Z' fill='url(%23metal)' stroke='rgba(255,255,255,0.22)' stroke-width='2' stroke-linejoin='round'/>" +
+        "<rect x='22' y='62' width='56' height='10' rx='5' fill='rgba(255,255,255,0.16)'/>" +
+        "<rect x='22' y='62' width='56' height='10' rx='5' fill='rgba(255,255,255,0.12)' filter='url(%23rough)'/>" +
+        "<circle cx='30' cy='34' r='3' fill='rgba(255,255,255,0.30)'/>" +
+        "<circle cx='50' cy='34' r='3' fill='rgba(255,255,255,0.30)'/>" +
+        "<circle cx='70' cy='34' r='3' fill='rgba(255,255,255,0.30)'/>" +
+        "</svg>";
+      poem.style.whiteSpace = "pre-wrap";
+      poem.style.lineHeight = "1.55";
+      poem.style.fontSize = "14px";
+      poem.style.color = "rgba(255,255,255,0.85)";
+      poem.style.textAlign = "center";
+      poem.textContent =
+        "I met a traveller from an antique land,\n" +
+        "Who said—“Two vast and trunkless legs of stone\n" +
+        "Stand in the desert. . . . Near them, on the sand,\n" +
+        "Half sunk a shattered visage lies, whose frown,\n" +
+        "And wrinkled lip, and sneer of cold command,\n" +
+        "Tell that its sculptor well those passions read\n" +
+        "Which yet survive, stamped on these lifeless things,\n" +
+        "The hand that mocked them, and the heart that fed;\n" +
+        "And on the pedestal, these words appear:\n" +
+        "My name is Ozymandias, King of Kings;\n" +
+        "Look on my Works, ye Mighty, and despair!\n" +
+        "Nothing beside remains. Round the decay\n" +
+        "Of that colossal Wreck, boundless and bare\n" +
+        "The lone and level sands stretch far away.”\n";
+
+      wrap.appendChild(icon);
+      wrap.appendChild(poem);
+      mainEl.appendChild(wrap);
+    };
+
+    if (String(baseData?.easterEgg || "").toLowerCase() === "ozymandias") {
+      renderOzymandiasEasterEgg();
+      return;
+    }
+
     const renderSuspensionNotice = (data) => {
       const mainEl = document.querySelector("main");
       const columns = document.querySelector(".dashboard-columns");
