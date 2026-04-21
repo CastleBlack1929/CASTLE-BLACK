@@ -1581,8 +1581,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       notice.className = "resumen suspension-card";
       notice.innerHTML = `
         <p class="tabla-tip suspension-alert">
-          <strong>Cuenta en suspensión.</strong> La operación se detuvo a solicitud del titular y puede reactivarse en cualquier momento.
-          Mantendremos el historial registrado mientras la cuenta permanezca en este estado.
+          <strong>Cuenta en suspensión.</strong> La operación se detuvo a solicitud del titular.
+          Puede reactivarse en cualquier momento al realizar un nuevo depósito.
+          Mientras la cuenta permanezca inactiva, mantendremos únicamente el historial de movimientos registrado.
+          Esperamos que regrese cuando le sea posible.
         </p>
       `;
       if (columns) {
