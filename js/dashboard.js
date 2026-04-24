@@ -4005,11 +4005,11 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             ? trimestresData.map((t) => [t.nombre, t.tarifa, t.comision, fmtMoney(t.valor)])
             : [["Sin datos", "—", "—", "—"]];
           addTable(
-            "Estructura de honorarios (BRONCE–ZAFIRO)",
+            "Estructura de honorarios (PLATA–ZAFIRO)",
             "Esta es la totalidad de los cobros que se efectuarán en la cuenta durante el transcurso del año. Estos valores corresponden a los honorarios trimestrales aplicados en función de las utilidades generadas por el portafolio en cada periodo. Las comisiones no son fijas, sino que varían según el rendimiento obtenido en cada trimestre, de acuerdo con la estructura anterior.",
             ["Nivel", "Rango de utilidad (USD)", "Comisión"],
             [
-              ["BRONCE / PLATA", "0 a 40", "$10 fijo"],
+              ["PLATA", "Menor a 40", "$10 fijo"],
               ["ORO", "40 a 100", "25%"],
               ["PLATINO", "100 a 500", "20%"],
               ["DIAMANTE", "500 a 1.000", "15%"],
