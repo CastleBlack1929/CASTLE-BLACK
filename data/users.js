@@ -111,7 +111,7 @@ const users = [
   },
   {
     "username": "RACD1990",
-    "password": "RACD1990",
+    "password": "RACD1990.",
     "dataFile": "data/usuarios/24.js"
   },
   {

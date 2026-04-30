@@ -4,7 +4,7 @@ window.userData = {
   "telefono": "+41782527757",
   "fechaUnion": "29/04/26",
   "username": "RACD1990",
-  "password": "RACD1990",
+  "password": "RACD1990.",
   "nivel": "CCC",
   "corte": "ENE-ABR-JUL-OCT",
   "cortePrimerAno": "ABR_MERGE_NEXT",
