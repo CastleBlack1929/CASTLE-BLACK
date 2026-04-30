@@ -110,6 +110,11 @@ const users = [
     "dataFile": "data/usuarios/23.js"
   },
   {
+    "username": "RACD1990",
+    "password": "RACD1990",
+    "dataFile": "data/usuarios/24.js"
+  },
+  {
     "username": "OZYMANDIAS",
     "password": "OZYMANDIAS",
     "dataFile": "data/usuarios/ozymandias.js"

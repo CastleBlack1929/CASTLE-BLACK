@@ -74,7 +74,7 @@
         <!-- Datos principales comparativos -->
         <section class="resumen">
       <h3>Estado de cuenta</h3>
-      <p class="tabla-tip" id="resumenTip">Aquí ves tu aporte del año, patrimonio, crecimiento y utilidades en USD y moneda local con tendencia en vivo; el aporte del año es la suma de los movimientos del año en curso más el patrimonio de años anteriores si aplica.</p>
+      <p class="tabla-tip" id="resumenTip">Resumen del año seleccionado: aportes registrados, patrimonio estimado, crecimiento porcentual y utilidad neta. Cuando aplica, se muestra la equivalencia en moneda local para facilitar la lectura del saldo.</p>
       <table class="tabla-resumen">
         <thead>
           <tr>
@@ -122,15 +122,15 @@
 
         <section class="activos-panel">
           <h3>Activos en cartera</h3>
-          <p class="tabla-tip">Estos son los activos actuales que se poseen en la cartera; su proporción y permanencia dependen de las condiciones del mercado y del análisis en curso.</p>
+          <p class="tabla-tip">Composición referencial del portafolio. Los pesos pueden cambiar según condiciones de mercado, liquidez disponible y decisiones de gestión.</p>
           <div id="activosBubbles" class="activos-bubbles" aria-label="Activos del portafolio"></div>
         </section>
 
         <!-- Honorarios -->
         <section class="honorarios">
           <h3>Honorarios a Castle Black</h3>
-          <p class="honorarios-desc">
-            Cálculo trimestral automático sobre utilidades generadas. La comisión varía según el tramo de utilidad del trimestre.
+          <p class="honorarios-desc" id="honorariosDesc">
+            Detalle de los honorarios aplicables según las utilidades generadas en cada periodo de corte. La tarifa depende del rango de utilidad alcanzado.
           </p>
           <div class="honorarios-corte" aria-label="Corte de honorarios">
             <strong>Corte aplicado:</strong>
@@ -154,9 +154,9 @@
         <section class="resumen resumen-historico">
           <h3>Estado de Cuenta Total</h3>
           <p class="resumen-desc">
-            Este resumen muestra el desempeño acumulado desde tu ingreso al portafolio. El aporte histórico es la suma de todos los movimientos realizados durante tu relación con nosotros.
+            Vista acumulada desde la fecha de ingreso al portafolio. Consolida los aportes, el patrimonio actual y el resultado histórico de la cuenta.
           </p>
-          <p class="resumen-desc tip-historico">Nota: El tipo de cambio en esta sección se muestra en vivo para reflejar el valor más reciente.</p>
+          <p class="resumen-desc tip-historico">La columna de moneda local usa la tasa visible para ofrecer una referencia actualizada del valor equivalente.</p>
           <p class="resumen-fecha">Fecha de unión: <span id="fechaUnionHist"></span></p>
           <table class="tabla-resumen">
             <thead>
@@ -201,7 +201,7 @@
         <!-- Reportes -->
         <section class="reportes">
       <h3>Reporte Mensual</h3>
-      <p class="tabla-tip">Cada fila muestra lo que aportaste, el patrimonio al cierre del mes y la ganancia/margen mensual.</p>
+      <p class="tabla-tip" id="reporteMensualTip">Seguimiento mensual del periodo: aporte del mes, patrimonio de cierre, margen porcentual y ganancia o pérdida estimada.</p>
       <table id="tablaMeses">
         <thead>
           <tr>
@@ -221,12 +221,12 @@
           <div class="graficos">
             <div class="grafico">
               <h4>Patrimonio</h4>
-              <p class="tabla-tip">Línea verde: evolución de tu patrimonio mes a mes.</p>
+              <p class="tabla-tip">Evolución del patrimonio al cierre de cada mes disponible.</p>
               <canvas id="graficoPatrimonio"></canvas>
             </div>
             <div class="grafico">
               <h4>Utilidad</h4>
-              <p class="tabla-tip">Barras: utilidad de cada mes y su acumulado.</p>
+              <p class="tabla-tip">Resultado mensual y utilidad acumulada durante el periodo seleccionado.</p>
               <canvas id="graficoUtilidades"></canvas>
             </div>
           </div>
@@ -237,7 +237,7 @@
     <!-- Movimientos -->
     <section class="movimientos">
       <h3>Movimientos</h3>
-      <p class="tabla-tip" id="movimientosTip">Listado de consignaciones y retiros con su tasa y valor en moneda local.</p>
+      <p class="tabla-tip" id="movimientosTip">Registro cronológico de aportes, retiros y ajustes realizados en la cuenta, con su conversión cuando corresponde.</p>
       <table>
         <thead>
           <tr>

@@ -367,6 +367,7 @@ const computeDerivedWithMonthlyRules = ({
   currentDay = null,
   startMonthKey = "febrero",
   mergeFebToNext = false,
+  mergeAbrToNext = false,
   respectManualPatrimonio = false
 }) => {
   let totalAporte = 0;
@@ -391,7 +392,12 @@ const computeDerivedWithMonthlyRules = ({
       mergeFebToNext &&
       String(year) === "2026" &&
       String(corteAplicado || "").toUpperCase() === "FEB-MAY-AGO-NOV";
+    const mergeAbr =
+      mergeAbrToNext &&
+      String(year) === "2026" &&
+      String(corteAplicado || "").toUpperCase() === "ENE-ABR-JUL-OCT";
     if (mergeFeb && mes === "marzo") return 0;
+    if (mergeAbr && (mes === "febrero" || mes === "mayo")) return 0;
     const utilTrim = (tri.meses || []).reduce((sum, item) => {
       const currentVal = toNumber(utilByMes[item]);
       if (Number.isFinite(currentVal)) return sum + currentVal;
@@ -406,6 +412,16 @@ const computeDerivedWithMonthlyRules = ({
       const febPrevVal = toNumber(prevYearUtilByMes["febrero"]);
       if (Number.isFinite(febPrevVal)) {
         return tarifaHonorarios(utilTrim + febPrevVal).valor || 0;
+      }
+    }
+    if (mergeAbr && mes === "agosto") {
+      const abrVal = toNumber(utilByMes["abril"]);
+      if (Number.isFinite(abrVal)) {
+        return tarifaHonorarios(utilTrim + abrVal).valor || 0;
+      }
+      const abrPrevVal = toNumber(prevYearUtilByMes["abril"]);
+      if (Number.isFinite(abrPrevVal)) {
+        return tarifaHonorarios(utilTrim + abrPrevVal).valor || 0;
       }
     }
     const tarifa = tarifaHonorarios(utilTrim);
@@ -577,11 +593,19 @@ const initDashboard = async () => {
   const localHeaderHist = document.getElementById("localHeaderHist");
   const resumenTip = document.getElementById("resumenTip");
   const movimientosTip = document.getElementById("movimientosTip");
+  const honorariosDesc = document.getElementById("honorariosDesc");
+  const reporteMensualTip = document.getElementById("reporteMensualTip");
+  const historicoRateTip = document.querySelector(".tip-historico");
   const yearSelect = document.getElementById("yearSelect");
   const activosBubbles = document.getElementById("activosBubbles");
   const activosPanel = document.querySelector(".activos-panel");
   const rateBox = document.querySelector(".rate-box");
   const movimientosSection = document.querySelector(".movimientos");
+  const movimientosHeaderRow = document.querySelector(".movimientos table thead tr");
+  const currentUtilityRow = utilidad?.closest("tr");
+  const currentUtilityTotalRow = utilidadTotal?.closest("tr");
+  const historicalUtilityRow = utilidadRHist?.closest("tr");
+  const historicalUtilityTotalRow = utilidadHist?.closest("tr");
 
   const setLoadingValue = (el) => {
     if (!el) return;
@@ -1883,6 +1907,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
     const userData = getDataForYear(selectedYear);
     const localCurrency = (userData.region || "COP").toUpperCase();
+    const hideLocalCurrency = userData.sinMonedaLocal === true;
     const formatMoneyLocal = (value) => (localCurrency === "COP" ? formatMoneyCop(value) : formatMoney(value));
     const localCurrencyLabel = localCurrency === "COP"
       ? "Pesos (COP)"
@@ -1904,6 +1929,56 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       if (!Number.isFinite(rateNorm) || rateNorm <= 0) return 0;
       return localCurrency === "EUR" ? localVal * rateNorm : localVal / rateNorm;
     };
+    const setHidden = (el, hidden) => {
+      if (el) el.style.display = hidden ? "none" : "";
+    };
+    [
+      localHeader,
+      aporteL,
+      patrimonioL,
+      crcmntL,
+      utilidadL?.parentElement,
+      utilidadTotalL?.parentElement,
+      localHeaderHist,
+      aporteHistL,
+      patrimonioHistL,
+      crcmntHistL,
+      utilidadRHistL?.parentElement,
+      utilidadHistL?.parentElement
+    ].forEach((el) => setHidden(el, hideLocalCurrency));
+    setHidden(rateBox, hideLocalCurrency);
+    setHidden(historicoRateTip, hideLocalCurrency);
+    setHidden(currentUtilityTotalRow, hideLocalCurrency);
+    setHidden(historicalUtilityTotalRow, hideLocalCurrency);
+
+    const currentConceptHeader = usdHeader?.previousElementSibling;
+    const historicalConceptHeader = usdHeaderHist?.previousElementSibling;
+    if (currentConceptHeader) currentConceptHeader.textContent = "Concepto";
+    if (historicalConceptHeader) historicalConceptHeader.textContent = "Concepto";
+    const currentUtilityLabel = currentUtilityRow?.querySelector("th");
+    const historicalUtilityLabel = historicalUtilityRow?.querySelector("th");
+    if (currentUtilityLabel) currentUtilityLabel.textContent = hideLocalCurrency ? "Utilidad" : "Utilidad real";
+    if (historicalUtilityLabel) historicalUtilityLabel.textContent = hideLocalCurrency ? "Utilidad" : "Utilidad real";
+
+    if (movimientosHeaderRow) {
+      movimientosHeaderRow.innerHTML = hideLocalCurrency
+        ? `
+            <th>Recibo</th>
+            <th>Fecha</th>
+            <th>Cantidad</th>
+            <th>Tipo</th>
+            <th>Cambio</th>
+          `
+        : `
+            <th>Recibo</th>
+            <th>Fecha</th>
+            <th>Cantidad</th>
+            <th>Tipo</th>
+            <th>Cotización</th>
+            <th>Cambio</th>
+          `;
+    }
+
     if (localHeader) localHeader.textContent = localCurrencyLabel;
     if (localHeaderHist) localHeaderHist.textContent = localCurrencyLabel;
     if (usdHeader) usdHeader.textContent = "Dólares (USD)";
@@ -1912,10 +1987,35 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       rateTitle.textContent = localCurrency === "EUR" ? "USD por EUR" : `${localCurrency} por USD`;
     }
     if (resumenTip) {
-      resumenTip.textContent = `Aquí ves tu aporte del año, patrimonio, crecimiento y utilidades en USD y ${localCurrencyLabel} con tendencia en vivo; el aporte del año es la suma de los movimientos del año en curso más el patrimonio de años anteriores si aplica.`;
+      resumenTip.textContent = `Resumen del año seleccionado: aportes registrados, patrimonio estimado, crecimiento porcentual y utilidad neta en USD y ${localCurrencyLabel}. La columna local es una referencia de conversión, no un movimiento adicional.`;
+      if (hideLocalCurrency) {
+        resumenTip.textContent = "Resumen del año seleccionado: aportes registrados, patrimonio estimado, crecimiento porcentual y utilidad neta expresados únicamente en USD. Esta cuenta no usa comparación con moneda externa.";
+      }
     }
     if (movimientosTip) {
-      movimientosTip.textContent = `Listado de consignaciones y retiros con su tasa y valor en ${localCurrencyShort}.`;
+      movimientosTip.textContent = `Registro cronológico de aportes, retiros y ajustes. La cotización muestra la tasa usada para expresar el movimiento en ${localCurrencyShort}.`;
+      if (hideLocalCurrency) {
+        movimientosTip.textContent = "Registro cronológico de aportes, retiros y ajustes de esta cuenta. Para este cliente se muestra el valor de referencia en USD sin tasa comparativa.";
+      }
+    }
+    if (honorariosDesc) {
+      honorariosDesc.textContent = "Detalle de los honorarios aplicables según las utilidades generadas en cada periodo de corte. La tarifa depende del rango de utilidad alcanzado.";
+      if (String(userData.cortePrimerAno || "").trim().toUpperCase() === "ABR_MERGE_NEXT") {
+        honorariosDesc.textContent = "Condición de primer año: T1 y T2 no generan cobro. La utilidad de abril se acumula al T3, que se calcula junto con mayo, junio y julio.";
+      }
+    }
+    if (reporteMensualTip) {
+      reporteMensualTip.textContent = "Seguimiento mensual del periodo: aporte del mes, patrimonio de cierre, margen porcentual y ganancia o pérdida estimada.";
+      if (hideLocalCurrency) {
+        const fechaParts = String(userData?.fechaUnion || "").split("/");
+        const fechaYearRaw = Number(fechaParts?.[2]);
+        const fechaYear = Number.isFinite(fechaYearRaw) ? (fechaYearRaw < 100 ? 2000 + fechaYearRaw : fechaYearRaw) : null;
+        const fechaMonth = Number(fechaParts?.[1]);
+        const startMonth = userData?.inicioMargenMes ||
+          (fechaYear === Number(displayYear) && Number.isFinite(fechaMonth) ? monthOrder[fechaMonth - 1] : null) ||
+          "febrero";
+        reporteMensualTip.textContent = `Seguimiento mensual desde ${startMonth}: aporte del mes, patrimonio de cierre, margen porcentual y ganancia o pérdida estimada en USD.`;
+      }
     }
     const yearValidation = validateUserData(userData);
     if (!yearValidation.valid) {
@@ -1977,6 +2077,15 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const month = Number(parts[1]);
       if (!Number.isFinite(month) || month < 1 || month > 12) return null;
       return monthOrder[month - 1];
+    };
+    const getStartMonthKey = (data, year) => {
+      if (data?.inicioMargenMes) return data.inicioMargenMes;
+      const parts = String(data?.fechaUnion || "").split("/");
+      if (parts.length < 3) return "febrero";
+      const joinedYearRaw = Number(parts[2]);
+      if (!Number.isFinite(joinedYearRaw)) return "febrero";
+      const joinedYear = joinedYearRaw < 100 ? 2000 + joinedYearRaw : joinedYearRaw;
+      return joinedYear === Number(year) ? monthKeyFromFecha(data.fechaUnion) || "febrero" : "febrero";
     };
     const getMovUsdValueLocal = (mov) => {
       const tipo = (mov.tipo || "").toUpperCase();
@@ -2072,7 +2181,15 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const loadUsersList = () => Promise.resolve(
       (typeof users !== "undefined" && Array.isArray(users)) ? users : []
     );
-    const computeHonorarioDeductionForMonth = ({ derivedCurrent, derivedPrev, corte, monthKey, year, mergeFebToNext = false }) => {
+    const computeHonorarioDeductionForMonth = ({
+      derivedCurrent,
+      derivedPrev,
+      corte,
+      monthKey,
+      year,
+      mergeFebToNext = false,
+      mergeAbrToNext = false
+    }) => {
       if (!monthKey) return 0;
       const utilPorMes = derivedCurrent?.monthly?.reduce((acc, m) => {
         acc[m.mes] = m.g_p;
@@ -2089,7 +2206,12 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         mergeFebToNext &&
         String(year) === "2026" &&
         String(corte || "").toUpperCase() === "FEB-MAY-AGO-NOV";
+      const mergeAbr =
+        mergeAbrToNext &&
+        String(year) === "2026" &&
+        String(corte || "").toUpperCase() === "ENE-ABR-JUL-OCT";
       if (mergeFeb && monthKey === "marzo") return 0;
+      if (mergeAbr && (monthKey === "febrero" || monthKey === "mayo")) return 0;
       const mesesTri = targetTri.meses || [];
       const triHasEnero = mesesTri.includes("enero");
       const triHasPrevWrap = triHasEnero && (mesesTri.includes("noviembre") || mesesTri.includes("diciembre"));
@@ -2107,7 +2229,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const extraFeb = mergeFeb && monthKey === "junio"
         ? (Number.isFinite(toNumber(utilPorMes["febrero"])) ? toNumber(utilPorMes["febrero"]) : toNumber(utilPorMesPrev["febrero"]) || 0)
         : 0;
-      const tarifa = tarifaHonorarios(utilTrim + extraFeb);
+      const extraAbr = mergeAbr && monthKey === "agosto"
+        ? (Number.isFinite(toNumber(utilPorMes["abril"])) ? toNumber(utilPorMes["abril"]) : toNumber(utilPorMesPrev["abril"]) || 0)
+        : 0;
+      const tarifa = tarifaHonorarios(utilTrim + extraFeb + extraAbr);
       return tarifa.valor || 0;
     };
     const ensureCastleBlackHonorariosMovement = async () => {
@@ -2159,9 +2284,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           disableHonorarios: false,
           currentMonthIndex: currentMonthIdx,
           currentDay: now.getDate(),
-          startMonthKey: userInfo?.inicioMargenMes,
+          startMonthKey: getStartMonthKey(userInfo, currentYearNumber),
           respectManualPatrimonio: userInfo?.preservarPatrimonioManual === true,
-          mergeFebToNext: String(userInfo.cortePrimerAno || "").trim().toUpperCase() === "FEB_MERGE_NEXT"
+          mergeFebToNext: String(userInfo.cortePrimerAno || "").trim().toUpperCase() === "FEB_MERGE_NEXT",
+          mergeAbrToNext: String(userInfo.cortePrimerAno || "").trim().toUpperCase() === "ABR_MERGE_NEXT"
         });
           const deduction = computeHonorarioDeductionForMonth({
             derivedCurrent,
@@ -2169,7 +2295,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             corte,
             monthKey,
             year: currentYearNumber,
-            mergeFebToNext: String(userInfo.cortePrimerAno || "").trim().toUpperCase() === "FEB_MERGE_NEXT"
+            mergeFebToNext: String(userInfo.cortePrimerAno || "").trim().toUpperCase() === "FEB_MERGE_NEXT",
+            mergeAbrToNext: String(userInfo.cortePrimerAno || "").trim().toUpperCase() === "ABR_MERGE_NEXT"
           });
           totalUsd += Number.isFinite(deduction) ? deduction : 0;
         }
@@ -2231,9 +2358,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         disableHonorarios,
         currentMonthIndex,
         currentDay,
-        startMonthKey: userData?.inicioMargenMes,
+        startMonthKey: getStartMonthKey(userData, displayYear),
         respectManualPatrimonio: userData?.preservarPatrimonioManual === true,
-        mergeFebToNext: String(userData.cortePrimerAno || "").trim().toUpperCase() === "FEB_MERGE_NEXT"
+        mergeFebToNext: String(userData.cortePrimerAno || "").trim().toUpperCase() === "FEB_MERGE_NEXT",
+        mergeAbrToNext: String(userData.cortePrimerAno || "").trim().toUpperCase() === "ABR_MERGE_NEXT"
       })
       : computeDerived(mesesForCalc, prevPatrInicial, useAporteAsPrev);
     const patrimonioCeroDesdeMes = userData?.patrimonioCeroDesdeMes;
@@ -3186,6 +3314,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const cMes = document.createElement("td");
           cMes.textContent = mes;
           const cAporte = document.createElement("td");
+          cAporte.className = aporte > 0 ? "aporte-in" : (aporte < 0 ? "aporte-out" : "");
           cAporte.textContent = `$ ${formatNumber(aporte)}`;
           const cPatr = document.createElement("td");
           const isCurrentYear2026 = isActualYear && Number(displayYear) === 2026;
@@ -3303,6 +3432,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         autoHonorarios2026 &&
         String(displayYear) === "2026" &&
         String(userData.cortePrimerAno || "").trim().toUpperCase() === "FEB_MERGE_NEXT";
+      const mergeAbrToNext =
+        autoHonorarios2026 &&
+        String(displayYear) === "2026" &&
+        String(userData.cortePrimerAno || "").trim().toUpperCase() === "ABR_MERGE_NEXT";
 
       trimestres.forEach((tri, triIndex) => {
         const mesesTri = tri.meses || [];
@@ -3357,7 +3490,13 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         const extraFeb = mergeFebToNext && triIndex === 1
           ? (toNumber(utilPorMes["febrero"]) || 0)
           : 0;
-        const utilTrim = mergeFebToNext && triIndex === 0
+        const extraAbr = mergeAbrToNext && triIndex === 2
+          ? (toNumber(utilPorMes["abril"]) || 0)
+          : 0;
+        const skipFirstYearCharge =
+          (mergeFebToNext && triIndex === 0) ||
+          (mergeAbrToNext && (triIndex === 0 || triIndex === 1));
+        const utilTrim = skipFirstYearCharge
           ? 0
           : mesesTri.reduce((sum, mes) => {
             if (autoHonorarios2026 && Number(displayYear) === 2026 && triIndex === 3 && mes === "enero") {
@@ -3369,8 +3508,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
               if (Number.isFinite(prevVal)) return sum + prevVal;
             }
             return sum + (Number.isFinite(currentVal) ? currentVal : 0);
-        }, extraFeb);
-        if (mergeFebToNext && triIndex === 0) {
+        }, extraFeb + extraAbr);
+        if (skipFirstYearCharge) {
           const row = document.createElement("tr");
           row.innerHTML = `
             <td>${tri.nombre}</td>
@@ -3620,20 +3759,28 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
                 ? formatNumber(mov.tasa, { minimumFractionDigits: 3, maximumFractionDigits: 3 })
                 : (isLocal ? formatLocal(mov.tasa) : formatNumber(mov.tasa)))
             : "";
-          row.innerHTML = `
-            <td>${mov.recibo || ""}</td>
-            <td>${mov.fecha || ""}</td>
-            <td>${cantidadTxt}</td>
-            <td>${mov.tipo || ""}</td>
-            <td>${tasaTxt}</td>
-            <td>${formatNumber(mov.cambio)}</td>
-          `;
+          row.innerHTML = hideLocalCurrency
+            ? `
+              <td>${mov.recibo || ""}</td>
+              <td>${mov.fecha || ""}</td>
+              <td>$ ${cantidadTxt}</td>
+              <td>${mov.tipo || ""}</td>
+              <td>$ ${formatNumber(mov.cambio)}</td>
+            `
+            : `
+              <td>${mov.recibo || ""}</td>
+              <td>${mov.fecha || ""}</td>
+              <td>$ ${cantidadTxt}</td>
+              <td>${mov.tipo || ""}</td>
+              <td>${tasaTxt}</td>
+              <td>$ ${formatNumber(mov.cambio)}</td>
+            `;
           tablaMovimientos.appendChild(row);
         });
       } else {
         const emptyRow = document.createElement("tr");
         emptyRow.className = "empty-row";
-        emptyRow.innerHTML = `<td colspan="6">Sin movimientos registrados</td>`;
+        emptyRow.innerHTML = `<td colspan="${hideLocalCurrency ? 5 : 6}">Sin movimientos registrados</td>`;
         tablaMovimientos.appendChild(emptyRow);
       }
     }
@@ -3898,7 +4045,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           doc.text("Horario de atención: L-V 8:00 - 18:00 (GMT-5)", marginX, y);
           y += 5;
           addParagraph("Este informe refleja exactamente lo que ves en tu dashboard: aportes, patrimonio, utilidades, honorarios y movimientos. Los valores en cero indican meses no cerrados o sin datos cargados.");
-          addParagraph(`Metodología: cifras en USD basadas en tus aportes y patrimonio; ${localCurrencyShort} convertidos con la tasa visible. Las utilidades consideran ganancias/pérdidas y comisiones. El apartado histórico muestra la evolución total desde tu fecha de ingreso.`);
+          addParagraph(hideLocalCurrency
+            ? "Metodología: cifras en USD basadas en tus aportes y patrimonio. Las utilidades consideran ganancias/pérdidas y comisiones. El apartado histórico muestra la evolución total desde tu fecha de ingreso."
+            : `Metodología: cifras en USD basadas en tus aportes y patrimonio; ${localCurrencyShort} convertidos con la tasa visible. Las utilidades consideran ganancias/pérdidas y comisiones. El apartado histórico muestra la evolución total desde tu fecha de ingreso.`
+          );
           y += 4;
           doc.setDrawColor(40);
           doc.setLineWidth(0.4);
@@ -3920,36 +4070,57 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
           y += 4;
           const reportYearNumber = (reportYearText || selectedYear || "").match(/\d{4}/)?.[0] || String(new Date().getFullYear());
+          const isAbrMergeFirstYear =
+            String(selectedUserData?.cortePrimerAno || userData?.cortePrimerAno || "").trim().toUpperCase() === "ABR_MERGE_NEXT" &&
+            String(reportYearNumber) === "2026";
+          const pdfStartMonthKey = getStartMonthKey(selectedUserData || userData, reportYearNumber);
+          const pdfStartMonthIdx = monthOrder.indexOf(pdfStartMonthKey);
+          const monthlySrcRaw = Array.isArray(derivedData?.monthly) ? derivedData.monthly : [];
+          const monthlySrc = hideLocalCurrency && pdfStartMonthIdx >= 0
+            ? monthlySrcRaw.filter((m) => monthOrder.indexOf(m.mes) >= pdfStartMonthIdx)
+            : monthlySrcRaw;
+          if (hideLocalCurrency) {
+            addParagraph(`Condición particular de la cuenta: este cliente se presenta únicamente en USD, sin tabla comparativa de moneda externa ni tasa de conversión. El periodo operativo del primer año inicia en ${pdfStartMonthKey}.`);
+          }
           addTable(
             "Resumen de cuenta",
             `Como resultado de los movimientos realizados a lo largo del periodo seleccionado, y considerando únicamente el intervalo comprendido desde el 1 de enero de ${reportYearNumber} o desde la fecha en la que usted se unió al portafolio durante ese mismo año, a continuación podrá ver el margen de utilidad obtenido. Esta información refleja de manera precisa los rendimientos generados exclusivamente en ${reportYearNumber} dentro de su participación en el fondo de inversión, permitiéndole evaluar el desempeño de su inversión con base en los resultados alcanzados al cierre de dicho periodo.`,
-            ["", "USD", localCurrencyShort],
-            [
-              ["Aporte", `$ ${safeText(aporte)}`, `$ ${safeText(aporteL)}`],
-              ["Patrimonio", `$ ${safeText(patrimonio)}`, `$ ${safeText(patrimonioL)}`],
-              ["Crecimiento", safeText(crcmnt), safeText(crcmntL)],
-              ["Utilidad R", `$ ${safeText(utilidad)}`, `$ ${safeText(utilidadL)}`],
-              ["Utilidad", `$ ${safeText(utilidadTotal)}`, `$ ${safeText(utilidadTotalL)}`]
-            ]
+            hideLocalCurrency ? ["Concepto", "USD"] : ["Concepto", "USD", localCurrencyShort],
+            hideLocalCurrency
+              ? [
+                ["Aporte", `$ ${safeText(aporte)}`],
+                ["Patrimonio", `$ ${safeText(patrimonio)}`],
+                ["Crecimiento", safeText(crcmnt)],
+                ["Utilidad", `$ ${safeText(utilidad)}`]
+              ]
+              : [
+                ["Aporte", `$ ${safeText(aporte)}`, `$ ${safeText(aporteL)}`],
+                ["Patrimonio", `$ ${safeText(patrimonio)}`, `$ ${safeText(patrimonioL)}`],
+                ["Crecimiento", safeText(crcmnt), safeText(crcmntL)],
+                ["Utilidad R", `$ ${safeText(utilidad)}`, `$ ${safeText(utilidadL)}`],
+                ["Utilidad", `$ ${safeText(utilidadTotal)}`, `$ ${safeText(utilidadTotalL)}`]
+              ]
           );
           const rateStamp = selectedYear === "actual" ? "31/12/2025" : `31/12/${reportYearNumber}`;
           const summaryRateNumber = Number(currentRate || baseRate);
           const summaryRateText = Number.isFinite(summaryRateNumber) ? formatNumber(summaryRateNumber) : safeText(rateValue) || "N/D";
-          addParagraph(`Interpretación: Patrimonio y utilidad en USD, crecimiento porcentual sobre aportes acumulados. Conversión a ${localCurrencyShort} usando la tasa vigente al cierre del periodo visible (tasa de cierre ${rateStamp}: ${ratePairLabel} ${summaryRateText}).`);
-          if (Array.isArray(derivedData?.monthly) && derivedData.monthly.length) {
-            const patrSeries = derivedData.monthly.map((m) => Number(m.patrimonio) || 0);
+          addParagraph(hideLocalCurrency
+            ? "Interpretación: Patrimonio y utilidad en USD, crecimiento porcentual sobre aportes acumulados."
+            : `Interpretación: Patrimonio y utilidad en USD, crecimiento porcentual sobre aportes acumulados. Conversión a ${localCurrencyShort} usando la tasa vigente al cierre del periodo visible (tasa de cierre ${rateStamp}: ${ratePairLabel} ${summaryRateText}).`
+          );
+          if (monthlySrc.length) {
+            const patrSeries = monthlySrc.map((m) => Number(m.patrimonio) || 0);
             if (patrSeries.some((v) => v !== 0)) {
               addSparkline(
                 "Patrimonio (USD)",
                 "El gráfico refleja claramente la evolución del patrimonio a lo largo del año. Se consideran depósitos que incrementan el capital, retiros que lo reducen y las ganancias o pérdidas del mercado. Cada movimiento impacta el balance general del patrimonio, permitiendo un seguimiento detallado del crecimiento o disminución. La línea verde con puntos muestra el cierre de cada mes.",
                 patrSeries,
-                derivedData.monthly.map((m) => m.mes || ""),
+                monthlySrc.map((m) => m.mes || ""),
                 [15, 81, 50]
               );
             }
           }
 
-            const monthlySrc = Array.isArray(derivedData?.monthly) ? derivedData.monthly : [];
             const monthlyRows = monthlySrc.length
               ? monthlySrc.map((m) => [
                 m.mes,
@@ -3966,10 +4137,11 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             ["Mes", "Aporte", "Patrimonio", "Margen %", "Gan/Pérd"],
             monthlyRows
           );
-          if (Array.isArray(derivedData?.monthly) && derivedData.monthly.length) {
-            const utilSeries = derivedData.monthly.map((m) => Number(m.g_p) || 0);
-            const labels = derivedData.monthly.map((m) => m.mes || "");
+          if (monthlySrc.length) {
+            const utilSeries = monthlySrc.map((m) => Number(m.g_p) || 0);
+            const labels = monthlySrc.map((m) => m.mes || "");
             if (utilSeries.some((v) => v !== 0)) {
+              const utilidadAcumuladaDesde = hideLocalCurrency ? pdfStartMonthKey : "enero";
               const cumulative = [];
               utilSeries.reduce((acc, val) => {
                 const next = acc + val;
@@ -3978,7 +4150,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
               }, 0);
               addBarChart(
                 "Utilidad mensual (USD)",
-                "Gráfico complementario: barras (verde/rojo) para la ganancia o pérdida de cada mes y una barra delgada paralela que muestra la utilidad acumulada desde enero. Si ves ceros, es porque el mes aún no está cerrado o cargado.",
+                `Gráfico complementario: barras (verde/rojo) para la ganancia o pérdida de cada mes y una barra delgada paralela que muestra la utilidad acumulada desde ${utilidadAcumuladaDesde}. Si ves ceros, es porque el mes aún no está cerrado o cargado.`,
                 labels,
                 utilSeries,
                 cumulative,
@@ -4018,10 +4190,15 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             ]
           );
           addParagraph("Esta es la totalidad de los cobros que se efectuarán en la cuenta durante el transcurso del año. Estos valores corresponden a los honorarios trimestrales aplicados en función de las utilidades generadas por el portafolio en cada periodo. Las comisiones no son fijas, sino que varían según el rendimiento obtenido en cada trimestre, de acuerdo con la estructura anterior.");
+          if (isAbrMergeFirstYear) {
+            addParagraph("Condición de primer año: el primer y segundo trimestre no generan cobro para este cliente. Las utilidades de abril se acumulan al tercer trimestre, por lo que el T3 se calcula con cuatro meses: abril, mayo, junio y julio.");
+          }
 
           addTable(
             "Honorarios del año (USD)",
-            "Los cobros se realizan de forma automática, descontándose del saldo de la cuenta durante los primeros días del mes correspondiente al trimestre siguiente. Estos montos reflejan únicamente lo correspondiente a sus utilidades individuales, y pueden aumentar o disminuir según el rendimiento obtenido.",
+            isAbrMergeFirstYear
+              ? "Para este primer año, el T1 y T2 quedan sin cobro. El primer cobro aplicable se acumula en el T3 e incluye las utilidades de abril, mayo, junio y julio."
+              : "Los cobros se realizan de forma automática, descontándose del saldo de la cuenta durante los primeros días del mes correspondiente al trimestre siguiente. Estos montos reflejan únicamente lo correspondiente a sus utilidades individuales, y pueden aumentar o disminuir según el rendimiento obtenido.",
             ["Trimestre", "Tarifa", "Comisión", "Valor"],
             honorariosRows
           );
@@ -4045,37 +4222,54 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           addTable(
             "Totales históricos",
             "Cifras acumuladas desde tu fecha de ingreso. El crecimiento refleja el rendimiento sobre el total aportado.",
-            ["Concepto", "USD", localCurrencyShort],
-            [
-              ["Aporte", fmtMoney(histAporteUsd), fmtMoney(histAporteCop)],
-              ["Patrimonio", fmtMoney(histPatrUsd), fmtMoney(histPatrCop)],
-              ["Crecimiento", safeText(crcmntHist), safeText(crcmntHistL)],
-              ["Utilidad R", fmtMoney(histUtilRUsd), fmtMoney(histUtilRCop)],
-              ["Utilidad", fmtMoney(histUtilUsd), fmtMoney(histUtilCop)]
-            ]
+            hideLocalCurrency ? ["Concepto", "USD"] : ["Concepto", "USD", localCurrencyShort],
+            hideLocalCurrency
+              ? [
+                ["Aporte", fmtMoney(histAporteUsd)],
+                ["Patrimonio", fmtMoney(histPatrUsd)],
+                ["Crecimiento", safeText(crcmntHist)],
+                ["Utilidad", fmtMoney(histUtilRUsd)]
+              ]
+              : [
+                ["Aporte", fmtMoney(histAporteUsd), fmtMoney(histAporteCop)],
+                ["Patrimonio", fmtMoney(histPatrUsd), fmtMoney(histPatrCop)],
+                ["Crecimiento", safeText(crcmntHist), safeText(crcmntHistL)],
+                ["Utilidad R", fmtMoney(histUtilRUsd), fmtMoney(histUtilRCop)],
+                ["Utilidad", fmtMoney(histUtilUsd), fmtMoney(histUtilCop)]
+              ]
           );
 
-          y += 2;
-          addLine("Tasa aplicada", 12, 8, "bold");
-          addLine(`${ratePairLabel}: ${formatNumber(latestHistoricalRate)}`);
-          const todayRateStamp = new Date().toLocaleDateString("es-CO");
-          addLine(`Actualizada a ${todayRateStamp}`);
+          if (!hideLocalCurrency) {
+            y += 2;
+            addLine("Tasa aplicada", 12, 8, "bold");
+            addLine(`${ratePairLabel}: ${formatNumber(latestHistoricalRate)}`);
+            const todayRateStamp = new Date().toLocaleDateString("es-CO");
+            addLine(`Actualizada a ${todayRateStamp}`);
+          }
 
           y += 10;
           const movimientosRows = movimientosFiltrados.length
-            ? movimientosFiltrados.map((m) => [
-              m.recibo || "",
-              m.fecha || "",
-              fmtMoney(m.cantidad),
-              m.tipo || "",
-              m.tasa ? fmtMoney(m.tasa) : "",
-              fmtMoney(m.cambio)
-            ])
-            : [["Sin movimientos", "—", "—", "—", "—", "—"]];
+            ? movimientosFiltrados.map((m) => hideLocalCurrency
+              ? [
+                m.recibo || "",
+                m.fecha || "",
+                fmtMoney(m.cantidad),
+                m.tipo || "",
+                fmtMoney(m.cambio)
+              ]
+              : [
+                m.recibo || "",
+                m.fecha || "",
+                fmtMoney(m.cantidad),
+                m.tipo || "",
+                m.tasa ? fmtMoney(m.tasa) : "",
+                fmtMoney(m.cambio)
+              ])
+            : [hideLocalCurrency ? ["Sin movimientos", "—", "—", "—", "—"] : ["Sin movimientos", "—", "—", "—", "—", "—"]];
           addTable(
             "Movimientos",
             "A continuación, se presentan todos los movimientos realizados por usted en el portafolio durante el presente año. Este registro incluye entradas de capital, retiros (salidas) y liquidaciones parciales o totales, reflejando la actividad completa de su cuenta en el período. Cada operación ha sido registrada con el detalle correspondiente, permitiéndole tener un control claro y transparente sobre la evolución de su inversión.",
-            ["Recibo", "Fecha", "Cantidad", "Tipo", "Tasa", "Cambio"],
+            hideLocalCurrency ? ["Recibo", "Fecha", "Cantidad", "Tipo", "Cambio"] : ["Recibo", "Fecha", "Cantidad", "Tipo", "Tasa", "Cambio"],
             movimientosRows
           );
 

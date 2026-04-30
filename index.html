@@ -17,15 +17,27 @@
 <body>
   <a class="skip-link" href="#inicio">Ir al inicio</a>
   <header class="hero" id="inicio">
-    <div class="hero-inner">
-      <div class="brand">
-        <img src="img/logo-black.png" class="logo" alt="Logo Castle Black">
-        <div>
-          <span class="eyebrow">Gestora de inversión</span>
-          <p class="brand-name">Castle Black</p>
-        </div>
+    <nav class="topbar" aria-label="Navegación principal">
+      <a class="topbar-brand" href="#inicio">
+        <img src="img/logo-black.png" class="nav-logo" alt="Logo Castle Black">
+        <span>Castle Black</span>
+      </a>
+      <div class="nav-links">
+        <a href="#servicios">Servicios</a>
+        <a href="#metodologia">Proceso</a>
+        <a href="#honorarios">Honorarios</a>
+        <a href="login.html">Panel</a>
       </div>
+    </nav>
+    <div class="hero-inner">
       <div class="hero-content">
+        <div class="brand">
+          <img src="img/logo-black.png" class="logo" alt="Logo Castle Black">
+          <div>
+            <span class="eyebrow">Gestora de inversión</span>
+            <p class="brand-name">Castle Black</p>
+          </div>
+        </div>
         <h1>Haz crecer tu capital a escala global.</h1>
         <p class="lead">
           Somos una firma con sede en la ciudad de New York enfocada en detectar ineficiencias del mercado y gestionar
@@ -52,6 +64,34 @@
           </div>
         </div>
       </div>
+      <aside class="hero-visual" aria-label="Vista previa del panel Castle Black">
+        <div class="visual-header">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="visual-grid">
+          <div>
+            <p class="visual-label">Patrimonio</p>
+            <p class="visual-value">$ 32,000.00</p>
+          </div>
+          <div>
+            <p class="visual-label">Crecimiento</p>
+            <p class="visual-value positive">+ 3.05%</p>
+          </div>
+        </div>
+        <div class="market-lines">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="ticker-row">
+          <span>AAPL</span>
+          <strong>20%</strong>
+          <span>MSFT</span>
+          <strong>20%</strong>
+          <span>BRK.B</span>
+          <strong>20%</strong>
+        </div>
+      </aside>
     </div>
   </header>
 
@@ -234,7 +274,7 @@
             </tr>
             <tr>
               <td>Zafiro</td>
-              <td>&le; $5000</td>
+              <td>&gt; $5000</td>
               <td>5%</td>
             </tr>
           </tbody>
@@ -249,7 +289,7 @@
         <h2>Reglas claras para una relación transparente.</h2>
       </div>
       <ul class="list-check">
-        <li>Aporte de capital inicial mínimo de USD $100.</li>
+        <li>Aporte de capital inicial mínimo de USD $300.</li>
         <li>Retiros disponibles en cualquier momento.</li>
         <li>Contrato de duración indefinida.</li>
         <li>Terminación con notificación escrita de 14 días de preaviso.</li>

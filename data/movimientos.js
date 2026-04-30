@@ -1,5 +1,18 @@
 const movimientosData = [
   {
+    "username": "RACD1990",
+    "cliente": "024",
+    "recibo": "125",
+    "fecha": "29/04/26",
+    "year": 2026,
+    "socio": "RICHARD ALEJANDRO CONTRERAS D'AMATO",
+    "cedula": "YB6801117",
+    "cantidad": 377.0,
+    "tipo": "CHF",
+    "tasa": 1.0,
+    "cambio": 377.0
+  },
+  {
     "username": "MATRIX",
     "cliente": "A",
     "recibo": "124",
