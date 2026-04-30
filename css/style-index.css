@@ -896,6 +896,111 @@ footer {
   }
 }
 
+@media (max-width: 860px) and (orientation: portrait) {
+  .hero {
+    min-height: auto;
+    padding: 94px 18px 36px;
+  }
+
+  .hero-inner {
+    gap: 22px;
+    align-items: start;
+  }
+
+  .brand {
+    margin-bottom: 14px;
+  }
+
+  .logo {
+    width: 58px;
+  }
+
+  .hero-content h1 {
+    max-width: 620px;
+    font-size: clamp(34px, 9.5vw, 48px);
+    line-height: 1;
+  }
+
+  .lead {
+    max-width: none;
+    font-size: 15px;
+    line-height: 1.52;
+    margin-bottom: 14px;
+  }
+
+  .cta-row {
+    margin: 14px 0 16px;
+  }
+
+  .hero-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .stat {
+    padding: 10px;
+    min-width: 0;
+  }
+
+  .stat-title {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+
+  .stat-value {
+    font-size: 14px;
+    line-height: 1.2;
+  }
+
+  .hero-visual {
+    width: 100%;
+    min-height: 0;
+    grid-template-rows: auto auto 150px auto;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .hero-visual::before {
+    inset-top: 46px;
+    background-size: 30px 30px;
+  }
+
+  .visual-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .visual-grid > div {
+    padding: 10px;
+    min-width: 0;
+  }
+
+  .visual-label {
+    font-size: 10px;
+    margin-bottom: 5px;
+  }
+
+  .visual-value {
+    font-size: 17px;
+    line-height: 1.15;
+    word-break: break-word;
+  }
+
+  .market-lines {
+    min-height: 0;
+    height: 150px;
+    gap: 6px;
+    padding: 14px 6px 0;
+  }
+
+  .ticker-row {
+    grid-template-columns: repeat(6, auto);
+    gap: 6px;
+    padding: 10px;
+    font-size: 11px;
+  }
+}
+
 @media (max-width: 560px) {
   .hero {
     padding: 96px 16px 34px;
@@ -938,10 +1043,6 @@ footer {
 
   .nav-logo {
     width: 28px;
-  }
-
-  .visual-grid {
-    grid-template-columns: 1fr;
   }
 
   .market-lines {
