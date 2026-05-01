@@ -122,6 +122,14 @@ const hasNonZeroMeses = (meses = {}) =>
     return (Number.isFinite(aporte) && aporte !== 0) || (Number.isFinite(patrimonio) && patrimonio !== 0);
   });
 
+const hasAccountActivityForHonorarios = (data = {}, meses = data?.meses || {}, prevPatrimonio = 0) => {
+  if (String(data?.easterEgg || "").trim()) return false;
+  if (Number.isFinite(toNumber(prevPatrimonio)) && toNumber(prevPatrimonio) > 0) return true;
+  if (Number.isFinite(toNumber(data?.patrimonioPrev)) && toNumber(data.patrimonioPrev) > 0) return true;
+  if (hasNonZeroMeses(meses)) return true;
+  return Object.values(data?.historico || {}).some((hist) => hasNonZeroMeses(hist?.meses || {}));
+};
+
 const computeTotalAportesAllYears = (data, currentYearKey) => {
   const historico = data?.historico || {};
   const currentMeses = data?.meses || {};
@@ -2061,6 +2069,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       claveUsuario === "jfpg2006" ||
       claveUsuario === "matris" ||
       claveUsuario === "matrix" ||
+      String(userData.easterEgg || "").trim() ||
       String(userData.socio || "").trim().toUpperCase() === "CASTLE BLACK";
     const corteAplicado = (userData.corte || baseData.corte || "MAR-JUN-SEP-DIC").trim().toUpperCase();
 
@@ -2257,7 +2266,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const userInfo = await loadUserData(userEntry.dataFile).catch(() => null);
           if (!userInfo) continue;
           const userIsCastle = String(userInfo.socio || "").trim().toUpperCase() === "CASTLE BLACK";
-          if (userIsCastle || username === "jfpg2006") continue;
+          const isSpecialProfile = String(userInfo.easterEgg || "").trim() || ["ozymandias", "makima"].includes(username);
+          if (userIsCastle || username === "jfpg2006" || isSpecialProfile) continue;
           const corte = (userInfo.corte || "MAR-JUN-SEP-DIC").trim().toUpperCase();
           const userPrevYearKey = String(currentYearNumber - 1);
           const userPrevYearData = userInfo.historico?.[userPrevYearKey];
@@ -2274,6 +2284,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             )
             : null;
           const mesesCalc = buildMesesWithMovAportesForUser(userInfo, currentYearNumber);
+          if (!hasAccountActivityForHonorarios(userInfo, mesesCalc, userPrevPatr)) continue;
         const derivedCurrent = computeDerivedWithMonthlyRules({
           meses: mesesCalc,
           prevPatrInicial: userPrevPatr,
