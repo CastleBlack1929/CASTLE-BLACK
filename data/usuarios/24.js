@@ -6,6 +6,17 @@ window.userData = {
   "username": "RACD1990",
   "password": "RACD1990.",
   "nivel": "CCC",
+  "estado": "DESACTIVADO",
+  "fechaRetiro": "13/05/26",
+  "suspenderDashboard": true,
+  "bloquearMovimientosAutomaticos": true,
+  "motivoRetiro": "Liquidación total de la cuenta antes de finalizar el primer trimestre operativo.",
+  "honorarioPendienteCastleBlack": {
+    "year": 2026,
+    "mesCobro": "agosto",
+    "valorUsd": 10,
+    "concepto": "Honorario cobrado antes de la liquidación; entra en el T3 de Castle Black."
+  },
   "corte": "ENE-ABR-JUL-OCT",
   "cortePrimerAno": "ABR_MERGE_NEXT",
   "inicioMargenMes": "abril",

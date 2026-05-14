@@ -1,5 +1,32 @@
 const movimientosData = [
   {
+    "username": "vspg2008",
+    "cliente": "006",
+    "recibo": "128",
+    "fecha": "13/05/26",
+    "year": 2026,
+    "socio": "VALERIA SOFIA PERALTA GONZALEZ",
+    "cedula": "324033",
+    "cantidad": 1500000.0,
+    "tipo": "COP",
+    "tasa": 3750.0,
+    "cambio": 400.0
+  },
+  {
+    "username": "RACD1990",
+    "cliente": "024",
+    "recibo": "127",
+    "fecha": "13/05/26",
+    "year": 2026,
+    "socio": "RICHARD ALEJANDRO CONTRERAS D'AMATO",
+    "cedula": "YB6801117",
+    "cantidad": -379.47,
+    "tipo": "CHF",
+    "tasa": 1.0,
+    "cambio": -379.47,
+    "concepto": "LIQUIDACION"
+  },
+  {
     "username": "RACD1990",
     "cliente": "024",
     "recibo": "125",

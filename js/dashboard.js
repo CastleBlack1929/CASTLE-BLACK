@@ -327,7 +327,8 @@ const MONTHLY_MARGIN_BY_YEAR = {
     enero: 2.648,
     febrero: 0.95,
     marzo: 1.55,
-    abril: 3.05
+    abril: 3.05,
+    mayo: 0.95
   }
 };
 
@@ -1611,12 +1612,13 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
       const notice = document.createElement("section");
       notice.className = "resumen suspension-card";
+      const isDeactivated = String(data?.estado || "").trim().toUpperCase() === "DESACTIVADO";
       notice.innerHTML = `
         <p class="tabla-tip suspension-alert">
-          <strong>Cuenta en suspensión.</strong> La operación se detuvo a solicitud del titular.
-          Puede reactivarse en cualquier momento al realizar un nuevo depósito.
-          Mientras la cuenta permanezca inactiva, mantendremos únicamente el historial de movimientos registrado.
-          Esperamos que regrese cuando le sea posible.
+          <strong>${isDeactivated ? "Cuenta desactivada." : "Cuenta en suspensión."}</strong>
+          ${isDeactivated
+            ? "La cuenta fue liquidada a solicitud del titular. El panel queda en modo consulta y conserva únicamente el historial de movimientos registrado."
+            : "La operación se detuvo a solicitud del titular. Puede reactivarse en cualquier momento al realizar un nuevo depósito. Mientras la cuenta permanezca inactiva, mantendremos únicamente el historial de movimientos registrado. Esperamos que regrese cuando le sea posible."}
         </p>
       `;
       if (columns) {
@@ -2257,6 +2259,16 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const rate = Number.isFinite(currentRate)
         ? currentRate
         : (Number.isFinite(baseRate) ? baseRate : HONORARIOS_RATE_FALLBACK);
+      const getPendingCastleBlackHonorario = (data, monthKey) => {
+        const pending = data?.honorarioPendienteCastleBlack;
+        if (!pending || typeof pending !== "object") return 0;
+        const pendingYear = Number(pending.year);
+        const pendingMonth = String(pending.mesCobro || "").trim().toLowerCase();
+        const pendingValue = toNumber(pending.valorUsd);
+        if (pendingYear !== currentYearNumber) return 0;
+        if (pendingMonth !== String(monthKey || "").trim().toLowerCase()) return 0;
+        return Number.isFinite(pendingValue) && pendingValue > 0 ? pendingValue : 0;
+      };
       const buildTotalUsdForMonth = async (monthKey) => {
         let totalUsd = 0;
         for (const userEntry of usersList) {
@@ -2268,6 +2280,17 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const userIsCastle = String(userInfo.socio || "").trim().toUpperCase() === "CASTLE BLACK";
           const isSpecialProfile = String(userInfo.easterEgg || "").trim() || ["ozymandias", "makima"].includes(username);
           if (userIsCastle || username === "jfpg2006" || isSpecialProfile) continue;
+          const pendingHonorario = getPendingCastleBlackHonorario(userInfo, monthKey);
+          const isInactiveUser =
+            userInfo.suspenderDashboard === true ||
+            userInfo.bloquearMovimientosAutomaticos === true ||
+            String(userInfo.estado || "").trim().toUpperCase() === "DESACTIVADO";
+          if (pendingHonorario > 0) {
+            totalUsd += pendingHonorario;
+          }
+          if (isInactiveUser) {
+            continue;
+          }
           const corte = (userInfo.corte || "MAR-JUN-SEP-DIC").trim().toUpperCase();
           const userPrevYearKey = String(currentYearNumber - 1);
           const userPrevYearData = userInfo.historico?.[userPrevYearKey];
