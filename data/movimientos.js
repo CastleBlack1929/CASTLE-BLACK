@@ -611,7 +611,7 @@ const movimientosData = [
     "cantidad": 3000000.0,
     "tipo": "COP",
     "tasa": 3883.0,
-    "cambio": 772.0
+    "cambio": 772.65
   },
   {
     "username": "MATRIX",
@@ -741,7 +741,7 @@ const movimientosData = [
     "cantidad": 2000000.0,
     "tipo": "COP",
     "tasa": 4070.0,
-    "cambio": 491.0
+    "cambio": 491.35
   },
   {
     "username": "ylgr1973",
@@ -767,7 +767,7 @@ const movimientosData = [
     "cantidad": 1000000.0,
     "tipo": "COP",
     "tasa": 4127.0,
-    "cambio": 242.0
+    "cambio": 242.30
   },
   {
     "username": "",
@@ -949,7 +949,7 @@ const movimientosData = [
     "cantidad": 2000000.0,
     "tipo": "COP",
     "tasa": 4178.0,
-    "cambio": 478.0
+    "cambio": 478.75
   },
   {
     "username": "aygr1975",
