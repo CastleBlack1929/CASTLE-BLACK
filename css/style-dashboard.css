@@ -2304,22 +2304,22 @@ table tbody tr:nth-child(even),
 
   #tablaMeses th:nth-child(2),
   #tablaMeses td:nth-child(2) {
-    width: 22%;
+    width: 21%;
   }
 
   #tablaMeses th:nth-child(3),
   #tablaMeses td:nth-child(3) {
-    width: 27%;
+    width: 25%;
   }
 
   #tablaMeses th:nth-child(4),
   #tablaMeses td:nth-child(4) {
-    width: 10%;
+    width: 14%;
   }
 
   #tablaMeses th:nth-child(5),
   #tablaMeses td:nth-child(5) {
-    width: 23%;
+    width: 22%;
   }
 
   .movimientos table {
