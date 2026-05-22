@@ -2179,3 +2179,188 @@ table tbody tr:hover,
     padding: 4px 1px;
   }
 }
+
+/* Cleaner dashboard refinement */
+.resumen,
+.rate-box,
+.honorarios,
+.reportes,
+.movimientos,
+.grafico {
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.038), rgba(255, 255, 255, 0.006)),
+    #070808;
+  border-color: rgba(255, 255, 255, 0.095);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.34);
+}
+
+.resumen::before,
+.honorarios::before,
+.reportes::before,
+.movimientos::before,
+.grafico::before {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(214, 181, 109, 0.7), rgba(61, 220, 151, 0.32), transparent);
+  opacity: 0.7;
+}
+
+.resumen h3,
+.honorarios h3,
+.reportes h3,
+.movimientos h3 {
+  font-family: "IBM Plex Sans", "Fira Sans", sans-serif;
+  font-weight: 650;
+  letter-spacing: 0;
+}
+
+table,
+#tablaHonorarios,
+.tabla-resumen {
+  border-radius: 10px;
+  background: #080a0b;
+}
+
+table th,
+#tablaHonorarios th,
+.tabla-resumen thead th {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.008)),
+    #101315;
+  color: #f2f4f3;
+  font-weight: 650;
+}
+
+table tbody tr,
+#tablaHonorarios tbody tr,
+.tabla-resumen tbody tr {
+  background: #080a0a;
+}
+
+table tbody tr:nth-child(even),
+#tablaHonorarios tbody tr:nth-child(even),
+.tabla-resumen tbody tr:nth-child(even) {
+  background: #0b0d0e;
+}
+
+@media (max-width: 768px) {
+  .movimientos table th,
+  .movimientos table td {
+    overflow-wrap: normal;
+    word-break: keep-all;
+  }
+}
+
+@media (max-width: 640px) {
+  .resumen,
+  .honorarios,
+  .reportes,
+  .movimientos {
+    padding: 14px;
+    border-radius: 10px;
+  }
+
+  table,
+  #tablaHonorarios,
+  .tabla-resumen {
+    font-size: 10.5px;
+  }
+
+  table th,
+  table td,
+  #tablaHonorarios th,
+  #tablaHonorarios td,
+  .tabla-resumen th,
+  .tabla-resumen td {
+    padding: 6px 4px;
+    line-height: 1.18;
+    overflow-wrap: normal;
+    word-break: keep-all;
+    hyphens: none;
+  }
+
+  table th,
+  #tablaHonorarios th,
+  .tabla-resumen th {
+    white-space: normal;
+  }
+
+  .tabla-resumen th:first-child,
+  .tabla-resumen td:first-child {
+    width: 36%;
+  }
+
+  .tabla-resumen th:nth-child(2),
+  .tabla-resumen td:nth-child(2),
+  .tabla-resumen th:nth-child(3),
+  .tabla-resumen td:nth-child(3) {
+    width: 32%;
+  }
+
+  #tablaMeses th:nth-child(1),
+  #tablaMeses td:nth-child(1) {
+    width: 18%;
+  }
+
+  #tablaMeses th:nth-child(2),
+  #tablaMeses td:nth-child(2) {
+    width: 22%;
+  }
+
+  #tablaMeses th:nth-child(3),
+  #tablaMeses td:nth-child(3) {
+    width: 27%;
+  }
+
+  #tablaMeses th:nth-child(4),
+  #tablaMeses td:nth-child(4) {
+    width: 10%;
+  }
+
+  #tablaMeses th:nth-child(5),
+  #tablaMeses td:nth-child(5) {
+    width: 23%;
+  }
+
+  .movimientos table {
+    font-size: 9px;
+  }
+
+  .movimientos table th:nth-child(1),
+  .movimientos table td:nth-child(1) {
+    width: 9%;
+  }
+
+  .movimientos table th:nth-child(2),
+  .movimientos table td:nth-child(2) {
+    width: 13%;
+  }
+
+  .movimientos table th:nth-child(3),
+  .movimientos table td:nth-child(3) {
+    width: 27%;
+  }
+
+  .movimientos table th:nth-child(4),
+  .movimientos table td:nth-child(4) {
+    width: 9%;
+  }
+
+  .movimientos table th:nth-child(5),
+  .movimientos table td:nth-child(5) {
+    width: 20%;
+  }
+
+  .movimientos table th:nth-child(6),
+  .movimientos table td:nth-child(6) {
+    width: 22%;
+  }
+}
+
+@media (max-width: 390px) {
+  table,
+  #tablaHonorarios,
+  .tabla-resumen {
+    font-size: 9.5px;
+  }
+}
