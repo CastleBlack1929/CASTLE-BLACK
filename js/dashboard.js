@@ -782,8 +782,23 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       return;
     }
 
+    const getHeaderDisplayName = (name) => {
+      const fullName = String(name || "Usuario").trim() || "Usuario";
+      const canShowFullName = window.matchMedia?.("(min-width: 641px), (orientation: landscape)")?.matches;
+      if (canShowFullName) return fullName;
+      const words = fullName.split(/\s+/).filter(Boolean);
+      return words.length > 2 ? words.slice(0, 2).join(" ") : (words.join(" ") || "Usuario");
+    };
+    const setHeaderClientName = (data) => {
+      if (!nombreCliente) return;
+      const fullName = data.nombre || data.socio || "Usuario";
+      nombreCliente.textContent = getHeaderDisplayName(fullName);
+      nombreCliente.title = fullName;
+      nombreCliente.dataset.fullName = fullName;
+    };
+
     const populateHeader = (data) => {
-      if (nombreCliente) nombreCliente.textContent = data.nombre || data.socio || "Usuario";
+      setHeaderClientName(data);
       if (nivelText) nivelText.textContent = data.nivel ? `Nivel: ${data.nivel}` : "";
       if (idClienteHeader) idClienteHeader.textContent = data.idCliente ? `ID: ${data.idCliente}` : "";
       if (menuCedula) menuCedula.textContent = data.cedula || "";
@@ -2082,7 +2097,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const corteAplicado = (userData.corte || baseData.corte || "MAR-JUN-SEP-DIC").trim().toUpperCase();
 
     // Mostrar datos del usuario
-    nombreCliente.textContent = userData.nombre || userData.socio || "Usuario";
+    setHeaderClientName(userData);
     if (nivelText) {
       nivelText.textContent = userData.nivel ? `Nivel: ${userData.nivel}` : "";
     }
@@ -4041,6 +4056,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           };
 
           const updatedLabel = reportUpdatedLabel || safeText(rateTime) || safeText(datetimeEl);
+          const fullClientName = selectedUserData?.nombre || selectedUserData?.socio || nombreCliente?.dataset?.fullName || safeText(nombreCliente);
           let fileName = `estado-cuenta-${(reportYearText || selectedYear || "actual").replace(/[^0-9a-zA-Z-]/g, "") || "actual"}.pdf`;
           const todayLabel = new Date().toLocaleDateString("es-CO", {
             weekday: "long",
@@ -4075,7 +4091,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           y += 16;
           doc.setFont("times", "normal");
           doc.setFontSize(11);
-          doc.text(`Estimado(a) ${safeText(nombreCliente)}`, marginX, y);
+          doc.text(`Estimado(a) ${fullClientName}`, marginX, y);
           y += 12;
           doc.setFontSize(9);
           addParagraph("Nos complace dirigirnos a usted en nombre de Castle Black para presentar los resultados de nuestras operaciones de inversión y dar un recuento de los movimientos del portafolio al cierre del año.");
@@ -4095,13 +4111,13 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           doc.line(marginX, y, pageWidth - marginX, y);
           y += 4;
 
-          addLine(`Cliente: ${safeText(nombreCliente)}`);
+          addLine(`Cliente: ${fullClientName}`);
           const cleanId = safeText(idClienteHeader).replace(/^ID:\\s*/i, "") || "N/D";
           addLine(cleanId);
           addLine(safeText(nivelText));
           addLine(`Año: ${reportYearText}`);
           addLine(`Actualizado: ${updatedLabel}`);
-          addParagraph(`Informe dirigido a ${safeText(nombreCliente)} (${cleanId}). Datos de contacto registrados: Teléfono ${safeText(menuTelefono)} | Identificación ${safeText(menuCedula)}. Este documento consolida la información actual del dashboard para su referencia y soporte.`);
+          addParagraph(`Informe dirigido a ${fullClientName} (${cleanId}). Datos de contacto registrados: Teléfono ${safeText(menuTelefono)} | Identificación ${safeText(menuCedula)}. Este documento consolida la información actual del dashboard para su referencia y soporte.`);
           addParagraph("Como resultado de los movimientos realizados durante el presente año (o desde tu fecha de ingreso en este periodo), este estado de cuenta muestra el margen de utilidad obtenido. El enfoque está en los rendimientos del año seleccionado para evaluar el desempeño actual de tu inversión, incluyendo aportes, retiros y comisiones.");
           const cleanIdForFile = (cleanId || "sin-id").replace(/[^0-9a-zA-Z-]/g, "") || "sin-id";
           const yearMatch = (reportYearText || selectedYear || "").match(/\d{4}/);
