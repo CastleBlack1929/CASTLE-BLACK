@@ -2435,9 +2435,22 @@ header {
 .datetime-text {
   display: inline-flex;
   align-items: center;
+  gap: 5px;
   margin-left: 0;
   min-width: auto;
   white-space: nowrap;
+  color: #d8dde1;
+  border-color: rgba(214, 181, 109, 0.22);
+  background: rgba(214, 181, 109, 0.065);
+}
+
+.datetime-text::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: #d6b56d;
+  box-shadow: 0 0 10px rgba(214, 181, 109, 0.45);
 }
 
 .menu-btn {
@@ -2529,10 +2542,6 @@ header {
     text-overflow: ellipsis;
   }
 
-  .datetime-text {
-    display: none;
-  }
-
   .menu-btn {
     min-width: 36px;
     min-height: 34px;
@@ -2542,5 +2551,33 @@ header {
   .menu-dropdown {
     width: min(280px, calc(100vw - 24px));
     right: 0;
+  }
+}
+
+@media (max-width: 640px) and (orientation: portrait) {
+  .user-info h2 {
+    max-width: calc(100vw - 116px);
+  }
+
+  .user-meta {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    align-items: center;
+    width: calc(100vw - 116px);
+  }
+
+  .user-id,
+  .datetime-text {
+    max-width: none;
+  }
+
+  .datetime-text {
+    display: inline-flex;
+    justify-self: start;
+    padding: 2px 6px;
+    border: 1px solid rgba(214, 181, 109, 0.18);
+    background: rgba(214, 181, 109, 0.055);
+    color: #c9ced4;
+    font-size: 9.5px;
   }
 }

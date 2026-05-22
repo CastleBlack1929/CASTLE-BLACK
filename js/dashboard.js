@@ -1850,10 +1850,16 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const yyyy = now.getFullYear();
       const mm = pad(now.getMonth() + 1);
       const dd = pad(now.getDate());
+      return `${dd}/${mm}/${yyyy}`;
+    };
+    const formatLiveWithTime = () => {
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = pad(now.getMonth() + 1);
+      const dd = pad(now.getDate());
       const hh = pad(now.getHours());
       const min = pad(now.getMinutes());
-      const ss = pad(now.getSeconds());
-      return `${hh}:${min}:${ss} ${dd}/${mm}/${yyyy}`;
+      return `${hh}:${min} ${dd}/${mm}/${yyyy}`;
     };
     const highlightYear = (text, year, useBlue = false) => {
       const cls = useBlue ? "year-pill-blue" : "year-pill-green";
@@ -1873,7 +1879,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           renderClock();
         }, 1000);
       } else {
-        const txt = `23:59 31/12/${yearLabel}`;
+        const txt = `31/12/${yearLabel}`;
         const useBlue = Number(displayYear) === 2026;
         datetimeEl.innerHTML = highlightYear(txt, displayYear, useBlue);
       }
@@ -2771,7 +2777,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       }
       if (rateTime) {
         if (isActualYear) {
-          rateTime.textContent = `Actualizada a ${formatLive()}`;
+          rateTime.textContent = `Actualizada a ${formatLiveWithTime()}`;
         } else {
           const label = `31/12/${yearLabel} 23:59`;
           rateTime.textContent = `Actualizada a ${label}`;
@@ -4445,19 +4451,16 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
   });
   setInterval(() => sessionStillValid(), 60000);
 
-  // Fecha y hora actualizadas
+  // Fecha visible actualizada
   if (datetimeEl) {
     const yearLabel = selectedYear !== "actual" ? selectedYear : new Date().getFullYear();
     const formatNow = () =>
-      new Date().toLocaleString("es-CO", {
+      new Date().toLocaleDateString("es-CO", {
         timeZone: "America/Bogota",
         weekday: "short",
         year: "numeric",
         month: "short",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit"
+        day: "2-digit"
       });
 
     if (isActualYear) {
@@ -4466,7 +4469,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         datetimeEl.textContent = formatNow();
       }, 1000);
     } else {
-      datetimeEl.textContent = `31/12/${yearLabel} 23:59`;
+      datetimeEl.textContent = `31/12/${yearLabel}`;
     }
   }
 
