@@ -237,3 +237,45 @@ footer {
     justify-content: center;
   }
 }
+
+/* Subtle login light */
+.login-hero::before {
+  content: "";
+  position: fixed;
+  inset: 12% auto auto 50%;
+  width: min(520px, 82vw);
+  height: min(520px, 82vw);
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(circle, rgba(214, 181, 109, 0.16), rgba(196, 201, 209, 0.08) 34%, transparent 68%);
+  filter: blur(6px);
+}
+
+.login-card {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(255, 255, 255, 0.095);
+  box-shadow:
+    var(--shadow),
+    0 14px 36px rgba(0, 0, 0, 0.34);
+}
+
+.login-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(214, 181, 109, 0.64), rgba(61, 220, 151, 0.26), rgba(255, 255, 255, 0.06), rgba(214, 181, 109, 0.32));
+  opacity: 0.72;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+}
