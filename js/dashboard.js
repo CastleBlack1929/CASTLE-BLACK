@@ -849,10 +849,6 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           e.stopPropagation();
           const shouldOpen = !isMenuOpen();
           setMenuOpen(shouldOpen);
-          if (shouldOpen) {
-            const focusables = getMenuItems();
-            if (focusables.length) focusables[0].focus();
-          }
         });
 
         menuDropdown.addEventListener("click", (e) => e.stopPropagation());
