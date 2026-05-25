@@ -1040,7 +1040,7 @@ const movimientosData = [
     "cantidad": 1000000.0,
     "tipo": "COP",
     "tasa": 4033.0,
-    "cambio": 247.0
+    "cambio": 247.98
   },
   {
     "username": "jaen1971",
