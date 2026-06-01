@@ -357,7 +357,7 @@ const movimientosData = [
     "username": "vspg2008",
     "cliente": "006",
     "recibo": "87",
-    "fecha": "08/10/25",
+    "fecha": "08/11/25",
     "year": 2025,
     "socio": "VALERIA SOFIA PERALTA (MARTIN PERALTA)",
     "cedula": "324033",
@@ -494,7 +494,7 @@ const movimientosData = [
     "cantidad": 600000.0,
     "tipo": "COP",
     "tasa": 3916.0,
-    "cambio": 153.0
+    "cambio": 153.23
   },
   {
     "username": "MATRIX",
@@ -572,7 +572,7 @@ const movimientosData = [
     "cantidad": 640000.0,
     "tipo": "COP",
     "tasa": 3875.0,
-    "cambio": 165.0
+    "cambio": 165.15
   },
   {
     "username": "cgg2004",
@@ -819,7 +819,7 @@ const movimientosData = [
     "cantidad": 500000.0,
     "tipo": "COP",
     "tasa": 4542.0,
-    "cambio": 110.0
+    "cambio": 110.09
   },
   {
     "username": "srb2006",
@@ -1274,20 +1274,20 @@ const movimientosData = [
     "cantidad": 400400.0,
     "tipo": "COP",
     "tasa": 4068.0,
-    "cambio": 98.0
+    "cambio": 98.4
   },
   {
     "username": "vspg2008",
     "cliente": "006",
     "recibo": "7",
-    "fecha": "13/09/24",
+    "fecha": "13/07/24",
     "year": 2024,
     "socio": "VALERIA SOFIA PERALTA (MARTIN PERALTA)",
     "cedula": "324033",
     "cantidad": 500000.0,
     "tipo": "COP",
     "tasa": 3942.0,
-    "cambio": 126.0
+    "cambio": 126.8
   },
   {
     "username": "jfpg2006",

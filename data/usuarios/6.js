@@ -142,11 +142,11 @@ window.userData = {
           "patrimonio": 1249.01
         },
         "octubre": {
-          "aporte": 153.23,
+          "aporte": 233.18,
           "patrimonio": 1425.54
         },
         "noviembre": {
-          "aporte": 79.95,
+          "aporte": 0.0,
           "patrimonio": 1537.12
         },
         "diciembre": {
