@@ -2273,9 +2273,29 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       if (!usersList.length) return;
       const pad2 = (n) => n.toString().padStart(2, "0");
       const yearShort = String(currentYearNumber).slice(-2);
-      const rate = Number.isFinite(currentRate)
-        ? currentRate
-        : (Number.isFinite(baseRate) ? baseRate : HONORARIOS_RATE_FALLBACK);
+      const castleHonorariosReceiptByDate = {
+        "01/05/26": "126"
+      };
+      const castleHonorariosRateByDate = {
+        "01/05/26": 3637.51,
+        "01/06/26": 3678.15
+      };
+      const getCastleHonorariosRate = (fecha) => {
+        const datedRate = toNumber(castleHonorariosRateByDate[fecha]);
+        if (Number.isFinite(datedRate) && datedRate > 0) return datedRate;
+        return Number.isFinite(baseRate) ? baseRate : HONORARIOS_RATE_FALLBACK;
+      };
+      const getCastleHonorariosReceipt = (fecha) => {
+        const preferred = castleHonorariosReceiptByDate[fecha];
+        if (preferred && !movimientosData.some((m) => String(m.recibo || "") === preferred)) {
+          return preferred;
+        }
+        const maxRecibo = movimientosData.reduce((max, m) => {
+          const val = Number(m.recibo);
+          return Number.isFinite(val) && val > max ? val : max;
+        }, 0);
+        return String(maxRecibo + 1);
+      };
       const getPendingCastleBlackHonorario = (data, monthKey) => {
         const pending = data?.honorarioPendienteCastleBlack;
         if (!pending || typeof pending !== "object") return 0;
@@ -2366,11 +2386,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         if (exists) continue;
         const totalUsd = await buildTotalUsdForMonth(monthKey);
         if (!Number.isFinite(totalUsd) || totalUsd <= 0) continue;
-        const maxRecibo = movimientosData.reduce((max, m) => {
-          const val = Number(m.recibo);
-          return Number.isFinite(val) && val > max ? val : max;
-        }, 0);
-        const nuevoRecibo = String(maxRecibo + 1);
+        const rate = getCastleHonorariosRate(fecha);
+        const nuevoRecibo = getCastleHonorariosReceipt(fecha);
         movimientosData.unshift({
           "username": "MATRIX",
           "cliente": "A",
