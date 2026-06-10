@@ -51,23 +51,23 @@ window.userData = {
   "meses": {
     "enero": {
       "aporte": 0.0,
-      "patrimonio": 462.19
+      "patrimonio": 462.19106
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 466.58188
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 473.8139
     },
     "abril": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 478.26522
     },
     "mayo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 479.46089
     },
     "junio": {
       "aporte": 0,
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "CCC",
       "meses": {
         "enero": {
-          "aporte": 0.00,
+          "aporte": 0.0,
           "patrimonio": 120.19
         },
         "febrero": {
@@ -297,4 +297,4 @@ window.userData = {
   },
   "idCliente": "004",
   "socio": "SANDRA CAMILA GONZALEZ"
-}
+};

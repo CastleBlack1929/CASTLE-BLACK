@@ -201,3 +201,52 @@ function login(event) {
   // Redirigimos al dashboard (flujo normal)
   window.location.href = "dashboard.html";
 }
+
+// Al cargar login.html, verificar si ya hay sesión activa y restaurarla.
+// Esto soluciona el caso de Makima en móvil: al refrescar, el iframe se pierde
+// aunque la sesión en localStorage sigue vigente.
+window.addEventListener("DOMContentLoaded", () => {
+  const storedFile = localStorage.getItem("currentUserFile");
+  if (!storedFile) return;
+
+  const SESSION_TIMEOUT_MS = 30 * 60 * 1000;
+  const lastActivity = Number(localStorage.getItem("sessionLastActivity"));
+  if (Number.isFinite(lastActivity) && Date.now() - lastActivity > SESSION_TIMEOUT_MS) {
+    ["currentUserFile", "sessionLastActivity", "sessionStart"].forEach((k) => localStorage.removeItem(k));
+    return;
+  }
+
+  const isMakimaFile = storedFile.toLowerCase().includes("makima");
+  const isMobile =
+    (window.matchMedia && window.matchMedia("(max-width: 949px)").matches) ||
+    (navigator.maxTouchPoints > 0 && /iphone|ipad|ipod|android/i.test(navigator.userAgent));
+
+  if (isMakimaFile && isMobile) {
+    // Restaurar iframe de Makima sin requerir login otra vez
+    const iframe = document.createElement("iframe");
+    iframe.src = "dashboard.html";
+    iframe.title = "Dashboard";
+    iframe.allow = "autoplay; fullscreen";
+    iframe.setAttribute("allowfullscreen", "true");
+    iframe.style.position = "fixed";
+    iframe.style.inset = "0";
+    iframe.style.width = "100vw";
+    iframe.style.height = "100vh";
+    iframe.style.border = "0";
+    iframe.style.zIndex = "9999";
+    iframe.style.background = "#000";
+    document.body.appendChild(iframe);
+
+    const stopIfLoggedOut = () => {
+      if (!localStorage.getItem("currentUserFile")) {
+        try { clearInterval(window.__makimaLogoutPoll); } catch {}
+        iframe.remove();
+        window.location.reload();
+      }
+    };
+    window.__makimaLogoutPoll = window.setInterval(stopIfLoggedOut, 500);
+  } else if (!isMakimaFile) {
+    // Cualquier otro usuario con sesión válida → redirigir al dashboard
+    window.location.href = "dashboard.html";
+  }
+});

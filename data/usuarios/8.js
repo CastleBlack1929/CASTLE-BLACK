@@ -51,23 +51,23 @@ window.userData = {
   "meses": {
     "enero": {
       "aporte": 0.0,
-      "patrimonio": 426.56
+      "patrimonio": 426.56194
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 430.61428
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 437.2888
     },
     "abril": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 440.62611
     },
     "mayo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 441.72768
     },
     "junio": {
       "aporte": 0,
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "CCC",
       "meses": {
         "enero": {
-          "aporte": 0.00,
+          "aporte": 0.0,
           "patrimonio": 552.42
         },
         "febrero": {
@@ -151,11 +151,11 @@ window.userData = {
         },
         "diciembre": {
           "aporte": 0.0,
-          "patrimonio": 425.30
+          "patrimonio": 425.3
         }
       },
       "aporte": 343.51,
-      "patrimonio": 425.30,
+      "patrimonio": 425.3,
       "honorariosTrimestres": [
         {
           "nombre": "TRIMESTRE 1",
@@ -297,4 +297,4 @@ window.userData = {
   },
   "idCliente": "008",
   "socio": "CHRISTOPER GOMEZ GONZALEZ"
-}
+};

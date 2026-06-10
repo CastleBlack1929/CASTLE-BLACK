@@ -51,23 +51,23 @@ window.userData = {
   "meses": {
     "enero": {
       "aporte": 0.0,
-      "patrimonio": 1427.14
+      "patrimonio": 1427.14981
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 1440.70773
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 1463.0387
     },
     "abril": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 1494.5717
     },
     "mayo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 1498.30813
     },
     "junio": {
       "aporte": 0,
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "BBB",
       "meses": {
         "enero": {
-          "aporte": 0.00,
+          "aporte": 0.0,
           "patrimonio": 1164.76
         },
         "febrero": {
@@ -297,4 +297,4 @@ window.userData = {
   },
   "idCliente": "010",
   "socio": "JUAN EVANGELISTA GONZALEZ BABATIVA"
-}
+};

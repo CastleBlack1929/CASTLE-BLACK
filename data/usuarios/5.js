@@ -51,23 +51,23 @@ window.userData = {
   "meses": {
     "enero": {
       "aporte": 0.0,
-      "patrimonio": 477.83
+      "patrimonio": 477.82644
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 472.36579
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 479.68746
     },
     "abril": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 494.31793
     },
     "mayo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 485.55372
     },
     "junio": {
       "aporte": 0,
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "CCC",
       "meses": {
         "enero": {
-          "aporte": 0.00,
+          "aporte": 0.0,
           "patrimonio": 529.35
         },
         "febrero": {
@@ -151,11 +151,11 @@ window.userData = {
         },
         "diciembre": {
           "aporte": 112.0,
-          "patrimonio": 465.50
+          "patrimonio": 465.5
         }
       },
       "aporte": 377.03,
-      "patrimonio": 465.50,
+      "patrimonio": 465.5,
       "honorariosTrimestres": [
         {
           "nombre": "TRIMESTRE 1",
@@ -297,4 +297,4 @@ window.userData = {
   },
   "idCliente": "005",
   "socio": "JOSE ANTONIO ENCINAS"
-}
+};

@@ -51,23 +51,23 @@ window.userData = {
   "meses": {
     "enero": {
       "aporte": 0.0,
-      "patrimonio": 583.23
+      "patrimonio": 583.23136
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 588.77206
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 597.89802
     },
     "abril": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 606.13391
     },
     "mayo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 607.64925
     },
     "junio": {
       "aporte": 0,
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "B",
       "meses": {
         "enero": {
-          "aporte": 0.00,
+          "aporte": 0.0,
           "patrimonio": 0.0
         },
         "febrero": {
@@ -151,11 +151,11 @@ window.userData = {
         },
         "diciembre": {
           "aporte": 0.0,
-          "patrimonio": 582.00
+          "patrimonio": 582.0
         }
       },
       "aporte": 525.27,
-      "patrimonio": 582.00,
+      "patrimonio": 582.0,
       "honorariosTrimestres": [
         {
           "nombre": "TRIMESTRE 1",
@@ -206,4 +206,4 @@ window.userData = {
   },
   "idCliente": "021",
   "socio": "MARTHA ELIZABETH MARULANDA JARAMILLO"
-}
+};

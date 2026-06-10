@@ -51,23 +51,23 @@ window.userData = {
   "meses": {
     "enero": {
       "aporte": 0.0,
-      "patrimonio": 8348.96
+      "patrimonio": 8348.96402
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 8361.97237
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 8491.58294
     },
     "abril": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 13005.23249
     },
     "mayo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 12958.6148
     },
     "junio": {
       "aporte": 0,
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "AA",
       "meses": {
         "enero": {
-          "aporte": 232.00,
+          "aporte": 232.0,
           "patrimonio": 242.76
         },
         "febrero": {
@@ -206,4 +206,4 @@ window.userData = {
   },
   "idCliente": "012",
   "socio": "YAMILE LEONOR GONZALEZ RODRIGUEZ"
-}
+};

@@ -28,24 +28,88 @@ window.userData = {
   },
   "aporteL": 0,
   "honorariosTrimestres": [
-    { "nombre": "TRIMESTRE 1", "meses": ["enero", "febrero", "marzo"] },
-    { "nombre": "TRIMESTRE 2", "meses": ["abril", "mayo", "junio"] },
-    { "nombre": "TRIMESTRE 3", "meses": ["julio", "agosto", "septiembre"] },
-    { "nombre": "TRIMESTRE 4", "meses": ["octubre", "noviembre", "diciembre"] }
+    {
+      "nombre": "TRIMESTRE 1",
+      "meses": [
+        "enero",
+        "febrero",
+        "marzo"
+      ]
+    },
+    {
+      "nombre": "TRIMESTRE 2",
+      "meses": [
+        "abril",
+        "mayo",
+        "junio"
+      ]
+    },
+    {
+      "nombre": "TRIMESTRE 3",
+      "meses": [
+        "julio",
+        "agosto",
+        "septiembre"
+      ]
+    },
+    {
+      "nombre": "TRIMESTRE 4",
+      "meses": [
+        "octubre",
+        "noviembre",
+        "diciembre"
+      ]
+    }
   ],
   "meses": {
-    "enero": { "aporte": 0, "patrimonio": 0 },
-    "febrero": { "aporte": 0, "patrimonio": 0 },
-    "marzo": { "aporte": 0, "patrimonio": 0 },
-    "abril": { "aporte": 0, "patrimonio": 0 },
-    "mayo": { "aporte": 0, "patrimonio": 0 },
-    "junio": { "aporte": 0, "patrimonio": 0 },
-    "julio": { "aporte": 0, "patrimonio": 0 },
-    "agosto": { "aporte": 0, "patrimonio": 0 },
-    "septiembre": { "aporte": 0, "patrimonio": 0 },
-    "octubre": { "aporte": 0, "patrimonio": 0 },
-    "noviembre": { "aporte": 0, "patrimonio": 0 },
-    "diciembre": { "aporte": 0, "patrimonio": 0 }
+    "enero": {
+      "aporte": 0,
+      "patrimonio": 0
+    },
+    "febrero": {
+      "aporte": 0,
+      "patrimonio": 0
+    },
+    "marzo": {
+      "aporte": 0,
+      "patrimonio": 0
+    },
+    "abril": {
+      "aporte": 0,
+      "patrimonio": 388.4985
+    },
+    "mayo": {
+      "aporte": 0,
+      "patrimonio": 389.46975
+    },
+    "junio": {
+      "aporte": 0,
+      "patrimonio": 0
+    },
+    "julio": {
+      "aporte": 0,
+      "patrimonio": 0
+    },
+    "agosto": {
+      "aporte": 0,
+      "patrimonio": 0
+    },
+    "septiembre": {
+      "aporte": 0,
+      "patrimonio": 0
+    },
+    "octubre": {
+      "aporte": 0,
+      "patrimonio": 0
+    },
+    "noviembre": {
+      "aporte": 0,
+      "patrimonio": 0
+    },
+    "diciembre": {
+      "aporte": 0,
+      "patrimonio": 0
+    }
   },
   "historico": {},
   "idCliente": "024",

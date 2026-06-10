@@ -55,19 +55,19 @@ window.userData = {
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 3748.02017
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 3806.11448
     },
     "abril": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 4487.66724
     },
     "mayo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 4498.8864
     },
     "junio": {
       "aporte": 0,
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "A",
       "meses": {
         "enero": {
-          "aporte": 193.00,
+          "aporte": 193.0,
           "patrimonio": 756.12
         },
         "febrero": {
@@ -164,7 +164,7 @@ window.userData = {
             "febrero",
             "marzo"
           ],
-          "tipo": "\u2014",
+          "tipo": "—",
           "cobro": 0.0,
           "comisionTxt": "$0"
         },
@@ -175,7 +175,7 @@ window.userData = {
             "mayo",
             "junio"
           ],
-          "tipo": "\u2014",
+          "tipo": "—",
           "cobro": 0.0,
           "comisionTxt": "$0"
         },
@@ -186,7 +186,7 @@ window.userData = {
             "agosto",
             "septiembre"
           ],
-          "tipo": "\u2014",
+          "tipo": "—",
           "cobro": 0.0,
           "comisionTxt": "$0"
         },
@@ -197,7 +197,7 @@ window.userData = {
             "noviembre",
             "diciembre"
           ],
-          "tipo": "\u2014",
+          "tipo": "—",
           "cobro": 0.0,
           "comisionTxt": "$0"
         }
@@ -297,4 +297,4 @@ window.userData = {
   },
   "idCliente": "001",
   "socio": "JUAN FEDERICO PERALTA GONZALEZ"
-}
+};

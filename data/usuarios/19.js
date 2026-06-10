@@ -51,23 +51,23 @@ window.userData = {
   "meses": {
     "enero": {
       "aporte": 0.0,
-      "patrimonio": 132.10
+      "patrimonio": 132.09563
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 186.53099
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 189.42223
     },
     "abril": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 185.1996
     },
     "mayo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 185.6626
     },
     "junio": {
       "aporte": 0,
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "CC",
       "meses": {
         "enero": {
-          "aporte": 0.00,
+          "aporte": 0.0,
           "patrimonio": 0.0
         },
         "febrero": {
@@ -206,4 +206,4 @@ window.userData = {
   },
   "idCliente": "019",
   "socio": "CARMEN LIGIA RODRIGUEZ AREVALO"
-}
+};

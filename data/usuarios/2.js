@@ -51,23 +51,23 @@ window.userData = {
   "meses": {
     "enero": {
       "aporte": 0.0,
-      "patrimonio": 4889.65
+      "patrimonio": 4889.64405
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 4936.09567
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 5012.60515
     },
     "abril": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 5128.92258
     },
     "mayo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 5141.74489
     },
     "junio": {
       "aporte": 0,
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "AA",
       "meses": {
         "enero": {
-          "aporte": 459.00,
+          "aporte": 459.0,
           "patrimonio": 2548.93
         },
         "febrero": {
@@ -297,4 +297,4 @@ window.userData = {
   },
   "idCliente": "002",
   "socio": "ALEIDA YANIRA GONZALEZ"
-}
+};

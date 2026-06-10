@@ -78,6 +78,10 @@ body.makima-solid .menu-btn:hover {
   background: #24000a;
 }
 
+body.makima-solid .header-left::before {
+  display: none;
+}
+
 body.makima-solid footer {
   background: #000;
   border-top-color: rgba(255, 0, 40, 0.28);

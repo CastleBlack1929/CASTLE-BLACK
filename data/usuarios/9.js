@@ -51,23 +51,23 @@ window.userData = {
   "meses": {
     "enero": {
       "aporte": 0.0,
-      "patrimonio": 7573.68
+      "patrimonio": 7573.68133
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 8195.87947
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 8223.39571
     },
     "abril": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 8474.20928
     },
     "mayo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 8495.3948
     },
     "junio": {
       "aporte": 0,
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "AAA",
       "meses": {
         "enero": {
-          "aporte": 0.00,
+          "aporte": 0.0,
           "patrimonio": 2925.23
         },
         "febrero": {
@@ -297,4 +297,4 @@ window.userData = {
   },
   "idCliente": "009",
   "socio": "CARROCERIAS JGB"
-}
+};

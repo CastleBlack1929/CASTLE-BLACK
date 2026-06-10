@@ -58,15 +58,15 @@ window.userData = {
   "meses": {
     "enero": {
       "aporte": 0.0,
-      "patrimonio": 0
+      "patrimonio": 139.42678
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 140.75133
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 142.93298
     },
     "abril": {
       "aporte": 0,
@@ -113,7 +113,7 @@ window.userData = {
       "nivel": "CC",
       "meses": {
         "enero": {
-          "aporte": 0.00,
+          "aporte": 0.0,
           "patrimonio": 0.0
         },
         "febrero": {
@@ -213,4 +213,4 @@ window.userData = {
   },
   "idCliente": "017",
   "socio": "SEBASTIAN RODRIGUEZ BALLEN"
-}
+};

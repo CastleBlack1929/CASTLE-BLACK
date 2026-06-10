@@ -51,23 +51,23 @@ window.userData = {
   "meses": {
     "enero": {
       "aporte": 0.0,
-      "patrimonio": 4735.19
+      "patrimonio": 4735.18557
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 4714.29472
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 4787.36629
     },
     "abril": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 4933.38096
     },
     "mayo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 4906.07533
     },
     "junio": {
       "aporte": 0,
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "AA",
       "meses": {
         "enero": {
-          "aporte": 1160.00,
+          "aporte": 1160.0,
           "patrimonio": 1204.46
         },
         "febrero": {
@@ -206,4 +206,4 @@ window.userData = {
   },
   "idCliente": "013",
   "socio": "FLOR MARINA RODRIGUEZ AREVALO"
-}
+};

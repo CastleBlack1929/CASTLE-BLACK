@@ -55,19 +55,19 @@ window.userData = {
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 518.14687
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 516.17814
     },
     "abril": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 531.92158
     },
     "mayo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 533.25138
     },
     "junio": {
       "aporte": 0,
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "B",
       "meses": {
         "enero": {
-          "aporte": 0.00,
+          "aporte": 0.0,
           "patrimonio": 0.0
         },
         "febrero": {
@@ -206,4 +206,4 @@ window.userData = {
   },
   "idCliente": "015",
   "socio": "MIGUEL ANGEL ENCINAS GONZALEZ"
-}
+};

@@ -51,23 +51,23 @@ window.userData = {
   "meses": {
     "enero": {
       "aporte": 0.0,
-      "patrimonio": 1407.93
+      "patrimonio": 1407.93513
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 1421.31051
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 1443.34083
     },
     "abril": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 1475.28251
     },
     "mayo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 1478.97072
     },
     "junio": {
       "aporte": 0,
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "BBB",
       "meses": {
         "enero": {
-          "aporte": 0.00,
+          "aporte": 0.0,
           "patrimonio": 0.0
         },
         "febrero": {
@@ -206,4 +206,4 @@ window.userData = {
   },
   "idCliente": "016",
   "socio": "BRYAN SEBASTIAN GONZALEZ MEDINA"
-}
+};

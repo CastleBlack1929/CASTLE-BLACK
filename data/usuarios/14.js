@@ -51,23 +51,23 @@ window.userData = {
   "meses": {
     "enero": {
       "aporte": 0.0,
-      "patrimonio": 320.79
+      "patrimonio": 320.78526
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 323.83272
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 318.85213
     },
     "abril": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 328.57712
     },
     "mayo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 329.39856
     },
     "junio": {
       "aporte": 0,
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "CCC",
       "meses": {
         "enero": {
-          "aporte": 0.00,
+          "aporte": 0.0,
           "patrimonio": 0.0
         },
         "febrero": {
@@ -206,4 +206,4 @@ window.userData = {
   },
   "idCliente": "014",
   "socio": "MARIA PAULA GOMEZ GONZALEZ"
-}
+};

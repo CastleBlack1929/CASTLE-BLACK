@@ -528,13 +528,6 @@ const loadUserData = (filePath) =>
   });
 
 const initDashboard = async () => {
-  // Reset de estilos “especiales” por perfil (por si venimos de un easter egg).
-  // Esto asegura que SOLO Makima tenga su fondo sólido/rojo.
-  try {
-    document.body.classList.remove("makima-solid");
-    document.body.style.background = "";
-    document.body.style.backgroundImage = "";
-  } catch {}
 
   const nombreCliente = document.getElementById("nombreCliente");
   const nivelText = document.getElementById("nivelText");
@@ -773,6 +766,21 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
   const currentUserFile = guardActiveSession();
   if (!currentUserFile) return;
+
+  // Aplicar o limpiar makima-solid inmediatamente, antes de cargar datos,
+  // para evitar el flash de la franja decorativa y del tema normal al refrescar.
+  try {
+    const isMakimaSession = String(currentUserFile).toLowerCase().includes("makima");
+    if (isMakimaSession) {
+      document.body.classList.add("makima-solid");
+      document.body.style.background = "#000";
+      document.body.style.backgroundImage = "none";
+    } else {
+      document.body.classList.remove("makima-solid");
+      document.body.style.background = "";
+      document.body.style.backgroundImage = "";
+    }
+  } catch {}
 
   try {
     const baseData = await loadUserData(currentUserFile);
@@ -2275,7 +2283,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const pad2 = (n) => n.toString().padStart(2, "0");
       const yearShort = String(currentYearNumber).slice(-2);
       const castleHonorariosReceiptByDate = {
-        "01/05/26": "126"
+        "01/05/26": "126",
+        "01/06/26": "130"
       };
       const castleHonorariosRateByDate = {
         "01/05/26": 3637.51,

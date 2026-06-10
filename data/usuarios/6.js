@@ -51,23 +51,23 @@ window.userData = {
   "meses": {
     "enero": {
       "aporte": 168.0,
-      "patrimonio": 2296.15
+      "patrimonio": 2296.144
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 2317.95737
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 2353.88571
     },
     "abril": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 2404.20779
     },
     "mayo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 2410.21831
     },
     "junio": {
       "aporte": 0,
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "AA",
       "meses": {
         "enero": {
-          "aporte": 0.00,
+          "aporte": 0.0,
           "patrimonio": 721.97
         },
         "febrero": {
@@ -151,11 +151,11 @@ window.userData = {
         },
         "diciembre": {
           "aporte": 480.49,
-          "patrimonio": 2100.00
+          "patrimonio": 2100.0
         }
       },
       "aporte": 1832.95,
-      "patrimonio": 2100.00,
+      "patrimonio": 2100.0,
       "honorariosTrimestres": [
         {
           "nombre": "TRIMESTRE 1",
@@ -297,4 +297,4 @@ window.userData = {
   },
   "idCliente": "006",
   "socio": "VALERIA SOFIA PERALTA GONZALEZ"
-}
+};

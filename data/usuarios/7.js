@@ -51,23 +51,23 @@ window.userData = {
   "meses": {
     "enero": {
       "aporte": 0.0,
-      "patrimonio": 684.15
+      "patrimonio": 684.148
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 690.6474
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 701.35244
     },
     "abril": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 712.74369
     },
     "mayo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 714.52555
     },
     "junio": {
       "aporte": 0,
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "B",
       "meses": {
         "enero": {
-          "aporte": 0.00,
+          "aporte": 0.0,
           "patrimonio": 545.74
         },
         "febrero": {
@@ -151,11 +151,11 @@ window.userData = {
         },
         "diciembre": {
           "aporte": 0.0,
-          "patrimonio": 677.70
+          "patrimonio": 677.7
         }
       },
       "aporte": 542.52,
-      "patrimonio": 677.70,
+      "patrimonio": 677.7,
       "honorariosTrimestres": [
         {
           "nombre": "TRIMESTRE 1",
@@ -297,4 +297,4 @@ window.userData = {
   },
   "idCliente": "007",
   "socio": "MARISOL GONZALEZ RODRIGUEZ"
-}
+};

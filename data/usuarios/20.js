@@ -63,11 +63,11 @@ window.userData = {
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 140.57307
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 142.75195
     },
     "abril": {
       "aporte": 0,
@@ -114,7 +114,7 @@ window.userData = {
       "nivel": "CC",
       "meses": {
         "enero": {
-          "aporte": 0.00,
+          "aporte": 0.0,
           "patrimonio": 0.0
         },
         "febrero": {
@@ -159,11 +159,11 @@ window.userData = {
         },
         "diciembre": {
           "aporte": 0.0,
-          "patrimonio": 145.40
+          "patrimonio": 145.4
         }
       },
       "aporte": 129.21,
-      "patrimonio": 145.40,
+      "patrimonio": 145.4,
       "honorariosTrimestres": [
         {
           "nombre": "TRIMESTRE 1",
@@ -214,4 +214,4 @@ window.userData = {
   },
   "idCliente": "020",
   "socio": "CARLOS EDUARDO RODRIGUEZ GONGARA"
-}
+};

@@ -55,19 +55,19 @@ window.userData = {
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 1661.86113
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 1808.99254
     },
     "abril": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 2935.06197
     },
     "mayo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 3071.49139
     },
     "junio": {
       "aporte": 0,
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "BB",
       "meses": {
         "enero": {
-          "aporte": 0.00,
+          "aporte": 0.0,
           "patrimonio": 0.0
         },
         "febrero": {
@@ -160,4 +160,4 @@ window.userData = {
   },
   "idCliente": "A",
   "socio": "CASTLE BLACK"
-}
+};

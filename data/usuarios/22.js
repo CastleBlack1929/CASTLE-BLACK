@@ -52,23 +52,23 @@ window.userData = {
   "meses": {
     "enero": {
       "aporte": 397.64,
-      "patrimonio": 5192.15
+      "patrimonio": 5192.1514
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 5241.47684
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 5322.71973
     },
     "abril": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 9726.58623
     },
     "mayo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 9750.90269
     },
     "junio": {
       "aporte": 0,
@@ -194,4 +194,4 @@ window.userData = {
   },
   "idCliente": "022",
   "socio": "LAZARO MARTIN PERALTA"
-}
+};

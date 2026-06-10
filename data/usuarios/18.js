@@ -51,23 +51,23 @@ window.userData = {
   "meses": {
     "enero": {
       "aporte": 0.0,
-      "patrimonio": 426.58
+      "patrimonio": 426.57512
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 430.62759
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 437.30231
     },
     "abril": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 440.64003
     },
     "mayo": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 441.74163
     },
     "junio": {
       "aporte": 0,
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "CCC",
       "meses": {
         "enero": {
-          "aporte": 0.00,
+          "aporte": 0.0,
           "patrimonio": 0.0
         },
         "febrero": {
@@ -206,4 +206,4 @@ window.userData = {
   },
   "idCliente": "018",
   "socio": "FERNANDO GONZALEZ MORA"
-}
+};
