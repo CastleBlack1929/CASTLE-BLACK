@@ -67,11 +67,11 @@ window.userData = {
     },
     "mayo": {
       "aporte": 0,
-      "patrimonio": 1498.30813
+      "patrimonio": 1529.24577
     },
     "junio": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 1537.65662
     },
     "julio": {
       "aporte": 0,
