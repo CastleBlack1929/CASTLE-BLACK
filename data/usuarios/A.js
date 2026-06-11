@@ -71,7 +71,7 @@ window.userData = {
     },
     "junio": {
       "aporte": 0,
-      "patrimonio": 3255.4603
+      "patrimonio": 3253.83986
     },
     "julio": {
       "aporte": 0,
