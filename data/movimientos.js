@@ -1,5 +1,18 @@
 const movimientosData = [
   {
+    "username": "vspg2008",
+    "cliente": "006",
+    "recibo": "132",
+    "fecha": "25/06/26",
+    "year": 2026,
+    "socio": "VALERIA SOFIA PERALTA GONZALEZ",
+    "cedula": "324033",
+    "cantidad": -2800000.0,
+    "tipo": "COP",
+    "tasa": 3406.0,
+    "cambio": -822.15
+  },
+  {
     "username": "jgb1975",
     "cliente": "009",
     "recibo": "131",
