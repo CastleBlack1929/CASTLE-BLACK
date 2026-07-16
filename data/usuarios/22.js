@@ -102,7 +102,6 @@ window.userData = {
   "historico": {
     "2026": {
       "aporteL": 0,
-      "patrimonioL": 0,
       "tasaBase": 3710.5,
       "nivel": "N/A",
       "meses": {

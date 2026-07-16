@@ -101,7 +101,7 @@ window.userData = {
   "historico": {
     "2025": {
       "aporteL": 23858330.16,
-      "patrimonioL": 25816857.98,
+        "patrimonioL": 25816857.98,
       "tasaBase": 3773.6,
       "nivel": "AAA",
       "meses": {
@@ -205,7 +205,7 @@ window.userData = {
     },
     "2024": {
       "aporteL": 11000000.0,
-      "patrimonioL": 12358330.155,
+        "patrimonioL": 12358330.15,
       "tasaBase": 4373.5,
       "aporte": 923.89,
       "patrimonio": 2825.73,

@@ -109,7 +109,7 @@ window.userData = {
   "historico": {
     "2025": {
       "aporteL": 500000.0,
-      "patrimonioL": 548681.44,
+        "patrimonioL": 548681.44,
       "tasaBase": 3773.6,
       "nivel": "CC",
       "meses": {
