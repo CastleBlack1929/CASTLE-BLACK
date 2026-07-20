@@ -329,7 +329,8 @@ const MONTHLY_MARGIN_BY_YEAR = {
     marzo: 1.55,
     abril: 3.05,
     mayo: 2.32,
-    junio: 1.5
+    junio: 1.5,
+    julio: 0.85
   }
 };
 
@@ -2165,7 +2166,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const sums = {};
       const counts = {};
       movimientosData
-        .filter((m) => matchMovimientoForUser(m) && Number(m.year) === Number(year))
+        .filter((m) => matchMovimientoForUser(m) && Number(m.year) === Number(year) && !m.soloLista)
         .forEach((m) => {
           const mesKey = monthKeyFromFecha(m.fecha);
           if (!mesKey) return;
@@ -2187,7 +2188,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       if (typeof movimientosData === "undefined" || !Array.isArray(movimientosData)) return data?.meses || {};
       const sums = {};
       movimientosData
-        .filter((m) => matchMovimientoForUserData(m, data) && Number(m.year) === Number(year))
+        .filter((m) => matchMovimientoForUserData(m, data) && Number(m.year) === Number(year) && !m.soloLista)
         .forEach((m) => {
           const mesKey = monthKeyFromFecha(m.fecha);
           if (!mesKey) return;
