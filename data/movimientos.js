@@ -122,6 +122,7 @@ const movimientosData = [
   {"username": "mgr1981", "cliente": "007", "recibo": "3", "fecha": "28/06/24", "year": 2024, "socio": "MARISOL GONZALEZ RODRIGUEZ", "cedula": "52517532", "cantidad": 2000000.0, "tipo": "COP", "tasa": 4019.0, "cambio": 497.0},
   {"username": "aygr1975", "cliente": "002", "recibo": "2", "fecha": "28/07/24", "year": 2024, "socio": "ALEIDA YANIRA GONZALEZ", "cedula": "52332911", "cantidad": 2000000.0, "tipo": "COP", "tasa": 4074.0, "cambio": 490.95},
   {"username": "vspg2008", "cliente": "006", "recibo": "6", "fecha": "28/03/24", "year": 2024, "socio": "VALERIA SOFIA PERALTA (MARTIN PERALTA)", "cedula": "324033", "cantidad": 800000.0, "tipo": "COP", "tasa": 4000.0, "cambio": 200.0},
+  {"username": "scgr1998", "cliente": "004", "recibo": "19", "fecha": "28/12/23", "year": 2024, "socio": "SANDRA CAMILA GONZALEZ", "cedula": "1016103922", "cantidad": 430000.0, "tipo": "COP", "tasa": 3962.0, "cambio": 108.5, "soloLista": true},
   {"username": "jaen1971", "cliente": "005", "recibo": "8", "fecha": "28/12/23", "year": 2024, "socio": "JOSE ANTONIO ENCINAS", "cedula": "318674", "cantidad": 800000.0, "tipo": "COP", "tasa": 4300.0, "cambio": 186.0},
   {"username": "aygr1975", "cliente": "002", "recibo": "1", "fecha": "28/12/23", "year": 2024, "socio": "ALEIDA YANIRA GONZALEZ", "cedula": "52332911", "cantidad": 5000000.0, "tipo": "COP", "tasa": 3973.0, "cambio": 1258.0, "soloLista": true}
 ];
