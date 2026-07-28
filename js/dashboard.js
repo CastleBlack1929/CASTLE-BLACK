@@ -3528,7 +3528,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             <td>${tri.nombre}</td>
             <td>—</td>
             <td>—</td>
-            <td>$ ${formatNumber(0)}</td>
+            <td>—</td>
           `;
           tablaHonorarios.appendChild(row);
           trimestresData.push({
