@@ -409,6 +409,11 @@ const computeDerivedWithMonthlyRules = ({
       String(corteAplicado || "").toUpperCase() === "ENE-ABR-JUL-OCT";
     if (mergeFeb && mes === "marzo") return 0;
     if (mergeAbr && (mes === "febrero" || mes === "mayo")) return 0;
+    const mergeAbrMAR =
+      mergeAbrToNext &&
+      String(year) === "2026" &&
+      String(corteAplicado || "").toUpperCase() === "MAR-JUN-SEP-DIC";
+    if (mergeAbrMAR && (mes === "abril" || mes === "julio")) return 0;
     const utilTrim = (tri.meses || []).reduce((sum, item) => {
       const currentVal = toNumber(utilByMes[item]);
       if (Number.isFinite(currentVal)) return sum + currentVal;
@@ -2725,6 +2730,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     lastPatOsc = patrimonioCalcUsd;
     utilidad.textContent = formatMoney(utilidadDisplayUsd);
     if (utilidadTotal) utilidadTotal.textContent = formatMoney(utilidadTotalDisplayUsd);
+    if (nivelText) {
+      const computedNivel = getNivelFromPatrimonio(patrimonioCalcUsd);
+      nivelText.textContent = computedNivel ? `Nivel: ${computedNivel}` : "";
+    }
     setTrendClass(utilidad, utilidadDisplayUsd);
     setTrendClass(utilidadTotal, utilidadTotalDisplayUsd);
     if (utilidadArrow) utilidadArrow.textContent = "";

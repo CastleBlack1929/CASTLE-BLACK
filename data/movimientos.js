@@ -1,4 +1,6 @@
 const movimientosData = [
+  {"username": "gcv2007", "cliente": "025", "recibo": "137", "fecha": "27/07/26", "year": 2026, "socio": "GABRIELA CHACON CUEVAS", "cedula": "1014206942", "cantidad": 500000.0, "tipo": "COP", "tasa": 3196.0, "cambio": 156.43},
+  {"username": "maeg2009", "cliente": "015", "recibo": "136", "fecha": "27/07/26", "year": 2026, "socio": "MIGUEL ANGEL ENCINAS GONZALEZ", "cedula": "318674", "cantidad": -1000000.0, "tipo": "COP", "tasa": 3185.0, "cambio": -314.0},
   {"username": "vspg2008", "cliente": "006", "recibo": "135", "fecha": "26/07/26", "year": 2026, "socio": "VALERIA SOFIA PERALTA GONZALEZ", "cedula": "324033", "cantidad": -2000000.0, "tipo": "COP", "tasa": 3185.0, "cambio": -627.85},
   {"username": "MATRIX", "cliente": "A", "recibo": "134", "fecha": "05/07/26", "year": 2026, "socio": "CASTLE BLACK", "cedula": "-", "cantidad": 3000000.0, "tipo": "COP", "tasa": 3348.0, "cambio": 896.13},
   {"username": "MATRIX", "cliente": "A", "recibo": "133", "fecha": "01/07/26", "year": 2026, "socio": "CASTLE BLACK", "cedula": "-", "cantidad": 976348.0, "tipo": "COP", "tasa": 3393.0, "cambio": 287.8, "concepto": "HONORARIOS"},
