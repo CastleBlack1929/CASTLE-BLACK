@@ -2285,153 +2285,6 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const tarifa = tarifaHonorarios(utilTrim + extraFeb + extraAbr);
       return tarifa.valor || 0;
     };
-    const ensureCastleBlackHonorariosMovement = async () => {
-    const isCastleBlack = claveUsuario === "matris" || claveUsuario === "matrix" || String(baseData.socio || "").trim().toUpperCase() === "CASTLE BLACK";
-      if (!isCastleBlack || !isActualYear || Number(displayYear) !== currentYearNumber) return;
-      const now = new Date();
-      const currentMonthIdx = now.getMonth();
-      if (currentMonthIdx < monthOrder.indexOf("febrero")) return;
-      const usersList = await loadUsersList();
-      if (!usersList.length) return;
-      const pad2 = (n) => n.toString().padStart(2, "0");
-      const yearShort = String(currentYearNumber).slice(-2);
-      const castleHonorariosReceiptByDate = {
-        "01/05/26": "126",
-        "01/06/26": "130"
-      };
-      const castleHonorariosRateByDate = {
-        "01/05/26": 3637.51,
-        "01/06/26": 3678.15
-      };
-      const getCastleHonorariosRate = (fecha) => {
-        const datedRate = toNumber(castleHonorariosRateByDate[fecha]);
-        if (Number.isFinite(datedRate) && datedRate > 0) return datedRate;
-        return Number.isFinite(baseRate) ? baseRate : HONORARIOS_RATE_FALLBACK;
-      };
-      const getCastleHonorariosReceipt = (fecha) => {
-        const preferred = castleHonorariosReceiptByDate[fecha];
-        if (preferred && !movimientosData.some((m) => String(m.recibo || "") === preferred)) {
-          return preferred;
-        }
-        const maxRecibo = movimientosData.reduce((max, m) => {
-          const val = Number(m.recibo);
-          return Number.isFinite(val) && val > max ? val : max;
-        }, 0);
-        return String(maxRecibo + 1);
-      };
-      const getPendingCastleBlackHonorario = (data, monthKey) => {
-        const pending = data?.honorarioPendienteCastleBlack;
-        if (!pending || typeof pending !== "object") return 0;
-        const pendingYear = Number(pending.year);
-        const pendingMonth = String(pending.mesCobro || "").trim().toLowerCase();
-        const pendingValue = toNumber(pending.valorUsd);
-        if (pendingYear !== currentYearNumber) return 0;
-        if (pendingMonth !== String(monthKey || "").trim().toLowerCase()) return 0;
-        return Number.isFinite(pendingValue) && pendingValue > 0 ? pendingValue : 0;
-      };
-      const buildTotalUsdForMonth = async (monthKey) => {
-        let totalUsd = 0;
-        for (const userEntry of usersList) {
-          if (!userEntry?.dataFile) continue;
-          const username = String(userEntry.username || "").trim().toLowerCase();
-          if (username === "matris") continue;
-          const userInfo = await loadUserData(userEntry.dataFile).catch(() => null);
-          if (!userInfo) continue;
-          const userIsCastle = String(userInfo.socio || "").trim().toUpperCase() === "CASTLE BLACK";
-          const isSpecialProfile = String(userInfo.easterEgg || "").trim() || ["ozymandias", "makima"].includes(username);
-          if (userIsCastle || username === "jfpg2006" || isSpecialProfile) continue;
-          const pendingHonorario = getPendingCastleBlackHonorario(userInfo, monthKey);
-          const isInactiveUser =
-            userInfo.suspenderDashboard === true ||
-            userInfo.bloquearMovimientosAutomaticos === true ||
-            String(userInfo.estado || "").trim().toUpperCase() === "DESACTIVADO";
-          if (pendingHonorario > 0) {
-            totalUsd += pendingHonorario;
-          }
-          if (isInactiveUser) {
-            continue;
-          }
-          const corte = (userInfo.corte || "MAR-JUN-SEP-DIC").trim().toUpperCase();
-          const userPrevYearKey = String(currentYearNumber - 1);
-          const userPrevYearData = userInfo.historico?.[userPrevYearKey];
-          const userPrevPrevYearKey = String(currentYearNumber - 2);
-          const userPrevPrevYearData = userInfo.historico?.[userPrevPrevYearKey];
-          const prevClosing = toNumber(userPrevYearData?.meses?.diciembre?.patrimonio) || 0;
-          const userPrevPatr = prevClosing > 0 ? prevClosing : (toNumber(userInfo.patrimonioPrev) || 0);
-          const userPrevPrevClosing = toNumber(userPrevPrevYearData?.meses?.diciembre?.patrimonio) || 0;
-          const derivedPrev = userPrevYearData?.meses
-            ? computeDerived(
-              userPrevYearData.meses || {},
-              userPrevPrevClosing || toNumber(userPrevYearData.patrimonioPrev) || 0,
-              userInfo.usarAporteComoPrev === true
-            )
-            : null;
-          const mesesCalc = buildMesesWithMovAportesForUser(userInfo, currentYearNumber);
-          if (!hasAccountActivityForHonorarios(userInfo, mesesCalc, userPrevPatr)) continue;
-        const derivedCurrent = computeDerivedWithMonthlyRules({
-          meses: mesesCalc,
-          prevPatrInicial: userPrevPatr,
-          useAporteAsPrev: userInfo.usarAporteComoPrev === true,
-          year: currentYearNumber,
-          corteAplicado: corte,
-          derivedPrevYear: derivedPrev,
-          disableHonorarios: false,
-          currentMonthIndex: currentMonthIdx,
-          currentDay: now.getDate(),
-          startMonthKey: getStartMonthKey(userInfo, currentYearNumber),
-          respectManualPatrimonio: userInfo?.preservarPatrimonioManual === true,
-          mergeFebToNext: String(userInfo.cortePrimerAno || "").trim().toUpperCase() === "FEB_MERGE_NEXT",
-          mergeAbrToNext: String(userInfo.cortePrimerAno || "").trim().toUpperCase() === "ABR_MERGE_NEXT"
-        });
-          const deduction = computeHonorarioDeductionForMonth({
-            derivedCurrent,
-            derivedPrev,
-            corte,
-            monthKey,
-            year: currentYearNumber,
-            mergeFebToNext: String(userInfo.cortePrimerAno || "").trim().toUpperCase() === "FEB_MERGE_NEXT",
-            mergeAbrToNext: String(userInfo.cortePrimerAno || "").trim().toUpperCase() === "ABR_MERGE_NEXT"
-          });
-          totalUsd += Number.isFinite(deduction) ? deduction : 0;
-        }
-        return totalUsd;
-      };
-      const startIdx = monthOrder.indexOf("febrero");
-      for (let monthIdx = startIdx; monthIdx <= currentMonthIdx; monthIdx += 1) {
-        const monthKey = monthOrder[monthIdx];
-        const monthNum = pad2(monthIdx + 1);
-        const fecha = `01/${monthNum}/${yearShort}`;
-        const exists = movimientosData.some((m) =>
-          String(m.username || "").toLowerCase() === "matrix" &&
-          String(m.fecha || "") === fecha &&
-          String(m.concepto || "") === "HONORARIOS"
-        );
-        if (exists) continue;
-        const totalUsd = await buildTotalUsdForMonth(monthKey);
-        if (!Number.isFinite(totalUsd) || totalUsd <= 0) continue;
-        const rate = getCastleHonorariosRate(fecha);
-        const nuevoRecibo = getCastleHonorariosReceipt(fecha);
-        movimientosData.unshift({
-          "username": "MATRIX",
-          "cliente": "A",
-          "recibo": nuevoRecibo,
-          "fecha": fecha,
-          "year": currentYearNumber,
-          "socio": "CASTLE BLACK",
-          "cedula": "-",
-          "cantidad": totalUsd * rate,
-          "tipo": "COP",
-          "tasa": rate,
-          "cambio": totalUsd,
-          "concepto": "HONORARIOS"
-        });
-      }
-    };
-    try {
-      await ensureCastleBlackHonorariosMovement();
-    } catch (err) {
-      console.error("Error al generar movimiento de honorarios:", err);
-    }
     const currentDate = new Date();
     const currentMonthIndex = currentDate.getMonth();
     const currentDay = currentDate.getDate();
@@ -3855,6 +3708,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     }
 
     // Movimientos
+    const renderTablaMovimientos = () => {
     if (tablaMovimientos) {
       const clave = (userData.username || "").toLowerCase();
       const targetYear = Number(displayYear);
@@ -3915,6 +3769,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         tablaMovimientos.appendChild(emptyRow);
       }
     }
+    };
+    renderTablaMovimientos();
 
     const safeText = (el) => (el?.textContent || "").trim() || "N/D";
 
