@@ -330,7 +330,8 @@ const MONTHLY_MARGIN_BY_YEAR = {
     abril: 3.05,
     mayo: 2.32,
     junio: 1.5,
-    julio: 1.75
+    julio: 1.75,
+    agosto: 0.45
   }
 };
 
