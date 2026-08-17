@@ -2,7 +2,7 @@ window.userData = {
   "region": "COP",
   "cedula": "1016103922",
   "telefono": "(-57-)3152357360",
-  "fechaUnion": "30/12/23",
+  "fechaUnion": "12/30/23",
   "username": "scgr1998",
   "password": "Scgr1998.",
   "nivel": "CCC",

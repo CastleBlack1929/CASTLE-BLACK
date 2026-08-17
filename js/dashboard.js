@@ -92,6 +92,36 @@ const monthOrder = [
   "diciembre"
 ];
 
+const parseDashboardDate = (fecha) => {
+  const parts = String(fecha || "").split("/");
+  if (parts.length < 3) return null;
+  const first = Number(parts[0]);
+  const second = Number(parts[1]);
+  const yy = String(parts[2] || "").trim();
+  if (!Number.isFinite(first) || !Number.isFinite(second) || !yy) return null;
+  const month = first;
+  const day = second;
+  if (!Number.isFinite(month) || month < 1 || month > 12) return null;
+  if (!Number.isFinite(day) || day < 1 || day > 31) return null;
+  const yearNum = Number(yy);
+  const year = Number.isFinite(yearNum)
+    ? (yearNum < 100 ? 2000 + yearNum : yearNum)
+    : null;
+  if (!Number.isFinite(year)) return null;
+  return { day, month, year };
+};
+
+const monthKeyFromFecha = (fecha, data = {}) => {
+  const parsed = parseDashboardDate(fecha, data);
+  return parsed ? monthOrder[parsed.month - 1] : null;
+};
+
+const toDateKey = (fecha, data = {}) => {
+  const parsed = parseDashboardDate(fecha, data);
+  if (!parsed) return "";
+  return `${parsed.year}-${String(parsed.month).padStart(2, "0")}-${String(parsed.day).padStart(2, "0")}`;
+};
+
 const HONORARIOS_RATE_FALLBACK = 3636.5;
 
 const sumAportesFromMeses = (meses = {}) =>
@@ -1626,17 +1656,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         const movCedula = String(mov.cedula || "").trim().toLowerCase();
         return cedulaData && movCedula === cedulaData;
       };
-      const toDateKey = (fecha) => {
-        const parts = String(fecha || "").split("/");
-        if (parts.length < 3) return "";
-        const [dd, mm, yy] = parts;
-        const year = yy.length === 4 ? yy : `20${yy}`;
-        return `${year}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
-      };
       const allMovs = (typeof movimientosData !== "undefined" && Array.isArray(movimientosData))
         ? [...movimientosData]
             .filter(matchMov)
-            .sort((a, b) => String(toDateKey(b.fecha)).localeCompare(String(toDateKey(a.fecha))))
+            .sort((a, b) => String(toDateKey(b.fecha, data)).localeCompare(String(toDateKey(a.fecha, data))))
         : [];
 
       const notice = document.createElement("section");
@@ -2055,12 +2078,9 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     if (reporteMensualTip) {
       reporteMensualTip.textContent = "Seguimiento mensual del periodo: aporte del mes, patrimonio de cierre, margen porcentual y ganancia o pérdida estimada.";
       if (hideLocalCurrency) {
-        const fechaParts = String(userData?.fechaUnion || "").split("/");
-        const fechaYearRaw = Number(fechaParts?.[2]);
-        const fechaYear = Number.isFinite(fechaYearRaw) ? (fechaYearRaw < 100 ? 2000 + fechaYearRaw : fechaYearRaw) : null;
-        const fechaMonth = Number(fechaParts?.[1]);
+        const fechaUnionParsed = parseDashboardDate(userData?.fechaUnion, userData);
         const startMonth = userData?.inicioMargenMes ||
-          (fechaYear === Number(displayYear) && Number.isFinite(fechaMonth) ? monthOrder[fechaMonth - 1] : null) ||
+          (fechaUnionParsed?.year === Number(displayYear) ? monthOrder[fechaUnionParsed.month - 1] : null) ||
           "febrero";
         reporteMensualTip.textContent = `Seguimiento mensual desde ${startMonth}: aporte del mes, patrimonio de cierre, margen porcentual y ganancia o pérdida estimada en USD.`;
       }
@@ -2122,21 +2142,11 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     }
     idClienteHeader.textContent = userData.idCliente ? `ID: ${userData.idCliente}` : "";
 
-    const monthKeyFromFecha = (fecha) => {
-      const parts = String(fecha || "").split("/");
-      if (parts.length < 2) return null;
-      const month = Number(parts[1]);
-      if (!Number.isFinite(month) || month < 1 || month > 12) return null;
-      return monthOrder[month - 1];
-    };
     const getStartMonthKey = (data, year) => {
       if (data?.inicioMargenMes) return data.inicioMargenMes;
-      const parts = String(data?.fechaUnion || "").split("/");
-      if (parts.length < 3) return "febrero";
-      const joinedYearRaw = Number(parts[2]);
-      if (!Number.isFinite(joinedYearRaw)) return "febrero";
-      const joinedYear = joinedYearRaw < 100 ? 2000 + joinedYearRaw : joinedYearRaw;
-      return joinedYear === Number(year) ? monthKeyFromFecha(data.fechaUnion) || "febrero" : "febrero";
+      const joinedDate = parseDashboardDate(data?.fechaUnion, data);
+      if (!joinedDate) return "febrero";
+      return joinedDate.year === Number(year) ? monthKeyFromFecha(data.fechaUnion, data) || "febrero" : "febrero";
     };
     const getMovUsdValueLocal = (mov) => {
       const tipo = (mov.tipo || "").toUpperCase();
@@ -2174,7 +2184,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       movimientosData
         .filter((m) => matchMovimientoForUser(m) && Number(m.year) === Number(year) && !m.soloLista)
         .forEach((m) => {
-          const mesKey = monthKeyFromFecha(m.fecha);
+          const mesKey = monthKeyFromFecha(m.fecha, userData);
           if (!mesKey) return;
           const usdVal = getMovUsdValueLocal(m);
           sums[mesKey] = (sums[mesKey] || 0) + (Number.isFinite(usdVal) ? usdVal : 0);
@@ -2196,7 +2206,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       movimientosData
         .filter((m) => matchMovimientoForUserData(m, data) && Number(m.year) === Number(year) && !m.soloLista)
         .forEach((m) => {
-          const mesKey = monthKeyFromFecha(m.fecha);
+          const mesKey = monthKeyFromFecha(m.fecha, data);
           if (!mesKey) return;
           const usdVal = getMovUsdValueLocal(m);
           sums[mesKey] = (sums[mesKey] || 0) + (Number.isFinite(usdVal) ? usdVal : 0);
@@ -2424,15 +2434,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const movimientosActual = movimientosYear.filter(
       (m) => matchMovimientoForUser(m) && Number(m.year) === currentYearNumber
     );
-    const toDateKey = (fecha) => {
-      const parts = String(fecha || "").split("/");
-      if (parts.length < 3) return "";
-      const [dd, mm, yy] = parts;
-      const year = yy.length === 4 ? yy : `20${yy}`;
-      return `${year}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
-    };
     const sortMovsByDate = (list) =>
-      [...list].sort((a, b) => String(toDateKey(a.fecha)).localeCompare(String(toDateKey(b.fecha))));
+      [...list].sort((a, b) => String(toDateKey(a.fecha, userData)).localeCompare(String(toDateKey(b.fecha, userData))));
     const sumMovUsd = movimientosActual.reduce((acc, mov) => {
       const rateFallback = currentRate || baseRate || safeTasaFallback || 0;
       return acc + getMovUsdValue(mov, rateFallback);
@@ -2456,7 +2459,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         const usdVal = getMovUsdValue(mov, rateFallback);
         acumuladoNet += Number.isFinite(usdVal) ? usdVal : 0;
         if (acumuladoNet <= (-1 * basePatrReset)) {
-          resetDateKey = toDateKey(mov.fecha);
+          resetDateKey = toDateKey(mov.fecha, userData);
           break;
         }
       }
@@ -2465,7 +2468,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const sumMovUsdPostReset = resetActivo
       ? movimientosActual
           .filter((m) => {
-            const key = toDateKey(m.fecha);
+            const key = toDateKey(m.fecha, userData);
             return key && key > resetDateKey;
           })
           .reduce((acc, mov) => {
@@ -2476,7 +2479,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const sumMovCopPostReset = resetActivo
       ? movimientosActual
           .filter((m) => {
-            const key = toDateKey(m.fecha);
+            const key = toDateKey(m.fecha, userData);
             return key && key > resetDateKey;
           })
           .reduce((acc, mov) => {
@@ -3711,11 +3714,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     // Movimientos
     const renderTablaMovimientos = () => {
     if (tablaMovimientos) {
-      const clave = (userData.username || "").toLowerCase();
       const targetYear = Number(displayYear);
       const registros = typeof movimientosData !== "undefined" && Array.isArray(movimientosData)
         ? movimientosData.filter(m => {
-            const sameUser = (m.username || "").toLowerCase() === clave;
+            const sameUser = matchMovimientoForUser(m);
             const sameYear = Number(m.year) === targetYear;
             return sameUser && sameYear;
           })
@@ -3724,8 +3726,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       tablaMovimientos.innerHTML = "";
 
       const registrosOrdenados = [...registros].sort((a, b) => {
-        const da = String(toDateKey(a.fecha));
-        const db = String(toDateKey(b.fecha));
+        const da = String(toDateKey(a.fecha, userData));
+        const db = String(toDateKey(b.fecha, userData));
         if (db !== da) return db.localeCompare(da);
         return Number(b.recibo || 0) - Number(a.recibo || 0);
       });
