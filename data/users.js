@@ -115,8 +115,8 @@ const users = [
     "dataFile": "data/usuarios/24.js"
   },
   {
-    "username": "gcv2007",
-    "password": "Gcv2007.",
+    "username": "GCC2007",
+    "password": "GCC2007.",
     "dataFile": "data/usuarios/25.js"
   },
   {
