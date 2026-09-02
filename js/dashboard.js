@@ -361,7 +361,8 @@ const MONTHLY_MARGIN_BY_YEAR = {
     mayo: 2.32,
     junio: 1.5,
     julio: 1.75,
-    agosto: 0.45
+    agosto: 0.45,
+    septiembre: 0.67
   }
 };
 
