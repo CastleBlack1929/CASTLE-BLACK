@@ -128,5 +128,10 @@ const users = [
     "username": "MAKIMA",
     "password": "MAKIMA",
     "dataFile": "data/usuarios/makima.js"
+  },
+  {
+    "username": "OBSESSION",
+    "password": "OBSESSION",
+    "dataFile": "data/usuarios/obsession.js"
   }
 ];

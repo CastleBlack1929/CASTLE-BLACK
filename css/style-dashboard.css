@@ -100,6 +100,174 @@ body.makima-eye::after {
   display: none;
 }
 
+body.obsession-easter {
+  background: #fdf6d8;
+  color: #3a2e10;
+}
+
+body.obsession-easter::before,
+body.obsession-easter::after {
+  display: none;
+}
+
+body.obsession-easter footer {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: #a03040;
+  border-top: 1px solid rgba(176, 42, 55, 0.3);
+}
+
+body.obsession-easter header,
+body.makima-solid header,
+body.makima-eye header,
+body.ozymandias-easter header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: auto;
+  height: auto;
+  padding: 14px 16px 0 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  justify-content: flex-end;
+}
+
+body.obsession-easter .header-left,
+body.makima-solid .header-left,
+body.makima-eye .header-left,
+body.ozymandias-easter .header-left {
+  display: none;
+}
+
+body.obsession-easter .menu-btn {
+  background: rgba(255, 248, 210, 0.75);
+  border-color: rgba(180, 140, 40, 0.28);
+  box-shadow: 0 8px 28px rgba(140, 100, 20, 0.18);
+}
+
+body.obsession-easter .menu-line {
+  background: #6b4e10;
+}
+
+body.obsession-easter .menu-dropdown {
+  background: rgba(255, 251, 225, 0.96);
+  border-color: rgba(176, 42, 55, 0.2);
+  box-shadow: 0 24px 70px rgba(140, 100, 20, 0.2);
+  color: #3a2e10;
+}
+
+body.obsession-easter #logoutBtn {
+  background: rgba(176, 42, 55, 0.14);
+  color: #e05060;
+  border: 1px solid rgba(176, 42, 55, 0.45);
+  box-shadow: 0 8px 24px rgba(176, 42, 55, 0.15);
+}
+
+body.obsession-easter #logoutBtn:hover,
+body.obsession-easter #logoutBtn:focus-visible {
+  background: rgba(176, 42, 55, 0.26);
+  color: #ff7080;
+  border-color: rgba(176, 42, 55, 0.65);
+}
+
+@keyframes obsession-ember-rise {
+  0%   { transform: translateY(0)      translateX(0px);  opacity: 0; }
+  8%   { opacity: 1; }
+  40%  { transform: translateY(-35vh)  translateX(12px); opacity: 0.9; }
+  70%  { transform: translateY(-65vh)  translateX(-8px); opacity: 0.6; }
+  100% { transform: translateY(-105vh) translateX(4px);  opacity: 0; }
+}
+
+@keyframes obsession-ember-flicker {
+  0%, 100% { filter: brightness(1)   blur(0px); }
+  30%       { filter: brightness(1.8) blur(0.5px); }
+  60%       { filter: brightness(0.6) blur(0px); }
+  80%       { filter: brightness(2.2) blur(0.8px); }
+}
+
+.obsession-ember {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+  animation: obsession-ember-rise linear infinite, obsession-ember-flicker ease-in-out infinite;
+}
+
+@keyframes obsession-fog-pulse {
+  0%, 100% { opacity: 0.52; }
+  50%       { opacity: 0.72; }
+}
+
+.obsession-fog {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse 75% 65% at 50% 50%, transparent 18%, rgba(18, 5, 3, 0.58) 100%);
+  animation: obsession-fog-pulse ease-in-out 9s infinite;
+}
+
+body.obsession-easter .menu-btn {
+  backdrop-filter: blur(6px) brightness(0.85);
+  background: rgba(20, 8, 5, 0.35);
+  border-color: rgba(200, 180, 160, 0.18);
+  box-shadow:
+    0 0 18px rgba(18, 5, 3, 0.45),
+    0 0 40px rgba(18, 5, 3, 0.25);
+}
+
+body.obsession-easter .menu-line {
+  background: rgba(240, 220, 200, 0.88);
+}
+
+.obsession-profile {
+  width: min(92vw, 760px);
+  min-height: min(80vh, 900px);
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+  position: relative;
+  z-index: 3;
+}
+
+.obsession-profile::before {
+  content: "";
+  position: absolute;
+  inset: -18px;
+  border-radius: 32px;
+  background:
+    linear-gradient(135deg, rgba(176, 42, 55, 0.18), rgba(255, 220, 180, 0.12), rgba(80, 40, 80, 0.15));
+  filter: blur(22px);
+  opacity: 0.74;
+}
+
+.obsession-image {
+  width: min(94vw, 680px);
+  max-height: 84vh;
+  object-fit: cover;
+  object-position: center top;
+  position: relative;
+  z-index: 1;
+  border-radius: 0;
+  border: none;
+  outline: none;
+  box-shadow:
+    0 24px 80px rgba(180, 140, 30, 0.22),
+    0 6px 24px rgba(140, 100, 10, 0.14);
+  cursor: pointer;
+  transition: transform 0.45s cubic-bezier(.22,.68,0,1.2), box-shadow 0.4s ease;
+}
+
+.obsession-image:hover {
+  transform: scale(1.025);
+  box-shadow:
+    0 36px 100px rgba(180, 140, 30, 0.28),
+    0 8px 32px rgba(140, 100, 10, 0.18);
+}
+
 h2, h3, h4 {
   font-family: "IBM Plex Serif", "Cormorant Garamond", serif;
 }

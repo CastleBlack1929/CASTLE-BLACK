@@ -1225,6 +1225,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       if (columns) columns.style.display = "none";
       if (!mainEl) return;
 
+      document.body.classList.add("ozymandias-easter");
+
       if (idClienteHeader) idClienteHeader.textContent = "";
       if (nivelText) nivelText.textContent = "";
 
@@ -1318,6 +1320,111 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
     if (String(baseData?.easterEgg || "").toLowerCase() === "ozymandias") {
       renderOzymandiasEasterEgg();
+      return;
+    }
+
+    const renderObsessionEasterEgg = () => {
+      const mainEl = document.querySelector("main");
+      const columns = document.querySelector(".dashboard-columns");
+      if (columns) columns.style.display = "none";
+      if (!mainEl) return;
+
+      if (nombreCliente) nombreCliente.textContent = "OBSESSION";
+      if (idClienteHeader) idClienteHeader.textContent = "";
+      if (nivelText) nivelText.textContent = "";
+      if (datetimeEl) datetimeEl.textContent = "";
+
+      const headerLogo = document.querySelector("header .logo");
+      if (headerLogo) headerLogo.style.display = "none";
+      if (nombreCliente) nombreCliente.style.display = "none";
+      const userMeta = document.querySelector("header .user-meta");
+      if (userMeta) userMeta.style.display = "none";
+
+      const movBox = document.querySelector(".movimientos");
+      if (movBox) movBox.style.display = "none";
+      const activosBox = document.querySelector(".activos-panel");
+      if (activosBox) activosBox.style.display = "none";
+      const chartsBox = document.querySelector(".graficos-panel");
+      if (chartsBox) chartsBox.style.display = "none";
+
+      document.body.classList.add("obsession-easter");
+
+      if (menuCedula) menuCedula.textContent = "";
+      if (menuTelefono) menuTelefono.textContent = "";
+      if (logoutBtn) logoutBtn.textContent = "Salir";
+      if (menuDropdown) {
+        menuDropdown.querySelectorAll(".menu-info").forEach((el) => {
+          el.style.display = "none";
+        });
+      }
+
+      const audio = document.createElement("audio");
+      audio.src = encodeURI("song/The Little Dippers - Forever (Single Version).mp3");
+      audio.loop = true;
+      audio.volume = 0.42;
+      audio.preload = "auto";
+      audio.setAttribute("aria-hidden", "true");
+
+      const startAudio = () => {
+        audio.play().catch(() => {});
+      };
+      document.addEventListener("pointerdown", startAudio, { once: true });
+      document.addEventListener("click", startAudio, { once: true });
+      document.addEventListener("keydown", startAudio, { once: true });
+      window.setTimeout(startAudio, 350);
+
+      const wrap = document.createElement("section");
+      wrap.className = "obsession-profile";
+
+      const image = document.createElement("img");
+      image.className = "obsession-image";
+      image.src = "img/assets/easter-eggs/onewishwillow.jpg";
+      image.alt = "Obsession";
+      image.addEventListener("click", startAudio);
+
+      const fog = document.createElement("div");
+      fog.className = "obsession-fog";
+      document.body.appendChild(fog);
+
+      const emberColors = [
+        { bg: "rgba(220,60,10,{a})",  glow: "rgba(220,60,10,{g})"  },
+        { bg: "rgba(255,120,0,{a})",  glow: "rgba(255,120,0,{g})"  },
+        { bg: "rgba(200,20,0,{a})",   glow: "rgba(200,20,0,{g})"   },
+        { bg: "rgba(255,180,30,{a})", glow: "rgba(255,180,30,{g})" },
+        { bg: "rgba(255,80,0,{a})",   glow: "rgba(255,80,0,{g})"   },
+      ];
+      for (let i = 0; i < 45; i++) {
+        const e = document.createElement("span");
+        e.className = "obsession-ember";
+        const size = 1.5 + Math.random() * 3.5;
+        const left = Math.random() * 100;
+        const startY = Math.random() * 100;
+        const dur = 5 + Math.random() * 9;
+        const flickerDur = 0.4 + Math.random() * 0.8;
+        const delay = -(Math.random() * dur);
+        const c = emberColors[Math.floor(Math.random() * emberColors.length)];
+        const alpha = (0.7 + Math.random() * 0.3).toFixed(2);
+        const glowA = (0.4 + Math.random() * 0.3).toFixed(2);
+        const bg   = c.bg.replace("{a}", alpha);
+        const glow = c.glow.replace("{g}", glowA);
+        e.style.cssText = `
+          width:${size}px; height:${size}px;
+          left:${left}vw; bottom:${startY}vh;
+          background:${bg};
+          box-shadow: 0 0 ${size * 4}px ${size * 1.5}px ${glow};
+          animation-duration: ${dur}s, ${flickerDur}s;
+          animation-delay: ${delay}s, ${-(Math.random() * flickerDur)}s;
+        `;
+        document.body.appendChild(e);
+      }
+
+      wrap.appendChild(image);
+      wrap.appendChild(audio);
+      mainEl.appendChild(wrap);
+    };
+
+    if (String(baseData?.easterEgg || "").toLowerCase() === "obsession") {
+      renderObsessionEasterEgg();
       return;
     }
 
@@ -1532,7 +1639,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       wrap.style.position = "relative";
       wrap.style.overflow = "hidden";
       // Fondo: solo imagen final (sin rastros de la anterior)
-      wrap.style.backgroundImage = "url('img/easter-eggs/MAKIMA_RED.png')";
+      wrap.style.backgroundImage = "url('img/assets/easter-eggs/MAKIMA_RED.png')";
       wrap.style.backgroundSize = "cover";
       wrap.style.backgroundPosition = "center";
       wrap.style.backgroundBlendMode = "normal";
