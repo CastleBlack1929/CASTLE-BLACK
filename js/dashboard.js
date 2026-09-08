@@ -362,7 +362,7 @@ const MONTHLY_MARGIN_BY_YEAR = {
     junio: 1.5,
     julio: 1.75,
     agosto: 0.45,
-    septiembre: 1.36
+    septiembre: 1.66
   }
 };
 
@@ -439,7 +439,7 @@ const computeDerivedWithMonthlyRules = ({
       mergeAbrToNext &&
       String(year) === "2026" &&
       String(corteAplicado || "").toUpperCase() === "ENE-ABR-JUL-OCT";
-    if (mergeFeb && mes === "marzo") return 0;
+    if (mergeFeb && (mes === "marzo" || mes === "junio" || mes === "septiembre")) return 0;
     if (mergeAbr && (mes === "febrero" || mes === "mayo")) return 0;
     const mergeAbrMAR =
       mergeAbrToNext &&
@@ -2010,7 +2010,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const yyyy = now.getFullYear();
       const mm = pad(now.getMonth() + 1);
       const dd = pad(now.getDate());
-      return `${dd}/${mm}/${yyyy}`;
+      return `${mm}/${dd}/${yyyy}`;
     };
     const formatLiveWithTime = () => {
       const now = new Date();
@@ -2019,7 +2019,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const dd = pad(now.getDate());
       const hh = pad(now.getHours());
       const min = pad(now.getMinutes());
-      return `${hh}:${min} ${dd}/${mm}/${yyyy}`;
+      return `${hh}:${min} ${mm}/${dd}/${yyyy}`;
     };
     const highlightYear = (text, year, useBlue = false) => {
       const cls = useBlue ? "year-pill-blue" : "year-pill-green";
@@ -2088,7 +2088,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const formatMoneyLocal = (value) => (localCurrency === "COP" ? formatMoneyCop(value) : formatMoney(value));
     const localCurrencyLabel = localCurrency === "COP"
       ? "Pesos (COP)"
-      : (localCurrency === "EUR" ? "Euro (EUR)" : `${localCurrency} (${localCurrency})`);
+      : (localCurrency === "EUR" ? "Euro (EUR)" : (localCurrency === "ARS" ? "Pesos (ARS)" : `${localCurrency} (${localCurrency})`));
     const localCurrencyShort = localCurrency === "COP" ? "COP" : localCurrency;
     const ratePairLabel = localCurrency === "EUR" ? "USD/EUR" : (localCurrency === "COP" ? "USD/COP" : `USD/${localCurrency}`);
     const normalizeRate = (rateVal) => {
@@ -2379,7 +2379,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         mergeAbrToNext &&
         String(year) === "2026" &&
         String(corte || "").toUpperCase() === "ENE-ABR-JUL-OCT";
-      if (mergeFeb && monthKey === "marzo") return 0;
+      if (mergeFeb && (monthKey === "marzo" || monthKey === "junio" || monthKey === "septiembre")) return 0;
       if (mergeAbr && (monthKey === "febrero" || monthKey === "mayo")) return 0;
       const mesesTri = targetTri.meses || [];
       const triHasEnero = mesesTri.includes("enero");
@@ -2828,20 +2828,28 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     // Datos en COP (cálculo dinámico)
     const DEFAULT_RATE_BY_CURRENCY = {
       COP: {
-        actual: 3636.5, // tasa vigente 2026
+        actual: 3636.5,
         "2025": 3773.6,
         "2026": 3636.5,
         "2024": 4373.5
       },
       EUR: {
         actual: 1.182
+      },
+      ARS: {
+        actual: 1584.0,
+        "2026": 1584.0
       }
     };
     const AUTO_RATE_ENABLED = true;
     const RATE_REFRESH_MS = 5 * 1000;
     const DEFAULT_RATE_BY_YEAR = DEFAULT_RATE_BY_CURRENCY[localCurrency] || DEFAULT_RATE_BY_CURRENCY.COP;
     const TRADINGVIEW_API_URL = "https://scanner.tradingview.com/forex/scan";
-    const RATE_SYMBOL = localCurrency === "EUR" ? "FX_IDC:USDEUR" : "FX_IDC:USDCOP";
+    const RATE_SYMBOL = localCurrency === "EUR"
+      ? "FX_IDC:USDEUR"
+      : localCurrency === "ARS"
+        ? "FX_IDC:USDARS"
+        : "FX_IDC:USDCOP";
     const TRADINGVIEW_PAYLOAD = {
       symbols: { tickers: [RATE_SYMBOL], query: { types: [] } },
       columns: ["close"]
@@ -2973,7 +2981,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     startRateAutoRefresh();
     crcmntBaseL = toNumber(userData.crcmntL) ?? crcmntBaseUsd ?? 0;
     const aporteBaseLInitial = (isActualYear || String(displayYear) === "2025")
-      ? (localCurrency === "COP" ? null : toNumber(userData.aporteL))
+      ? (localCurrency === "COP" ? null : (toNumber(userData.aporteL) || null))
       : toNumber(userData.aporteL);
     aporteBaseL = aporteBaseLInitial;
     utilOsc = utilCalcBase;
@@ -3472,7 +3480,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     if (tablaHonorarios && honorariosTotal) {
       if (corteHonorariosText) corteHonorariosText.textContent = corteAplicado;
       const autoHonorarios2026 = isActualYear;
-      const trimestres = autoHonorarios2026
+      const hasCortePrimerAno = String(userData.cortePrimerAno || "").trim() !== "";
+      const trimestres = autoHonorarios2026 && !hasCortePrimerAno
         ? getTrimestresByCorte(corteAplicado)
         : (Array.isArray(userData.honorariosTrimestres) && userData.honorariosTrimestres.length
           ? userData.honorariosTrimestres
@@ -3531,7 +3540,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         const triHasEnero = mesesTri.includes("enero");
         const triHasPrevWrap = triHasEnero && (mesesTri.includes("noviembre") || mesesTri.includes("diciembre"));
 
-        // Trimestre sin meses: fila vacía
+        // Trimestre sin meses: fila con —
         if (!mesesTri.length) {
           const row = document.createElement("tr");
           row.innerHTML = `
@@ -4138,10 +4147,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           y += 12;
           doc.setFontSize(9);
           addParagraph("Nos complace dirigirnos a usted en nombre de Castle Black para presentar los resultados de nuestras operaciones de inversión y dar un recuento de los movimientos del portafolio al cierre del año.");
-          doc.text("castleblack.inc@gmail.com | Tel: (+57) 320 901 7438 | Bogotá, Colombia", marginX, y);
-          y += 5;
-          doc.setFontSize(9);
-          doc.text("Horario de atención: L-V 8:00 - 18:00 (GMT-5)", marginX, y);
+          doc.text("castleblack.inc@gmail.com | Tel: (+57) 320 901 7438", marginX, y);
           y += 5;
           addParagraph("Este informe refleja exactamente lo que ves en tu dashboard: aportes, patrimonio, utilidades, honorarios y movimientos. Los valores en cero indican meses no cerrados o sin datos cargados.");
           addParagraph(hideLocalCurrency
@@ -4187,17 +4193,17 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             hideLocalCurrency ? ["Concepto", "USD"] : ["Concepto", "USD", localCurrencyShort],
             hideLocalCurrency
               ? [
-                ["Aporte", `$ ${safeText(aporte)}`],
-                ["Patrimonio", `$ ${safeText(patrimonio)}`],
+                ["Aporte", safeText(aporte)],
+                ["Patrimonio", safeText(patrimonio)],
                 ["Crecimiento", safeText(crcmnt)],
-                ["Utilidad", `$ ${safeText(utilidad)}`]
+                ["Utilidad", safeText(utilidad)]
               ]
               : [
-                ["Aporte", `$ ${safeText(aporte)}`, `$ ${safeText(aporteL)}`],
-                ["Patrimonio", `$ ${safeText(patrimonio)}`, `$ ${safeText(patrimonioL)}`],
+                ["Aporte", safeText(aporte), safeText(aporteL)],
+                ["Patrimonio", safeText(patrimonio), safeText(patrimonioL)],
                 ["Crecimiento", safeText(crcmnt), safeText(crcmntL)],
-                ["Utilidad R", `$ ${safeText(utilidad)}`, `$ ${safeText(utilidadL)}`],
-                ["Utilidad", `$ ${safeText(utilidadTotal)}`, `$ ${safeText(utilidadTotalL)}`]
+                ["Utilidad R", safeText(utilidad), safeText(utilidadL)],
+                ["Utilidad", safeText(utilidadTotal), safeText(utilidadTotalL)]
               ]
           );
           const rateStamp = selectedYear === "actual" ? "31/12/2025" : `31/12/${reportYearNumber}`;

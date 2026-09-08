@@ -120,6 +120,11 @@ const users = [
     "dataFile": "data/usuarios/25.js"
   },
   {
+    "username": "LNET2007",
+    "password": "LNET2007.",
+    "dataFile": "data/usuarios/26.js"
+  },
+  {
     "username": "OZYMANDIAS",
     "password": "OZYMANDIAS",
     "dataFile": "data/usuarios/ozymandias.js"
