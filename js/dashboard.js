@@ -4180,6 +4180,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
           y += 4;
           const reportYearNumber = (reportYearText || selectedYear || "").match(/\d{4}/)?.[0] || String(new Date().getFullYear());
+          const isActualYear2026PDF = isActualYear;
           const isAbrMergeFirstYear =
             String(selectedUserData?.cortePrimerAno || userData?.cortePrimerAno || "").trim().toUpperCase() === "ABR_MERGE_NEXT" &&
             String(reportYearNumber) === "2026";
