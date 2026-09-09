@@ -362,7 +362,7 @@ const MONTHLY_MARGIN_BY_YEAR = {
     junio: 1.5,
     julio: 1.75,
     agosto: 0.45,
-    septiembre: 1.66
+    septiembre: 1.96
   }
 };
 
@@ -2487,7 +2487,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const sumMovCopAllYears = () => {
       if (typeof movimientosData === "undefined" || !Array.isArray(movimientosData)) return 0;
       return movimientosData
-        .filter(matchMovimientoForUser)
+        .filter((m) => matchMovimientoForUser(m) && !m.soloLista)
         .reduce((acc, mov) => {
           const tipo = (mov.tipo || "").toUpperCase();
           if (tipo !== localCurrency) return acc;
@@ -2497,7 +2497,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const sumMovUsdAllYears = () => {
       if (typeof movimientosData === "undefined" || !Array.isArray(movimientosData)) return 0;
       return movimientosData
-        .filter(matchMovimientoForUser)
+        .filter((m) => matchMovimientoForUser(m) && !m.soloLista)
         .reduce((acc, mov) => acc + getMovUsdValue(mov), 0);
     };
     const totalMovCopAll = sumMovCopAllYears();
@@ -2521,7 +2521,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const sumMovCopByYear = (year) => {
       if (typeof movimientosData === "undefined" || !Array.isArray(movimientosData)) return 0;
       return movimientosData
-        .filter((m) => matchMovimientoForUser(m) && Number(m.year) === year)
+        .filter((m) => matchMovimientoForUser(m) && Number(m.year) === year && !m.soloLista)
         .reduce((acc, mov) => {
           const tipo = (mov.tipo || "").toUpperCase();
           const tasaMov = normalizeRate(toNumber(mov.tasa) || safeTasaFallback || 1);
@@ -3406,7 +3406,12 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
               ? patrimonioCalc
               : (Number.isFinite(currentMonthData?.patrimonio) ? currentMonthData.patrimonio : 0))
           : null;
-        derived.monthly.forEach(({ mes, aporte, patrimonio: patrVal, margen, g_p }) => {
+        derived.monthly
+          .filter(({ mes, aporte, patrimonio: patrVal, g_p }) => {
+            if (isActualYear && monthOrder.indexOf(mes) > currentMonthIndex) return false;
+            return aporte !== 0 || patrVal !== 0 || g_p !== 0;
+          })
+          .forEach(({ mes, aporte, patrimonio: patrVal, margen, g_p }) => {
           const row = document.createElement("tr");
           const cMes = document.createElement("td");
           cMes.textContent = mes;
@@ -3495,7 +3500,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       let totalHonorarios = 0;
       trimestresData = [];
 
-      if (disableHonorarios) {
+      if (disableHonorarios || (hasCortePrimerAno && !isActualYear)) {
         trimestres.forEach((tri) => {
           const row = document.createElement("tr");
           row.innerHTML = `
@@ -4181,9 +4186,12 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const pdfStartMonthKey = getStartMonthKey(selectedUserData || userData, reportYearNumber);
           const pdfStartMonthIdx = monthOrder.indexOf(pdfStartMonthKey);
           const monthlySrcRaw = Array.isArray(derivedData?.monthly) ? derivedData.monthly : [];
-          const monthlySrc = hideLocalCurrency && pdfStartMonthIdx >= 0
-            ? monthlySrcRaw.filter((m) => monthOrder.indexOf(m.mes) >= pdfStartMonthIdx)
-            : monthlySrcRaw;
+          const monthlySrc = monthlySrcRaw.filter((m) => {
+            const mIdx = monthOrder.indexOf(m.mes);
+            if (hideLocalCurrency && pdfStartMonthIdx >= 0 && mIdx < pdfStartMonthIdx) return false;
+            if (isActualYear2026PDF && mIdx > currentMonthIndex) return false;
+            return m.aporte !== 0 || m.patrimonio !== 0 || m.g_p !== 0;
+          });
           if (hideLocalCurrency) {
             addParagraph(`Condición particular de la cuenta: este cliente se presenta únicamente en USD, sin tabla comparativa de moneda externa ni tasa de conversión. El periodo operativo del primer año inicia en ${pdfStartMonthKey}.`);
           }

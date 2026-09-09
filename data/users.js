@@ -115,6 +115,11 @@ const users = [
     "dataFile": "data/usuarios/24.js"
   },
   {
+    "username": "dsgc2003",
+    "password": "Dsgc2003.",
+    "dataFile": "data/usuarios/3.js"
+  },
+  {
     "username": "GCC2007",
     "password": "GCC2007.",
     "dataFile": "data/usuarios/25.js"
