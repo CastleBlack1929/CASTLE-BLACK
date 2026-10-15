@@ -1123,6 +1123,160 @@ h1, h2, h3, h4 {
 .section-white h2, .section-white h3 { color: #1d1d1f; }
 .section-white .split-text p, .section-white .check-list li { color: #444; }
 .section-white .check-list li::before { color: #147a50; }
+.section-news.section-white .news-header p { color: #555; }
+
+/* ── MÉTRICAS + PROCESO (white section) ─────────────────── */
+.section-metrics {
+  padding: 120px 40px;
+  background-image: radial-gradient(circle, rgba(0,0,0,0.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+.metrics-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 72px;
+}
+.metrics-header { text-align: center; }
+.eyebrow--dark {
+  color: #147a50 !important;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  margin-bottom: 16px; display: block;
+}
+.metrics-title {
+  font-size: clamp(32px, 5vw, 54px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: #1d1d1f;
+  line-height: 1.08;
+  margin: 0 0 20px;
+}
+.metrics-sub {
+  font-size: 16px;
+  color: #555;
+  max-width: 580px;
+  margin: 0 auto;
+  line-height: 1.65;
+}
+
+/* grid de métricas */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.metric-card {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.07);
+  border-radius: 20px;
+  padding: 32px 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+  transition: transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s;
+}
+.metric-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.1);
+}
+.metric-num {
+  font-size: clamp(36px, 5vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: #1d1d1f;
+  line-height: 1;
+}
+.metric-unit {
+  font-size: 0.55em;
+  font-weight: 700;
+  color: #3ddc97;
+  vertical-align: top;
+  margin-top: 4px;
+  display: inline-block;
+}
+.metric-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin-top: 8px;
+}
+.metric-period {
+  font-size: 12px;
+  color: #888;
+  font-weight: 400;
+}
+
+/* proceso 3 pasos */
+.process-row {
+  display: grid;
+  grid-template-columns: 1fr 32px 1fr 32px 1fr;
+  align-items: start;
+  gap: 0;
+}
+.process-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 18px;
+  color: rgba(0,0,0,0.15);
+}
+.process-divider::after {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 40px;
+  background: rgba(0,0,0,0.12);
+}
+.process-step {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.07);
+  border-radius: 20px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+  transition: transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s;
+}
+.process-step:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.1);
+}
+.ps-num {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #3ddc97;
+}
+.ps-body h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1d1d1f;
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+.ps-body p {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  .process-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .process-divider { display: none; }
+}
+@media (max-width: 540px) {
+  .metrics-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .section-metrics { padding: 80px 20px; }
+}
 
 /* ── FOOTER ──────────────────────────────────────────── */
 footer {
@@ -1393,13 +1547,13 @@ footer {
 /* Color tint + gradient fade to bottom */
 .nc-bg { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
 .nc-bg::after { content:""; position:absolute;inset:0; }
-.nc-ai    .nc-bg { background: linear-gradient(to bottom, rgba(6,20,40,0.1) 0%, rgba(6,20,40,0.55) 55%, rgba(6,20,40,0.97) 100%); }
+.nc-ai    .nc-bg { background: linear-gradient(to bottom, rgba(6,20,40,0.05) 0%, rgba(6,20,40,0.65) 45%, rgba(6,20,40,1) 100%); }
 .nc-ai    .nc-bg::after { background: radial-gradient(ellipse at 80% 0%, rgba(90,110,255,0.25) 0%, transparent 60%); }
-.nc-oil   .nc-bg { background: linear-gradient(to bottom, rgba(2,14,28,0.1) 0%, rgba(2,14,28,0.55) 55%, rgba(2,14,28,0.97) 100%); }
+.nc-oil   .nc-bg { background: linear-gradient(to bottom, rgba(2,14,28,0.05) 0%, rgba(2,14,28,0.65) 45%, rgba(2,14,28,1) 100%); }
 .nc-oil   .nc-bg::after { background: radial-gradient(ellipse at 20% 0%, rgba(0,150,210,0.2) 0%, transparent 60%); }
-.nc-china .nc-bg { background: linear-gradient(to bottom, rgba(22,0,0,0.1) 0%, rgba(22,0,0,0.55) 55%, rgba(22,0,0,0.97) 100%); }
+.nc-china .nc-bg { background: linear-gradient(to bottom, rgba(22,0,0,0.05) 0%, rgba(22,0,0,0.65) 45%, rgba(22,0,0,1) 100%); }
 .nc-china .nc-bg::after { background: radial-gradient(ellipse at 75% 0%, rgba(220,30,30,0.25) 0%, transparent 60%); }
-.nc-chips .nc-bg { background: linear-gradient(to bottom, rgba(0,22,8,0.1) 0%, rgba(0,22,8,0.55) 55%, rgba(0,22,8,0.97) 100%); }
+.nc-chips .nc-bg { background: linear-gradient(to bottom, rgba(0,22,8,0.05) 0%, rgba(0,22,8,0.65) 45%, rgba(0,22,8,1) 100%); }
 .nc-chips .nc-bg::after { background: radial-gradient(ellipse at 30% 0%, rgba(61,220,151,0.18) 0%, transparent 60%); }
 .nc-content {
   position: relative;
@@ -1408,14 +1562,15 @@ footer {
 }
 .nc-tag {
   font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
-  color: rgba(255,255,255,0.45); text-transform: uppercase;
+  color: rgba(255,255,255,0.75); text-transform: uppercase;
   display: block; margin-bottom: 14px;
 }
 .news-card h3 {
   font-size: clamp(17px, 2vw, 23px); font-weight: 800;
   letter-spacing: -0.04em; line-height: 1.2; margin-bottom: 10px;
+  color: #fff;
 }
-.news-card > .nc-content > p { font-size: 14px; color: rgba(255,255,255,0.45); line-height: 1.55; }
+.news-card > .nc-content > p { font-size: 14px; color: rgba(255,255,255,0.72); line-height: 1.55; }
 @media (max-width: 700px) {
   .news-inner { grid-template-columns: 1fr; gap: 32px; }
   .news-deck { height: 430px; max-width: 100%; }
