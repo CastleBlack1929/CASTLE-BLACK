@@ -610,6 +610,16 @@
   window.addEventListener("load", () => { forceTop(); requestAnimationFrame(forceTop); setTimeout(forceTop, 50); });
   window.addEventListener("pageshow", forceTop);
 
+  /* ── INTEL MARQUEE: pausa cuando la sección es visible ── */
+  (function () {
+    const sec = document.getElementById('global');
+    if (!sec) return;
+    const io = new IntersectionObserver(([e]) => {
+      sec.classList.toggle('intel-visible', e.isIntersecting);
+    }, { threshold: 0.15 });
+    io.observe(sec);
+  })();
+
   /* ── SCROLL REVEAL ──────────────────────────────── */
   const revealEls = document.querySelectorAll(".reveal");
   const revealIO = new IntersectionObserver((entries) => {
