@@ -1,336 +1,859 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <title>Castle Black</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Castle Black — Gestora de Inversión</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Serif:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style-index.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style-index.css">
   <link rel="icon" href="img/logo-black.png" type="image/png">
   <link rel="apple-touch-icon" href="img/logo-black.png">
 </head>
 <body>
+
   <a class="skip-link" href="#inicio">Ir al inicio</a>
+
+  <!-- ── NAV ─────────────────────────────────────── -->
+  <nav class="topbar" aria-label="Navegación principal">
+    <a class="topbar-brand" href="#inicio">
+      <img src="img/logo-black.png" class="nav-logo" alt="Logo Castle Black">
+      <span>Castle Black</span>
+    </a>
+    <div class="nav-links">
+      <a href="#servicios">Servicios</a>
+      <a href="#mercados">Mercados</a>
+      <a href="#honorarios">Honorarios</a>
+      <a href="#documentos">Documentos</a>
+      <a href="login.html" class="nav-cta">Panel →</a>
+    </div>
+  </nav>
+
+  <!-- ── HERO ─────────────────────────────────────── -->
   <header class="hero" id="inicio">
-    <nav class="topbar" aria-label="Navegación principal">
-      <a class="topbar-brand" href="#inicio">
-        <img src="img/logo-black.png" class="nav-logo" alt="Logo Castle Black">
-        <span>Castle Black</span>
-      </a>
-      <div class="nav-links">
-        <a href="#servicios">Servicios</a>
-        <a href="#metodologia">Proceso</a>
-        <a href="#honorarios">Honorarios</a>
-        <a href="login.html">Panel</a>
-      </div>
-    </nav>
     <div class="hero-inner">
-      <div class="hero-content">
-        <div class="brand">
-          <img src="img/logo-black.png" class="logo" alt="Logo Castle Black">
-          <div>
-            <span class="eyebrow">Gestora de inversión</span>
-            <p class="brand-name">Castle Black</p>
-          </div>
-        </div>
-        <h1>Haz crecer tu capital a escala global.</h1>
+      <div class="hero-content reveal">
+        <p class="eyebrow">Gestora de inversión · Operaciones globales</p>
+        <h1>Haz crecer<br>tu capital<br><em>a escala global.</em></h1>
         <p class="lead">
-          Somos una firma con sede en la ciudad de New York enfocada en detectar ineficiencias del mercado y gestionar
-          portafolios con una combinación de análisis cuantitativo, visión estratégica y ejecución disciplinada.
-          Nuestros clientes pueden pertenecer a cualquier parte del mundo, con un objetivo claro de maximizar
-          rendimientos y reducir riesgos con total transparencia.
+          Detectamos ineficiencias del mercado y gestionamos portafolios
+          con análisis cuantitativo, visión estratégica y ejecución disciplinada.
+          Tus rendimientos, en tiempo real.
         </p>
         <div class="cta-row">
           <a href="login.html" class="btn-primary">Ingresar al panel</a>
-          <a href="https://wa.me/573209017438?text=Hola.%0A%0AQuisiera%20informaci%C3%B3n%20para%20inscribirme%20al%20programa%3A%20requisitos%2C%20proceso%20de%20inicio%20y%20fecha%20estimada%20para%20empezar.%0A%0AGracias." class="btn-outline" target="_blank" rel="noopener">Hablar por WhatsApp</a>
+          <a href="https://wa.me/573209017438?text=Hola.%0A%0AQuisiera%20informaci%C3%B3n%20para%20inscribirme%20al%20programa%3A%20requisitos%2C%20proceso%20de%20inicio%20y%20fecha%20estimada%20para%20empezar.%0A%0AGracias." class="btn-ghost" target="_blank" rel="noopener">Contactarnos</a>
         </div>
         <div class="hero-stats">
           <div class="stat">
-            <p class="stat-title">Aporte mínimo</p>
-            <p class="stat-value">USD $300</p>
+            <p class="stat-label">Aporte mínimo</p>
+            <p class="stat-val">USD $300</p>
           </div>
           <div class="stat">
-            <p class="stat-title">Sede</p>
-          <p class="stat-value">New York</p>
+            <p class="stat-label">Operaciones</p>
+            <p class="stat-val">Descentralizado</p>
           </div>
           <div class="stat">
-            <p class="stat-title">Mercado</p>
-          <p class="stat-value">Mercados globales</p>
+            <p class="stat-label">Mercado</p>
+            <p class="stat-val">Global</p>
           </div>
         </div>
       </div>
-      <aside class="hero-visual" aria-label="Vista previa del panel Castle Black">
-        <div class="visual-header">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-        <div class="visual-grid">
-          <div>
-            <p class="visual-label">Patrimonio</p>
-            <p class="visual-value">$ 32,000.00</p>
+      <aside class="hero-panel reveal" aria-hidden="true">
+        <div class="panel-chrome"><span></span><span></span><span></span></div>
+        <div class="panel-metrics">
+          <div class="metric">
+            <p class="metric-lbl">Patrimonio</p>
+            <p class="metric-val" id="heroPatrimonio">$32,000.00</p>
           </div>
-          <div>
-            <p class="visual-label">Crecimiento</p>
-            <p class="visual-value positive">+ 3.05%</p>
+          <div class="metric">
+            <p class="metric-lbl">Crecimiento</p>
+            <p class="metric-val green" id="heroCrecimiento">+3.05%</p>
           </div>
         </div>
-        <div class="market-lines">
-          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-        </div>
-        <div class="ticker-row">
-          <span>AAPL</span>
-          <strong>20%</strong>
-          <span>MSFT</span>
-          <strong>20%</strong>
-          <span>BRK.B</span>
-          <strong>20%</strong>
+        <canvas id="heroCandles" class="hero-canvas"></canvas>
+        <div class="panel-ticker">
+          <span class="tk-item"><b>AAPL</b><em class="green">▲ 0.8%</em></span>
+          <span class="tk-item"><b>NVDA</b><em class="green">▲ 2.3%</em></span>
+          <span class="tk-item"><b>BRK.B</b><em class="red">▼ 0.4%</em></span>
+          <span class="tk-item"><b>TSLA</b><em class="green">▲ 1.9%</em></span>
         </div>
       </aside>
     </div>
+    <div class="hero-scroll-hint">
+      <span></span>
+    </div>
   </header>
 
-  <main class="container">
-    <section class="section" id="quienes">
-      <div class="section-header">
+  <!-- ── LOGOS MARQUEE ─────────────────────────────── -->
+  <section class="section-logos" id="mercados" aria-label="Empresas de referencia global">
+    <div class="logos-header reveal">
+      <p class="eyebrow">Mercados internacionales</p>
+      <h2>Operamos donde opera el mundo.</h2>
+      <p class="logos-sub">Gestionamos exposición a las compañías más relevantes del planeta — sin importar desde qué país nos accedas, tenemos margen de maniobra para cualquier parte del mundo. Desde semiconductores en Taiwan hasta lujo en París, energía en Riad y tecnología en Silicon Valley.</p>
+    </div>
+    <div class="logos-dual">
+      <!-- ROW 1 → izquierda -->
+      <div class="logos-track-wrap">
+        <div class="logos-track logos-track-a">
+          <span class="logo-item" data-info="Mayor capitalización bursátil del mundo. Lanzó Apple Intelligence en 2025: IA generativa nativa en todos sus dispositivos, transformando la computación personal."><svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg><em>Apple</em><small>🇺🇸</small></span>
+          <span class="logo-item" data-info="Invirtió $13B en OpenAI. Azure AI crece +33% YoY. Copilot redefinió la productividad empresarial en todo el ecosistema Microsoft 365."><svg viewBox="0 0 24 24"><path d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zM24 11.4H12.6V0H24v11.4z"/></svg><em>Microsoft</em><small>🇺🇸</small></span>
+          <span class="logo-item" data-info="Sus GPUs H100 y B200 son el recurso más escaso de la economía digital. Domina el 80%+ del mercado de chips para entrenamiento de IA a nivel global."><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="3" fill="none"/><path d="M9 5v2.5c.83-.6 2-.9 3-.9 2.8 0 5 2.2 5 5s-2.2 5-5 5c-1 0-2.17-.3-3-.9V19h10V5H9zm3 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 9.5 12 9.5s2.5 1.1 2.5 2.5-1.1 2.5-2.5 2.5z"/></svg><em>NVIDIA</em><small>🇺🇸</small></span>
+          <span class="logo-item" data-info="AWS controla el 31% del mercado cloud global. Anunció $100B en inversión en infraestructura de IA y centros de datos para los próximos años."><svg viewBox="0 0 24 24"><path d="M.045 18.02c.072-.116.187-.124.348-.022 3.636 2.11 7.594 3.166 11.87 3.166 2.852 0 5.668-.533 8.447-1.595l.315-.14c.226-.088.39-.046.495.13.106.173.04.345-.193.518A23.6 23.6 0 0 1 12.54 22.5C8 22.5 3.78 21.29-.09 18.86c-.246-.155-.34-.33-.275-.507l.416-.338zm15.7-7.23c.87.494 1.456 1.02 1.758 1.58.302.56.248 1.207-.164 1.94a.46.46 0 0 0-.007.387c.073.123.19.184.354.184.116 0 .226-.04.33-.12.804-.638 1.19-1.48 1.154-2.527-.018-.714-.365-1.634-1.375-2.72l-.86-.16-2.16.78c-.193.07-.292.173-.298.306-.006.133.083.25.268.35z"/></svg><em>Amazon</em><small>🇺🇸</small></span>
+          <span class="logo-item" data-info="Lanzó Gemini 2.0, el modelo de IA más rápido. Google mantiene 92% del market share en búsqueda global. DeepMind lidera investigación de IA avanzada."><svg viewBox="0 0 24 24"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/></svg><em>Alphabet</em><small>🇺🇸</small></span>
+          <span class="logo-item" data-info="Líder mundial en chips de memoria y pantallas OLED. Compite con TSMC en nodos de 2nm y 3nm para la próxima generación de dispositivos."><svg viewBox="0 0 80 30"><text x="0" y="24" font-size="26" font-weight="700" fill="currentColor" font-family="sans-serif">SAMSUNG</text></svg><small>🇰🇷</small></span>
+          <span class="logo-item" data-info="Fabrica el 92% de los chips más avanzados del planeta. Expande fábricas en Arizona, Japón y Alemania para diversificar la cadena de suministro geopolíticamente."><svg viewBox="0 0 60 30"><text x="0" y="24" font-size="26" font-weight="800" fill="currentColor" font-family="sans-serif">TSMC</text></svg><small>🇹🇼</small></span>
+          <span class="logo-item" data-info="Mayor fabricante automotriz global. Pioneero en hidrógeno y reestructura su estrategia EV con alianzas estratégicas en Asia y América del Norte."><svg viewBox="0 0 50 30"><ellipse cx="25" cy="15" rx="22" ry="10" fill="none" stroke="currentColor" stroke-width="2.5"/><ellipse cx="25" cy="15" rx="10" ry="14" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="5" y1="15" x2="45" y2="15" stroke="currentColor" stroke-width="2.5"/></svg><em>Toyota</em><small>🇯🇵</small></span>
+          <span class="logo-item" data-info="El mayor conglomerado de lujo del mundo con 75 maisons. Bernard Arnault es uno de los hombres más ricos del planeta. Crecimiento sostenido en Asia emergente."><svg viewBox="0 0 60 30"><text x="0" y="24" font-size="24" font-weight="800" fill="currentColor" font-family="serif" letter-spacing="2">LVMH</text></svg><small>🇫🇷</small></span>
+          <span class="logo-item" data-info="La empresa más rentable de la historia. Financia la transformación económica de Arabia Saudita bajo Vision 2030 hacia tecnología y energías limpias."><em>Saudi Aramco</em><small>🇸🇦</small></span>
+          <!-- loop copy -->
+          <span class="logo-item" data-info="Mayor capitalización bursátil del mundo. Lanzó Apple Intelligence en 2025: IA generativa nativa en todos sus dispositivos, transformando la computación personal."><svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg><em>Apple</em><small>🇺🇸</small></span>
+          <span class="logo-item" data-info="Invirtió $13B en OpenAI. Azure AI crece +33% YoY. Copilot redefinió la productividad empresarial en todo el ecosistema Microsoft 365."><svg viewBox="0 0 24 24"><path d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zM24 11.4H12.6V0H24v11.4z"/></svg><em>Microsoft</em><small>🇺🇸</small></span>
+          <span class="logo-item" data-info="Sus GPUs H100 y B200 son el recurso más escaso de la economía digital. Domina el 80%+ del mercado de chips para entrenamiento de IA a nivel global."><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="3" fill="none"/><path d="M9 5v2.5c.83-.6 2-.9 3-.9 2.8 0 5 2.2 5 5s-2.2 5-5 5c-1 0-2.17-.3-3-.9V19h10V5H9zm3 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 9.5 12 9.5s2.5 1.1 2.5 2.5-1.1 2.5-2.5 2.5z"/></svg><em>NVIDIA</em><small>🇺🇸</small></span>
+          <span class="logo-item" data-info="AWS controla el 31% del mercado cloud global. Anunció $100B en inversión en infraestructura de IA."><em>Amazon</em><small>🇺🇸</small></span>
+          <span class="logo-item" data-info="Lanzó Gemini 2.0. Google mantiene 92% del market share en búsqueda global."><em>Alphabet</em><small>🇺🇸</small></span>
+          <span class="logo-item" data-info="Líder mundial en chips de memoria y pantallas OLED."><svg viewBox="0 0 80 30"><text x="0" y="24" font-size="26" font-weight="700" fill="currentColor" font-family="sans-serif">SAMSUNG</text></svg><small>🇰🇷</small></span>
+          <span class="logo-item" data-info="Fabrica el 92% de los chips más avanzados del planeta."><svg viewBox="0 0 60 30"><text x="0" y="24" font-size="26" font-weight="800" fill="currentColor" font-family="sans-serif">TSMC</text></svg><small>🇹🇼</small></span>
+          <span class="logo-item" data-info="Mayor fabricante automotriz global. Lider en hidrógeno."><svg viewBox="0 0 50 30"><ellipse cx="25" cy="15" rx="22" ry="10" fill="none" stroke="currentColor" stroke-width="2.5"/><ellipse cx="25" cy="15" rx="10" ry="14" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="5" y1="15" x2="45" y2="15" stroke="currentColor" stroke-width="2.5"/></svg><em>Toyota</em><small>🇯🇵</small></span>
+          <span class="logo-item" data-info="Mayor conglomerado de lujo del mundo con 75 maisons."><svg viewBox="0 0 60 30"><text x="0" y="24" font-size="24" font-weight="800" fill="currentColor" font-family="serif" letter-spacing="2">LVMH</text></svg><small>🇫🇷</small></span>
+          <span class="logo-item" data-info="La empresa más rentable de la historia. Vision 2030."><em>Saudi Aramco</em><small>🇸🇦</small></span>
+        </div>
+      </div>
+      <!-- ROW 2 ← derecha -->
+      <div class="logos-track-wrap">
+        <div class="logos-track logos-track-b">
+          <span class="logo-item" data-info="El conglomerado de Warren Buffett alcanzó reservas de efectivo récord de $325B. Apple es su mayor posición, con participación superior al 40% del portafolio."><em>Berkshire</em><small>🇺🇸</small></span>
+          <span class="logo-item" data-info="Fabricante de Ozempic y Wegovy. Las ventas de GLP-1 superaron el PIB de Dinamarca, revolucionando el tratamiento de la obesidad y diabetes tipo 2 a escala global."><em>Novo Nordisk</em><small>🇩🇰</small></span>
+          <span class="logo-item" data-info="El único fabricante de máquinas EUV litográficas del mundo. Sin ellas, ningún chip avanzado puede fabricarse — posición monopolística estratégica y de alta barrera de entrada."><svg viewBox="0 0 60 30"><text x="0" y="24" font-size="26" font-weight="800" fill="currentColor" font-family="sans-serif">ASML</text></svg><small>🇳🇱</small></span>
+          <span class="logo-item" data-info="Líder en vehículos eléctricos y almacenamiento. Full Self-Driving avanza hacia autonomía nivel 4. Robotaxi y Optimus robot marcan su transición a empresa de IA/robótica."><svg viewBox="0 0 50 30"><path d="M5 8h10l5 5-5 5H5V8zM45 8H35l-5 5 5 5h10V8zM20 5h10v20H20z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><em>Tesla</em><small>🇺🇸</small></span>
+          <span class="logo-item" data-info="Mayor banco de EE.UU. con $4T+ en activos. Jamie Dimon advierte sobre los mayores riesgos geopolíticos y de deuda soberana en décadas. Líder global en banca de inversión."><em>JPMorgan</em><small>🇺🇸</small></span>
+          <span class="logo-item" data-info="Mayor empresa de alimentos del mundo. Reestructura su portafolio hacia nutrición premium y bienestar, desinvirtiendo en marcas de bajo crecimiento para enfocarse en salud."><svg viewBox="0 0 60 30"><text x="0" y="24" font-size="20" font-weight="700" fill="currentColor" font-family="sans-serif">Nestlé</text></svg><small>🇨🇭</small></span>
+          <span class="logo-item" data-info="Entre las mayores energéticas globales. Equilibra transición a renovables con producción récord de gas natural licuado (LNG) abasteciendo Europa y Asia simultáneamente."><svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5.5 5 9c0 5 7 13 7 13s7-8 7-13c0-3.5-3-7-7-7zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 6.5 12 6.5s2.5 1.1 2.5 2.5S13.4 11.5 12 11.5z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><em>Shell</em><small>🇳🇱</small></span>
+          <span class="logo-item" data-info="Lidera gaming con PlayStation, imagen con sensores CMOS y entretenimiento original global. PlayStation Network supera 120M de usuarios activos mensuales. Líder en cine y música."><svg viewBox="0 0 50 30"><text x="0" y="24" font-size="26" font-weight="700" fill="currentColor" font-family="sans-serif">SONY</text></svg><small>🇯🇵</small></span>
+          <span class="logo-item" data-info="Facebook, Instagram, WhatsApp. Lidera IA open-source con LLaMA. Ray-Ban Meta Glasses superan 1M unidades, acelerando la adopción de IA wearable y computación espacial."><svg viewBox="0 0 32 20"><path d="M4 10 C4 5 8 2 12 4 C14 5 15 7 16 10 C17 7 18 5 20 4 C24 2 28 5 28 10 C28 14 25 17 22 16 C19 15 17 12 16 10 C15 12 13 15 10 16 C7 17 4 14 4 10Z" fill="none" stroke="currentColor" stroke-width="2"/></svg><em>Meta</em><small>🇺🇸</small></span>
+          <span class="logo-item" data-info="Gigante chino de e-commerce y cloud. Qwen AI compite directamente con los mejores modelos occidentales. Recupera valoración tras años de regulación gubernamental intensa."><em>Alibaba</em><small>🇨🇳</small></span>
+          <!-- loop copy -->
+          <span class="logo-item" data-info="El conglomerado de Warren Buffett alcanzó reservas de efectivo récord de $325B."><em>Berkshire</em><small>🇺🇸</small></span>
+          <span class="logo-item" data-info="Fabricante de Ozempic y Wegovy. Las ventas de GLP-1 superaron el PIB de Dinamarca."><em>Novo Nordisk</em><small>🇩🇰</small></span>
+          <span class="logo-item" data-info="El único fabricante de máquinas EUV litográficas del mundo. Posición monopolística estratégica."><svg viewBox="0 0 60 30"><text x="0" y="24" font-size="26" font-weight="800" fill="currentColor" font-family="sans-serif">ASML</text></svg><small>🇳🇱</small></span>
+          <span class="logo-item" data-info="Líder en vehículos eléctricos. Full Self-Driving avanza hacia autonomía nivel 4."><em>Tesla</em><small>🇺🇸</small></span>
+          <span class="logo-item" data-info="Mayor banco de EE.UU. con $4T+ en activos. Líder global en banca de inversión."><em>JPMorgan</em><small>🇺🇸</small></span>
+          <span class="logo-item" data-info="Mayor empresa de alimentos del mundo. Reestructura hacia nutrición premium."><svg viewBox="0 0 60 30"><text x="0" y="24" font-size="20" font-weight="700" fill="currentColor" font-family="sans-serif">Nestlé</text></svg><small>🇨🇭</small></span>
+          <span class="logo-item" data-info="Entre las mayores energéticas globales. Producción récord de LNG."><em>Shell</em><small>🇳🇱</small></span>
+          <span class="logo-item" data-info="Lidera gaming con PlayStation y sensores CMOS. 120M usuarios activos."><svg viewBox="0 0 50 30"><text x="0" y="24" font-size="26" font-weight="700" fill="currentColor" font-family="sans-serif">SONY</text></svg><small>🇯🇵</small></span>
+          <span class="logo-item" data-info="Facebook, Instagram, WhatsApp. Lidera IA open-source con LLaMA."><em>Meta</em><small>🇺🇸</small></span>
+          <span class="logo-item" data-info="Gigante chino de e-commerce y cloud. Qwen AI compite con modelos occidentales."><em>Alibaba</em><small>🇨🇳</small></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CANDLESTICK ───────────────────────────────── -->
+  <section class="section-chart" aria-label="Mercados en vivo">
+    <div class="chart-header reveal">
+      <p class="eyebrow">Análisis técnico en tiempo real</p>
+      <h2>En el pulso del mercado,<br>cada segundo importa.</h2>
+      <p class="chart-sub">Monitoreamos señales y movimientos de precio con precisión milimétrica. El mercado no descansa — nosotros tampoco.</p>
+    </div>
+    <div class="chart-stage reveal">
+      <div class="chart-meta">
+        <span class="chart-asset">PORTFOLIO · SIMULADO</span>
+        <span class="chart-status"><i class="pulse-dot"></i> EN VIVO</span>
+      </div>
+      <canvas id="candleChart"></canvas>
+      <div class="chart-axis-y" id="chartAxisY"></div>
+    </div>
+  </section>
+
+  <!-- ── QUIÉNES SOMOS ─────────────────────────────── -->
+  <section class="section-split section-white" id="quienes">
+    <div class="split-inner">
+      <div class="split-text reveal">
         <p class="eyebrow">Quiénes somos</p>
         <h2>Gestión profesional, eficiente y orientada a resultados.</h2>
-      </div>
-      <div class="section-grid">
-        <p>
-          Castle Black es una empresa líder en la inversión de activos internacionales, comprometida con la gestión
-          profesional y eficiente del capital de nuestros clientes. Creamos soluciones personalizadas para maximizar
-          rendimientos y minimizar riesgos, con un enfoque basado en datos, disciplina y transparencia.
-        </p>
-        <p>
-          Detectamos irregularidades del mercado financiero como desequilibrios temporales de oferta y demanda y
-          valoraciones fuera de rango. Con herramientas analíticas avanzadas y un equipo experto en finanzas,
-          anticipamos movimientos y posicionamos inversiones de manera óptima para proteger el capital y aprovechar
-          oportunidades emergentes.
-        </p>
-      </div>
-    </section>
-
-    <section class="section" id="analisis">
-      <div class="section-header">
-        <p class="eyebrow">Análisis de necesidades</p>
-        <h2>Un diagnóstico claro antes de invertir.</h2>
-      </div>
-      <div class="section-grid">
-        <p>
-          Evaluamos el perfil de riesgo, expectativas de retorno y circunstancias financieras del cliente para construir
-          un plan de inversión realista, flexible y alineado con sus metas de largo plazo. Este diagnóstico nos permite
-          proteger el capital sin sacrificar oportunidades de crecimiento.
-        </p>
-        <ul class="list-check">
-          <li>Minimizar riesgos con diversificación estratégica y gestión activa de cartera.</li>
-          <li>Maximizar rendimientos detectando anomalías e ineficiencias del mercado.</li>
-          <li>Ajustar dinámicamente las estrategias según las condiciones y necesidades del cliente.</li>
+        <p>Castle Black es una empresa líder en la inversión de activos internacionales, comprometida con la gestión profesional del capital de nuestros clientes. Detectamos irregularidades del mercado financiero — desequilibrios temporales de oferta y demanda, valoraciones fuera de rango — y las convertimos en oportunidades de crecimiento.</p>
+        <ul class="check-list">
+          <li>Minimizar riesgos con diversificación estratégica</li>
+          <li>Maximizar rendimientos detectando ineficiencias</li>
+          <li>Ajustar dinámicamente según condiciones del cliente</li>
         </ul>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="section" id="servicios">
-      <div class="section-header">
+  <!-- ── SERVICIOS ─────────────────────────────────── -->
+  <section class="section-services" id="servicios">
+    <div class="services-inner">
+      <div class="services-header reveal">
         <p class="eyebrow">Propuesta de servicios</p>
-        <h2>Un ciclo completo de inversión y acompañamiento.</h2>
+        <h2>Un ciclo completo de inversión<br>y acompañamiento.</h2>
       </div>
-      <div class="card-grid">
-        <article class="card">
+      <div class="services-grid">
+        <article class="svc-card reveal">
+          <div class="svc-num">01</div>
           <h3>Recepción y gestión de capital</h3>
           <p>Administramos el capital con seguridad, disciplina y enfoque estratégico para obtener los mejores resultados.</p>
         </article>
-        <article class="card">
+        <article class="svc-card reveal">
+          <div class="svc-num">02</div>
           <h3>Análisis de mercado</h3>
-          <p>Investigación exhaustiva para identificar oportunidades que se alineen con el perfil del cliente.</p>
+          <p>Investigación exhaustiva para identificar oportunidades alineadas con el perfil del cliente.</p>
         </article>
-        <article class="card">
+        <article class="svc-card reveal">
+          <div class="svc-num">03</div>
           <h3>Ejecución de inversiones</h3>
-          <p>Compra y venta de acciones, bonos, ETFs, fondos, materias primas, criptomonedas y activos off‑market.</p>
+          <p>Acciones, bonos, ETFs, fondos, materias primas, criptomonedas y activos off-market.</p>
         </article>
-        <article class="card">
+        <article class="svc-card reveal">
+          <div class="svc-num">04</div>
           <h3>Monitoreo y ajustes</h3>
           <p>Seguimiento continuo y ajustes tácticos para proteger el capital y sostener el rendimiento.</p>
         </article>
-        <article class="card">
+        <article class="svc-card reveal">
+          <div class="svc-num">05</div>
           <h3>Soporte y asesoramiento</h3>
           <p>Acompañamiento directo con recomendaciones basadas en análisis de mercado actualizado.</p>
         </article>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="section" id="metodologia">
-      <div class="section-header">
-        <p class="eyebrow">Metodología de inversión</p>
-        <h2>Proceso claro, seguimiento constante.</h2>
+  <!-- ── INTELIGENCIA GLOBAL ────────────────────────── -->
+  <!-- ── INTELIGENCIA GLOBAL + GEOPOLÍTICA ────────────── -->
+  <section class="section-intel" id="global">
+    <div class="intel-inner">
+
+      <div class="intel-header reveal">
+        <p class="eyebrow">Inteligencia global</p>
+        <h2>Siempre al pendiente<br>del mundo.</h2>
+        <p class="intel-sub">Seguimos en tiempo real la política global, los conflictos geopolíticos y los líderes que mueven mercados. No reaccionamos a las noticias — las anticipamos. Esa es la diferencia entre perder y ganar capital.</p>
       </div>
-      <ol class="steps">
-        <li>
-          <span>01</span>
-          <div>
+
+      <!-- Fila 1: Países -->
+      <div class="intel-block-label reveal"><span>Mercados &amp; Regiones</span></div>
+      <div class="intel-marquee-wrap">
+        <div class="intel-track intel-track-fwd">
+          <div class="globe-card gc-usa"><div class="gc-glow"></div><div class="gc-bg-text">USA</div><div class="gc-content"><h3>🇺🇸 Estados Unidos</h3><p class="gc-markets">NYSE · NASDAQ · S&P 500 · Fed</p><p class="gc-desc">Mercado más líquido del mundo. La Fed define el costo del capital global y las mega-caps mueven índices en todos los continentes.</p></div></div>
+          <div class="globe-card gc-china"><div class="gc-glow"></div><div class="gc-bg-text">CHN</div><div class="gc-content"><h3>🇨🇳 China</h3><p class="gc-markets">Shanghai · Shenzhen · HKEX</p><p class="gc-desc">Segunda economía mundial. Los estímulos del PBOC y las tensiones con EE.UU. definen la demanda de commodities global.</p></div></div>
+          <div class="globe-card gc-japan"><div class="gc-glow"></div><div class="gc-bg-text">JPN</div><div class="gc-content"><h3>🇯🇵 Japón</h3><p class="gc-markets">TSE · Nikkei 225 · BoJ</p><p class="gc-desc">El yen carry trade mueve billones. Cada ajuste del Banco de Japón sacude la liquidez global en segundos.</p></div></div>
+          <div class="globe-card gc-france"><div class="gc-glow"></div><div class="gc-bg-text">EUR</div><div class="gc-content"><h3>🇫🇷 Francia · Eurozona</h3><p class="gc-markets">CAC 40 · Euronext · BCE</p><p class="gc-desc">Puerta de entrada al bloque europeo. El BCE y LVMH son termómetros del capital continental y del lujo global.</p></div></div>
+          <div class="globe-card gc-israel"><div class="gc-glow"></div><div class="gc-bg-text">ISR</div><div class="gc-content"><h3>🇮🇱 Israel</h3><p class="gc-markets">TASE · Defensa · Cyber</p><p class="gc-desc">Hub tecnológico del Medio Oriente. Los conflictos activos impactan ciberseguridad, defensa y energía regional.</p></div></div>
+          <div class="globe-card gc-iran"><div class="gc-glow"></div><div class="gc-bg-text">IRN</div><div class="gc-content"><h3>🇮🇷 Irán</h3><p class="gc-markets">Crudo · Ormuz · OPEC</p><p class="gc-desc">Controla el paso del 20% del petróleo mundial. Cada escalada irradia volatilidad directa en energía y mercados emergentes.</p></div></div>
+          <div class="globe-card gc-india"><div class="gc-glow"></div><div class="gc-bg-text">IND</div><div class="gc-content"><h3>🇮🇳 India</h3><p class="gc-markets">NSE · BSE · Sensex · RBI</p><p class="gc-desc">La economía de mayor crecimiento entre las grandes potencias. Atrae capital tecnológico y redefine las cadenas de suministro globales.</p></div></div>
+          <div class="globe-card gc-saudi"><div class="gc-glow"></div><div class="gc-bg-text">SAU</div><div class="gc-content"><h3>🇸🇦 Arabia Saudita</h3><p class="gc-markets">Tadawul · Aramco · OPEC+</p><p class="gc-desc">Eje de la geopolítica energética. Vision 2030 mueve capitales masivos hacia tecnología y activos no-petroleros.</p></div></div>
+          <div class="globe-card gc-germany"><div class="gc-glow"></div><div class="gc-bg-text">DEU</div><div class="gc-content"><h3>🇩🇪 Alemania</h3><p class="gc-markets">DAX · Frankfurt · Bundesbank</p><p class="gc-desc">Motor industrial de Europa. Su salud económica determina la fortaleza del euro y la cohesión del bloque europeo.</p></div></div>
+          <div class="globe-card gc-uk"><div class="gc-glow"></div><div class="gc-bg-text">GBR</div><div class="gc-content"><h3>🇬🇧 Reino Unido</h3><p class="gc-markets">FTSE 100 · LSE · BoE</p><p class="gc-desc">Plaza financiera global post-Brexit. El BoE y la libra esterlina son termómetros del riesgo soberano europeo.</p></div></div>
+          <div class="globe-card gc-brazil"><div class="gc-glow"></div><div class="gc-bg-text">BRA</div><div class="gc-content"><h3>🇧🇷 Brasil</h3><p class="gc-markets">B3 · Bovespa · Real</p><p class="gc-desc">Mayor economía latinoamericana. Petróleo, agroindustria y el real son indicadores clave del apetito global por emergentes.</p></div></div>
+          <!-- loop copy -->
+          <div class="globe-card gc-usa"><div class="gc-glow"></div><div class="gc-bg-text">USA</div><div class="gc-content"><h3>🇺🇸 Estados Unidos</h3><p class="gc-markets">NYSE · NASDAQ · S&P 500 · Fed</p><p class="gc-desc">Mercado más líquido del mundo. La Fed define el costo del capital global y las mega-caps mueven índices en todos los continentes.</p></div></div>
+          <div class="globe-card gc-china"><div class="gc-glow"></div><div class="gc-bg-text">CHN</div><div class="gc-content"><h3>🇨🇳 China</h3><p class="gc-markets">Shanghai · Shenzhen · HKEX</p><p class="gc-desc">Segunda economía mundial. Los estímulos del PBOC y las tensiones con EE.UU. definen la demanda de commodities global.</p></div></div>
+          <div class="globe-card gc-japan"><div class="gc-glow"></div><div class="gc-bg-text">JPN</div><div class="gc-content"><h3>🇯🇵 Japón</h3><p class="gc-markets">TSE · Nikkei 225 · BoJ</p><p class="gc-desc">El yen carry trade mueve billones. Cada ajuste del Banco de Japón sacude la liquidez global en segundos.</p></div></div>
+          <div class="globe-card gc-france"><div class="gc-glow"></div><div class="gc-bg-text">EUR</div><div class="gc-content"><h3>🇫🇷 Francia · Eurozona</h3><p class="gc-markets">CAC 40 · Euronext · BCE</p><p class="gc-desc">Puerta de entrada al bloque europeo. El BCE y LVMH son termómetros del capital continental y del lujo global.</p></div></div>
+          <div class="globe-card gc-israel"><div class="gc-glow"></div><div class="gc-bg-text">ISR</div><div class="gc-content"><h3>🇮🇱 Israel</h3><p class="gc-markets">TASE · Defensa · Cyber</p><p class="gc-desc">Hub tecnológico del Medio Oriente. Los conflictos activos impactan ciberseguridad, defensa y energía regional.</p></div></div>
+          <div class="globe-card gc-iran"><div class="gc-glow"></div><div class="gc-bg-text">IRN</div><div class="gc-content"><h3>🇮🇷 Irán</h3><p class="gc-markets">Crudo · Ormuz · OPEC</p><p class="gc-desc">Controla el paso del 20% del petróleo mundial. Cada escalada irradia volatilidad directa en energía y mercados emergentes.</p></div></div>
+          <div class="globe-card gc-india"><div class="gc-glow"></div><div class="gc-bg-text">IND</div><div class="gc-content"><h3>🇮🇳 India</h3><p class="gc-markets">NSE · BSE · Sensex · RBI</p><p class="gc-desc">La economía de mayor crecimiento entre las grandes potencias. Atrae capital tecnológico y redefine las cadenas de suministro globales.</p></div></div>
+          <div class="globe-card gc-saudi"><div class="gc-glow"></div><div class="gc-bg-text">SAU</div><div class="gc-content"><h3>🇸🇦 Arabia Saudita</h3><p class="gc-markets">Tadawul · Aramco · OPEC+</p><p class="gc-desc">Eje de la geopolítica energética. Vision 2030 mueve capitales masivos hacia tecnología y activos no-petroleros.</p></div></div>
+          <div class="globe-card gc-germany"><div class="gc-glow"></div><div class="gc-bg-text">DEU</div><div class="gc-content"><h3>🇩🇪 Alemania</h3><p class="gc-markets">DAX · Frankfurt · Bundesbank</p><p class="gc-desc">Motor industrial de Europa. Su salud económica determina la fortaleza del euro y la cohesión del bloque europeo.</p></div></div>
+          <div class="globe-card gc-uk"><div class="gc-glow"></div><div class="gc-bg-text">GBR</div><div class="gc-content"><h3>🇬🇧 Reino Unido</h3><p class="gc-markets">FTSE 100 · LSE · BoE</p><p class="gc-desc">Plaza financiera global post-Brexit. El BoE y la libra esterlina son termómetros del riesgo soberano europeo.</p></div></div>
+          <div class="globe-card gc-brazil"><div class="gc-glow"></div><div class="gc-bg-text">BRA</div><div class="gc-content"><h3>🇧🇷 Brasil</h3><p class="gc-markets">B3 · Bovespa · Real</p><p class="gc-desc">Mayor economía latinoamericana. Petróleo, agroindustria y el real son indicadores clave del apetito global por emergentes.</p></div></div>
+        </div>
+      </div>
+
+      <!-- Fila 2: Líderes + CEOs -->
+      <div class="intel-block-label reveal"><span>Líderes que mueven mercados</span></div>
+      <div class="intel-marquee-wrap">
+        <div class="intel-track intel-track-rev">
+          <div class="leader-card lc-usa"><div class="lc-scanlines"></div><div class="lc-avatar lca-trump"><img src="img/leaders/trump.jpg" alt="Donald Trump" onerror="this.style.display='none'"><span>DT</span></div><div class="lc-body"><h3 class="lc-name">Donald Trump</h3><p class="lc-title">Presidente · EE.UU.</p><p class="lc-desc">Aranceles, déficit y dólar. Su política comercial redefine cadenas de suministro globales y presiona a la Fed en tiempo real.</p></div><div class="lc-ticker">S&P 500 · DXY · GOLD</div></div>
+          <div class="leader-card lc-russia"><div class="lc-scanlines"></div><div class="lc-avatar lca-putin"><img src="img/leaders/putin.jpg" alt="Vladimir Putin" onerror="this.style.display='none'"><span>VP</span></div><div class="lc-body"><h3 class="lc-name">Vladimir Putin</h3><p class="lc-title">Presidente · Rusia</p><p class="lc-desc">Controla el 12% del petróleo y 17% del gas mundial. Cada movimiento en Ucrania impacta futuros de energía en Europa.</p></div><div class="lc-ticker">BRENT · NATGAS · EUR</div></div>
+          <div class="leader-card lc-china"><div class="lc-scanlines"></div><div class="lc-avatar lca-xi"><img src="img/leaders/xi.jpg" alt="Xi Jinping" onerror="this.style.display='none'"><span>XJ</span></div><div class="lc-body"><h3 class="lc-name">Xi Jinping</h3><p class="lc-title">Presidente · China</p><p class="lc-desc">Sus decisiones sobre Taiwan, tech y estímulo fiscal determinan el rumbo de los mercados emergentes globales.</p></div><div class="lc-ticker">HSI · CNY · COPPER</div></div>
+          <div class="leader-card lc-japan"><div class="lc-scanlines"></div><div class="lc-avatar lca-ishiba"><img src="img/leaders/ishiba.jpg" alt="Sanae Takaichi" onerror="this.style.display='none'"><span>ST</span></div><div class="lc-body"><h3 class="lc-name">Sanae Takaichi</h3><p class="lc-title">Primera Ministra · Japón</p><p class="lc-desc">Primera mujer en liderar Japón. Su política monetaria con el BoJ determina el carry trade global y la liquidez en mercados emergentes.</p></div><div class="lc-ticker">NIKKEI · JPY · JGB</div></div>
+          <div class="leader-card lc-france"><div class="lc-scanlines"></div><div class="lc-avatar lca-macron"><img src="img/leaders/macron.jpg" alt="Emmanuel Macron" onerror="this.style.display='none'"><span>EM</span></div><div class="lc-body"><h3 class="lc-name">Emmanuel Macron</h3><p class="lc-title">Presidente · Francia</p><p class="lc-desc">Su capacidad de mantener la cohesión europea determina la fortaleza del euro y la estabilidad de la deuda soberana.</p></div><div class="lc-ticker">EUR · CAC 40 · OAT</div></div>
+          <div class="leader-card lc-india"><div class="lc-scanlines"></div><div class="lc-avatar lca-modi"><img src="img/leaders/modi.jpg" alt="Narendra Modi" onerror="this.style.display='none'"><span>NM</span></div><div class="lc-body"><h3 class="lc-name">Narendra Modi</h3><p class="lc-title">Primer Ministro · India</p><p class="lc-desc">Dirige la economía de mayor crecimiento entre las potencias. Su política de inversión extranjera redefine el comercio global.</p></div><div class="lc-ticker">SENSEX · INR · TCS</div></div>
+          <div class="leader-card lc-saudi"><div class="lc-scanlines"></div><div class="lc-avatar lca-mbs"><img src="img/leaders/mbs.jpg" alt="Mohammed bin Salman" onerror="this.style.display='none'"><span>MBS</span></div><div class="lc-body"><h3 class="lc-name">Mohammed bin Salman</h3><p class="lc-title">Príncipe · Arabia Saudita</p><p class="lc-desc">Controla OPEC+ y el precio del barril. Vision 2030 mueve capital masivo hacia activos tecnológicos y no-petroleros.</p></div><div class="lc-ticker">BRENT · ARAMCO · SAR</div></div>
+          <div class="leader-card lc-elon"><div class="lc-scanlines"></div><div class="lc-avatar lca-musk"><img src="img/leaders/musk.jpg" alt="Elon Musk" onerror="this.style.display='none'"><span>EL</span></div><div class="lc-body"><h3 class="lc-name">Elon Musk</h3><p class="lc-title">CEO Tesla · SpaceX · xAI</p><p class="lc-desc">El hombre más influyente en mercados vía redes sociales. Mueve cripto con un tweet y define el futuro de la IA.</p></div><div class="lc-ticker">TSLA · BTC · DOGE</div></div>
+          <div class="leader-card lc-nvidia"><div class="lc-scanlines"></div><div class="lc-avatar lca-huang"><img src="img/leaders/huang.jpg" alt="Jensen Huang" onerror="this.style.display='none'"><span>JH</span></div><div class="lc-body"><h3 class="lc-name">Jensen Huang</h3><p class="lc-title">CEO NVIDIA</p><p class="lc-desc">Sus chips H100 y B200 son el activo más escaso de la economía digital. NVIDIA lidera el 80%+ del mercado de chips para IA.</p></div><div class="lc-ticker">NVDA · SMH · SOXL</div></div>
+          <div class="leader-card lc-openai"><div class="lc-scanlines"></div><div class="lc-avatar lca-altman"><img src="img/leaders/altman.jpg" alt="Sam Altman" onerror="this.style.display='none'"><span>SA</span></div><div class="lc-body"><h3 class="lc-name">Sam Altman</h3><p class="lc-title">CEO OpenAI</p><p class="lc-desc">Define la velocidad a la que la IA reemplaza sectores. Sus alianzas con Microsoft y Apple controlan la capa de inteligencia global.</p></div><div class="lc-ticker">MSFT · GOOG · AI</div></div>
+          <!-- loop copy -->
+          <div class="leader-card lc-usa"><div class="lc-scanlines"></div><div class="lc-avatar lca-trump"><img src="img/leaders/trump.jpg" alt="Donald Trump" onerror="this.style.display='none'"><span>DT</span></div><div class="lc-body"><h3 class="lc-name">Donald Trump</h3><p class="lc-title">Presidente · EE.UU.</p><p class="lc-desc">Aranceles, déficit y dólar. Su política comercial redefine cadenas de suministro globales y presiona a la Fed en tiempo real.</p></div><div class="lc-ticker">S&P 500 · DXY · GOLD</div></div>
+          <div class="leader-card lc-russia"><div class="lc-scanlines"></div><div class="lc-avatar lca-putin"><img src="img/leaders/putin.jpg" alt="Vladimir Putin" onerror="this.style.display='none'"><span>VP</span></div><div class="lc-body"><h3 class="lc-name">Vladimir Putin</h3><p class="lc-title">Presidente · Rusia</p><p class="lc-desc">Controla el 12% del petróleo y 17% del gas mundial. Cada movimiento en Ucrania impacta futuros de energía en Europa.</p></div><div class="lc-ticker">BRENT · NATGAS · EUR</div></div>
+          <div class="leader-card lc-china"><div class="lc-scanlines"></div><div class="lc-avatar lca-xi"><img src="img/leaders/xi.jpg" alt="Xi Jinping" onerror="this.style.display='none'"><span>XJ</span></div><div class="lc-body"><h3 class="lc-name">Xi Jinping</h3><p class="lc-title">Presidente · China</p><p class="lc-desc">Sus decisiones sobre Taiwan, tech y estímulo fiscal determinan el rumbo de los mercados emergentes globales.</p></div><div class="lc-ticker">HSI · CNY · COPPER</div></div>
+          <div class="leader-card lc-japan"><div class="lc-scanlines"></div><div class="lc-avatar lca-ishiba"><img src="img/leaders/ishiba.jpg" alt="Sanae Takaichi" onerror="this.style.display='none'"><span>ST</span></div><div class="lc-body"><h3 class="lc-name">Sanae Takaichi</h3><p class="lc-title">Primera Ministra · Japón</p><p class="lc-desc">Primera mujer en liderar Japón. Su política monetaria con el BoJ determina el carry trade global y la liquidez en mercados emergentes.</p></div><div class="lc-ticker">NIKKEI · JPY · JGB</div></div>
+          <div class="leader-card lc-france"><div class="lc-scanlines"></div><div class="lc-avatar lca-macron"><img src="img/leaders/macron.jpg" alt="Emmanuel Macron" onerror="this.style.display='none'"><span>EM</span></div><div class="lc-body"><h3 class="lc-name">Emmanuel Macron</h3><p class="lc-title">Presidente · Francia</p><p class="lc-desc">Su capacidad de mantener la cohesión europea determina la fortaleza del euro y la estabilidad de la deuda soberana.</p></div><div class="lc-ticker">EUR · CAC 40 · OAT</div></div>
+          <div class="leader-card lc-india"><div class="lc-scanlines"></div><div class="lc-avatar lca-modi"><img src="img/leaders/modi.jpg" alt="Narendra Modi" onerror="this.style.display='none'"><span>NM</span></div><div class="lc-body"><h3 class="lc-name">Narendra Modi</h3><p class="lc-title">Primer Ministro · India</p><p class="lc-desc">Dirige la economía de mayor crecimiento entre las potencias. Su política de inversión extranjera redefine el comercio global.</p></div><div class="lc-ticker">SENSEX · INR · TCS</div></div>
+          <div class="leader-card lc-saudi"><div class="lc-scanlines"></div><div class="lc-avatar lca-mbs"><img src="img/leaders/mbs.jpg" alt="Mohammed bin Salman" onerror="this.style.display='none'"><span>MBS</span></div><div class="lc-body"><h3 class="lc-name">Mohammed bin Salman</h3><p class="lc-title">Príncipe · Arabia Saudita</p><p class="lc-desc">Controla OPEC+ y el precio del barril. Vision 2030 mueve capital masivo hacia activos tecnológicos y no-petroleros.</p></div><div class="lc-ticker">BRENT · ARAMCO · SAR</div></div>
+          <div class="leader-card lc-elon"><div class="lc-scanlines"></div><div class="lc-avatar lca-musk"><img src="img/leaders/musk.jpg" alt="Elon Musk" onerror="this.style.display='none'"><span>EL</span></div><div class="lc-body"><h3 class="lc-name">Elon Musk</h3><p class="lc-title">CEO Tesla · SpaceX · xAI</p><p class="lc-desc">El hombre más influyente en mercados vía redes sociales. Mueve cripto con un tweet y define el futuro de la IA.</p></div><div class="lc-ticker">TSLA · BTC · DOGE</div></div>
+          <div class="leader-card lc-nvidia"><div class="lc-scanlines"></div><div class="lc-avatar lca-huang"><img src="img/leaders/huang.jpg" alt="Jensen Huang" onerror="this.style.display='none'"><span>JH</span></div><div class="lc-body"><h3 class="lc-name">Jensen Huang</h3><p class="lc-title">CEO NVIDIA</p><p class="lc-desc">Sus chips H100 y B200 son el activo más escaso de la economía digital. NVIDIA lidera el 80%+ del mercado de chips para IA.</p></div><div class="lc-ticker">NVDA · SMH · SOXL</div></div>
+          <div class="leader-card lc-openai"><div class="lc-scanlines"></div><div class="lc-avatar lca-altman"><img src="img/leaders/altman.jpg" alt="Sam Altman" onerror="this.style.display='none'"><span>SA</span></div><div class="lc-body"><h3 class="lc-name">Sam Altman</h3><p class="lc-title">CEO OpenAI</p><p class="lc-desc">Define la velocidad a la que la IA reemplaza sectores. Sus alianzas con Microsoft y Apple controlan la capa de inteligencia global.</p></div><div class="lc-ticker">MSFT · GOOG · AI</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── NOTICIAS / PULSO ─────────────────────────────── -->
+  <section class="section-news" id="pulso">
+    <div class="news-inner">
+      <div class="news-header reveal">
+        <p class="eyebrow">Pulso del mercado</p>
+        <h2>Lo que mueve el mundo,<br>mueve tu capital.</h2>
+        <p>Contexto geopolítico y tecnológico que monitoreamos activamente para anticipar movimientos de mercado.</p>
+      </div>
+      <div class="news-grid">
+        <div class="news-card nc-ai reveal">
+          <div class="nc-bg"></div>
+          <img class="nc-photo" src="img/news/ai.jpg" alt="Data center IA">
+          <div class="nc-content">
+            <span class="nc-tag">Tecnología · Global</span>
+            <h3>La IA rediseña los mercados de capitales</h3>
+            <p>Las grandes tecnológicas superan $15 billones en capitalización combinada. NVIDIA, Microsoft y Apple lideran el mayor ciclo de inversión en infraestructura tecnológica de la historia.</p>
+          </div>
+        </div>
+        <div class="news-card nc-oil reveal">
+          <div class="nc-bg"></div>
+          <img class="nc-photo" src="img/news/oil.jpg" alt="Estrecho de Ormuz">
+          <div class="nc-content">
+            <span class="nc-tag">Energía · Medio Oriente</span>
+            <h3>Tensiones en Ormuz elevan el petróleo</h3>
+            <p>El 20% del suministro energético mundial pasa por 54 km de agua. Cada escalada geopolítica se traduce en volatilidad inmediata en commodities, transporte y mercados emergentes.</p>
+          </div>
+        </div>
+        <div class="news-card nc-china reveal">
+          <div class="nc-bg"></div>
+          <img class="nc-photo" src="img/news/china.jpg" alt="Shanghai Pudong">
+          <div class="nc-content">
+            <span class="nc-tag">Geopolítica · China</span>
+            <h3>El yuan digital expande su alcance global</h3>
+            <p>China acelera el despliegue del e-CNY mientras los BRICS exploran alternativas al sistema SWIFT. El dólar enfrenta su mayor desafío estructural en décadas.</p>
+          </div>
+        </div>
+        <div class="news-card nc-chips reveal">
+          <div class="nc-bg"></div>
+          <img class="nc-photo" src="img/news/chips.jpg" alt="Semiconductores">
+          <div class="nc-content">
+            <span class="nc-tag">Tecnología · Semiconductores</span>
+            <h3>Semiconductores: la nueva geografía del poder</h3>
+            <p>El control de la cadena de chips define el nuevo orden mundial. EE.UU., Taiwan, Corea del Sur y Europa compiten por soberanía tecnológica y acceso a fábricas avanzadas.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── AURORA CALLOUT ─────────────────────────────── -->
+  <section class="section-aurora reveal">
+    <div class="aurora-bg"></div>
+    <div class="aurora-content">
+      <p class="eyebrow">Por qué Castle Black</p>
+      <h2>"Los mercados no esperan.<br><em>Nosotros tampoco.</em>"</h2>
+      <p class="aurora-lead">Mientras otros analizan el pasado, nosotros ya estamos posicionados en el siguiente movimiento. Detección de oportunidades antes de que se conviertan en titulares.</p>
+    </div>
+  </section>
+
+  <!-- ── METODOLOGÍA ───────────────────────────────── -->
+  <section class="section-method section-white" id="metodologia">
+    <div class="method-inner">
+      <div class="method-header reveal">
+        <p class="eyebrow">Metodología de inversión</p>
+        <h2>Proceso claro,<br>seguimiento constante.</h2>
+      </div>
+      <div class="method-steps">
+        <div class="mstep reveal">
+          <div class="mstep-line"></div>
+          <div class="mstep-dot"></div>
+          <div class="mstep-body">
+            <span class="mstep-num">01</span>
             <h3>Análisis inicial</h3>
             <p>Evaluamos perfil de riesgo, objetivos de inversión y horizonte de tiempo.</p>
           </div>
-        </li>
-        <li>
-          <span>02</span>
-          <div>
+        </div>
+        <div class="mstep reveal">
+          <div class="mstep-line"></div>
+          <div class="mstep-dot"></div>
+          <div class="mstep-body">
+            <span class="mstep-num">02</span>
             <h3>Selección de portafolio</h3>
             <p>Elegimos activos con fundamentos sólidos y oportunidades de crecimiento sostenible.</p>
           </div>
-        </li>
-        <li>
-          <span>03</span>
-          <div>
+        </div>
+        <div class="mstep reveal">
+          <div class="mstep-line"></div>
+          <div class="mstep-dot"></div>
+          <div class="mstep-body">
+            <span class="mstep-num">03</span>
             <h3>Gestión activa</h3>
-            <p>Ajustamos la cartera según mercado y metas del cliente.</p>
+            <p>Ajustamos la cartera según condiciones del mercado y metas del cliente.</p>
           </div>
-        </li>
-        <li>
-          <span>04</span>
-          <div>
+        </div>
+        <div class="mstep reveal">
+          <div class="mstep-line-last"></div>
+          <div class="mstep-dot"></div>
+          <div class="mstep-body">
+            <span class="mstep-num">04</span>
             <h3>Informes y comunicación</h3>
-            <p>Reportes periódicos, trazabilidad y reuniones de seguimiento.</p>
+            <p>Reportes periódicos, trazabilidad y reuniones de seguimiento disponibles 24/7.</p>
           </div>
-        </li>
-      </ol>
-    </section>
-
-    <section class="section" id="plataforma">
-      <div class="callout">
-        <div>
-          <p class="eyebrow">Plataforma digital</p>
-          <h2>Control total del patrimonio en tiempo real.</h2>
-          <p>
-            El sitio web de Castle Black centraliza, visualiza y gestiona el patrimonio de los socios con claridad,
-            transparencia y automatización. Permite consultar la evolución del capital mes a mes, rendimientos,
-            comisiones y desempeño individual, fortaleciendo la confianza entre la firma y sus inversionistas.
-          </p>
         </div>
-        <div class="callout-box">
-          <p class="callout-title">Dominio oficial</p>
-          <p>castleblack.company</p>
-          <p class="callout-note">Acceso seguro para clientes con reportes y panel en vivo.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="equipo">
-      <div class="section-header">
-        <p class="eyebrow">Equipo de trabajo</p>
-        <h2>Especialistas en mercados internacionales.</h2>
-      </div>
-      <p>
-        Nuestro equipo está compuesto por expertos en inversiones con años de experiencia en mercados financieros
-        internacionales. Juan Federico Peralta González, CEO y fundador, lidera un equipo dedicado a la excelencia y a
-        la obtención de resultados positivos para nuestros clientes.
-      </p>
-    </section>
-
-    <section class="section" id="honorarios">
-      <div class="section-header">
-        <p class="eyebrow">Estructura de honorarios</p>
-        <h2>Comisión alineada al desempeño trimestral.</h2>
-      </div>
-      <div class="table-wrap">
-        <table class="fee-table">
-          <thead>
-            <tr>
-              <th>Tarifa</th>
-              <th>Utilidades</th>
-              <th>Comisión</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Plata</td>
-              <td>&lt; $40</td>
-              <td>$10</td>
-            </tr>
-            <tr>
-              <td>Oro</td>
-              <td>$40 - $100</td>
-              <td>25%</td>
-            </tr>
-            <tr>
-              <td>Platino</td>
-              <td>$100 - $500</td>
-              <td>20%</td>
-            </tr>
-            <tr>
-              <td>Diamante</td>
-              <td>$500 - $1000</td>
-              <td>15%</td>
-            </tr>
-            <tr>
-              <td>Rubí</td>
-              <td>$1000 - $5000</td>
-              <td>10%</td>
-            </tr>
-            <tr>
-              <td>Zafiro</td>
-              <td>&gt; $5000</td>
-              <td>5%</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="small-note">Los honorarios se aplican por trimestre, según el nivel de utilidades generadas.</p>
-    </section>
-
-    <section class="section" id="terminos">
-      <div class="section-header">
-        <p class="eyebrow">Términos y condiciones</p>
-        <h2>Reglas claras para una relación transparente.</h2>
-      </div>
-      <ul class="list-check">
-        <li>Aporte de capital inicial mínimo de USD $300.</li>
-        <li>Retiros disponibles en cualquier momento.</li>
-        <li>Contrato de duración indefinida.</li>
-        <li>Terminación con notificación escrita de 14 días de preaviso.</li>
-      </ul>
-    </section>
-
-  </main>
-
-  <footer id="contacto">
-    <div class="footer-inner">
-      <div>
-        <h2>Contáctanos</h2>
-        <p>¿Quieres más información o inscribirte?</p>
-      </div>
-      <div class="footer-contact">
-        <p><strong>WhatsApp:</strong> <a class="contact-link" href="https://wa.me/573209017438?text=Hola.%0A%0AQuisiera%20informaci%C3%B3n%20para%20inscribirme%20al%20programa%3A%20requisitos%2C%20proceso%20de%20inicio%20y%20fecha%20estimada%20para%20empezar.%0A%0AGracias." target="_blank" rel="noopener">(+57) 320 901 7438</a></p>
-        <p><strong>Correo:</strong> <a class="contact-link" href="mailto:castleblack.inc@gmail.com">castleblack.inc@gmail.com</a></p>
-        <p><strong>Instagram:</strong> <a class="contact-link" href="https://instagram.com/castleblacks" target="_blank" rel="noopener">@castleblacks</a></p>
       </div>
     </div>
-    <p class="copy">© Castle Black 2026</p>
+  </section>
+
+  <!-- ── PLATAFORMA ────────────────────────────────── -->
+  <section class="section-platform reveal" id="plataforma">
+    <div class="platform-inner">
+      <div class="platform-text">
+        <p class="eyebrow">Plataforma digital</p>
+        <h2>Control total del patrimonio en tiempo real.</h2>
+        <p>El panel de Castle Black centraliza, visualiza y gestiona el patrimonio con claridad, transparencia y automatización. Consulta la evolución del capital mes a mes, rendimientos, comisiones y desempeño individual.</p>
+        <a href="login.html" class="btn-primary" style="margin-top:24px;display:inline-flex">Acceder al panel →</a>
+      </div>
+      <div class="platform-box">
+        <p class="pbox-label">Dominio oficial</p>
+        <p class="pbox-domain">castleblack.company</p>
+        <p class="pbox-note">Acceso seguro · Reportes en vivo · Panel personalizado</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HONORARIOS ────────────────────────────────── -->
+  <section class="section-fees" id="honorarios">
+    <div class="fees-inner">
+
+      <div class="fees-top reveal">
+        <div class="fees-header">
+          <p class="eyebrow">Estructura de honorarios</p>
+          <h2>A mayor ganancia,<br>menor comisión.</h2>
+          <p class="fees-sub">Cobramos $10 fijos por trimestre mientras las utilidades no superen los $40. A partir de ahí, el cobro es porcentual sobre lo generado — y entre más ganas, menor el porcentaje que aplico.</p>
+        </div>
+        <div class="fees-principle">
+          <div class="fp-item"><span class="fp-icon">◎</span><p><strong>$10 fijos</strong> por trimestre mientras las utilidades no superen los $40.</p></div>
+          <div class="fp-item"><span class="fp-icon">◎</span><p>Desde <strong>$40 de utilidad</strong>, el cobro es porcentual sobre las ganancias del periodo.</p></div>
+          <div class="fp-item"><span class="fp-icon">◎</span><p>A mayor utilidad generada, <strong>menor porcentaje cobrado</strong> — máximo 25%, mínimo 5%.</p></div>
+        </div>
+      </div>
+
+      <!-- Tabla de niveles -->
+      <div class="fees-tiers-grid reveal">
+
+        <div class="ftg-row ftg-header">
+          <span>Nivel</span>
+          <span>Utilidades trimestrales</span>
+          <span>Comisión</span>
+        </div>
+
+        <div class="ftg-row ftg-silver">
+          <div class="ftg-level">
+            <span class="ftg-dot"></span>
+            <span class="ftg-name">Plata</span>
+          </div>
+          <span class="ftg-range">$0 – $40</span>
+          <span class="ftg-fee">$10 <small>fijo</small></span>
+        </div>
+
+        <div class="ftg-row ftg-gold">
+          <div class="ftg-level">
+            <span class="ftg-dot"></span>
+            <span class="ftg-name">Oro</span>
+          </div>
+          <span class="ftg-range">$40 – $100</span>
+          <span class="ftg-fee">25%</span>
+        </div>
+
+        <div class="ftg-row ftg-platinum">
+          <div class="ftg-level">
+            <span class="ftg-dot"></span>
+            <span class="ftg-name">Platino</span>
+          </div>
+          <span class="ftg-range">$100 – $500</span>
+          <span class="ftg-fee">20%</span>
+        </div>
+
+        <div class="ftg-row ftg-diamond">
+          <div class="ftg-level">
+            <span class="ftg-dot"></span>
+            <span class="ftg-name">Diamante</span>
+          </div>
+          <span class="ftg-range">$500 – $1,000</span>
+          <span class="ftg-fee">15%</span>
+        </div>
+
+        <div class="ftg-row ftg-ruby">
+          <div class="ftg-level">
+            <span class="ftg-dot"></span>
+            <span class="ftg-name">Rubí</span>
+          </div>
+          <span class="ftg-range">$1,000 – $5,000</span>
+          <span class="ftg-fee">10%</span>
+        </div>
+
+        <div class="ftg-row ftg-sapphire">
+          <div class="ftg-level">
+            <span class="ftg-dot"></span>
+            <span class="ftg-name">Zafiro</span>
+          </div>
+          <span class="ftg-range">&gt; $5,000</span>
+          <span class="ftg-fee">5%</span>
+        </div>
+
+      </div>
+
+      <p class="fees-note reveal">$10 fijos mientras las utilidades no superen $40. A partir de $40 el cobro es porcentual sobre las ganancias del trimestre — y entre más ganas, menor el porcentaje.</p>
+    </div>
+  </section>
+
+  <!-- ── TÉRMINOS ──────────────────────────────────── -->
+  <section class="section-terms" id="terminos">
+    <div class="terms-inner reveal">
+      <p class="eyebrow">Términos y condiciones</p>
+      <h2>Reglas claras para una relación transparente.</h2>
+      <ul class="terms-list">
+        <li><span class="tl-check">✓</span>Aporte de capital inicial mínimo de USD $300.</li>
+        <li><span class="tl-check">✓</span>Retiros disponibles en cualquier momento.</li>
+        <li><span class="tl-check">✓</span>Contrato de duración indefinida.</li>
+        <li><span class="tl-check">✓</span>Terminación con notificación escrita de 14 días de preaviso.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── DOCUMENTOS ────────────────────────────────── -->
+  <section class="section-docs" id="documentos">
+    <div class="docs-inner">
+      <div class="docs-header reveal">
+        <p class="eyebrow">Documentos oficiales</p>
+        <h2>Transparencia total en cada acuerdo.</h2>
+      </div>
+      <div class="docs-grid">
+        <div class="doc-card reveal">
+          <div class="doc-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <h3><a id="doc-contract-link" href="docs/es/Contrato_Castle_Black.pdf" target="_blank" rel="noopener">Contrato de inversión</a></h3>
+          <p id="doc-contract-desc">Documento oficial que regula la relación entre el socio y Castle Black, incluyendo términos, condiciones, derechos y compromisos de ambas partes.</p>
+        </div>
+        <div class="doc-card reveal">
+          <div class="doc-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <h3><a id="doc-proposal-link" href="docs/es/Propuesta_Comercial.pdf" target="_blank" rel="noopener">Propuesta comercial</a></h3>
+          <p id="doc-proposal-desc">Presentación completa de los servicios, metodología, estructura de honorarios y beneficios del programa de inversión Castle Black.</p>
+        </div>
+      </div>
+      <p class="docs-note" id="doc-note">Los documentos están disponibles para consulta y descarga. Para cualquier duda sobre su contenido, contáctenos directamente.</p>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ────────────────────────────────────── -->
+  <footer id="contacto">
+    <div class="footer-inner">
+
+      <!-- Bloque izquierdo: marca + contacto -->
+      <div class="footer-left">
+        <div class="footer-brand">
+          <img src="img/logo-black.png" alt="Castle Black" width="36">
+          <p>Castle Black</p>
+          <p class="footer-tagline">Gestora de inversión · Operaciones globales</p>
+        </div>
+        <div class="footer-contact">
+          <h4>Contáctanos</h4>
+          <p><a href="https://wa.me/573209017438?text=Hola.%0A%0AQuisiera%20informaci%C3%B3n%20para%20inscribirme%20al%20programa%3A%20requisitos%2C%20proceso%20de%20inicio%20y%20fecha%20estimada%20para%20empezar.%0A%0AGracias." target="_blank" rel="noopener">(+57) 320 901 7438</a></p>
+          <p><a href="mailto:castleblack.inc@gmail.com">castleblack.inc@gmail.com</a></p>
+          <p><a href="https://instagram.com/castleblack.company" target="_blank" rel="noopener">@castleblack.company</a></p>
+        </div>
+      </div>
+
+      <!-- Bloque derecho: navegación + copyright -->
+      <div class="footer-right">
+        <div class="footer-nav">
+          <h4>Navegación</h4>
+          <a href="#servicios">Servicios</a>
+          <a href="#metodologia">Metodología</a>
+          <a href="#honorarios">Honorarios</a>
+          <a href="#documentos">Documentos</a>
+          <a href="login.html">Panel de cliente</a>
+        </div>
+        <p class="footer-copy">© Castle Black 2026 · All rights reserved</p>
+      </div>
+
+    </div>
   </footer>
 
   <script>
-    if ("scrollRestoration" in history) {
-      history.scrollRestoration = "manual";
+  /* ── DOC LANG ───────────────────────────────────── */
+  const DOC_LANGS = {
+    es: {
+      contract: { href: "docs/es/Contrato_Castle_Black.pdf", label: "Contrato de inversión", desc: "Documento oficial que regula la relación entre el socio y Castle Black, incluyendo términos, condiciones, derechos y compromisos de ambas partes." },
+      proposal: { href: "docs/es/Propuesta_Comercial.pdf",   label: "Propuesta comercial",   desc: "Presentación completa de los servicios, metodología, estructura de honorarios y beneficios del programa de inversión Castle Black." },
+      note: "Los documentos están disponibles para consulta y descarga. Para cualquier duda sobre su contenido, contáctenos directamente."
+    },
+    en: {
+      contract: { href: "docs/en/Investment_Agreement.pdf",  label: "Investment Agreement",  desc: "Official document governing the relationship between the partner and Castle Black, including terms, conditions, rights and obligations of both parties." },
+      proposal: { href: "docs/en/Commercial_Proposal.pdf",   label: "Commercial Proposal",   desc: "Full presentation of services, methodology, fee structure and benefits of the Castle Black investment program." },
+      note: "Documents are available for review and download. For any questions regarding their content, please contact us directly."
+    }
+  };
+  (function applyDocLang() {
+    const primary = (navigator.languages && navigator.languages.length > 0) ? navigator.languages[0] : (navigator.language || "es");
+    const lang = primary.toLowerCase().startsWith("en") ? "en" : "es";
+    const t = DOC_LANGS[lang];
+    const cl = document.getElementById("doc-contract-link");
+    const pl = document.getElementById("doc-proposal-link");
+    const cd = document.getElementById("doc-contract-desc");
+    const pd = document.getElementById("doc-proposal-desc");
+    const nt = document.getElementById("doc-note");
+    if (cl) { cl.href = t.contract.href; cl.textContent = t.contract.label; }
+    if (pl) { pl.href = t.proposal.href; pl.textContent = t.proposal.label; }
+    if (cd) cd.textContent = t.contract.desc;
+    if (pd) pd.textContent = t.proposal.desc;
+    if (nt) nt.textContent = t.note;
+  })();
+
+  /* ── SCROLL RESTORE ─────────────────────────────── */
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  const forceTop = () => { window.scrollTo(0, 0); };
+  window.addEventListener("load", () => { forceTop(); requestAnimationFrame(forceTop); setTimeout(forceTop, 50); });
+  window.addEventListener("pageshow", forceTop);
+
+  /* ── SCROLL REVEAL ──────────────────────────────── */
+  const revealEls = document.querySelectorAll(".reveal");
+  const revealIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); revealIO.unobserve(e.target); } });
+  }, { threshold: 0.05, rootMargin: "0px 0px -40px 0px" });
+  revealEls.forEach(el => revealIO.observe(el));
+  /* Force-reveal anything already in the viewport on load */
+  setTimeout(() => {
+    revealEls.forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) el.classList.add("visible");
+    });
+  }, 80);
+
+  /* ── HERO MINI CANDLES ──────────────────────────── */
+  (function heroChart() {
+    const canvas = document.getElementById("heroCandles");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let price = 32000;
+    const candles = [];
+    const MAX = 30;
+    function makeCandle(prev) {
+      const move = (Math.random() - 0.45) * prev * 0.025;
+      const o = prev;
+      const c = prev + move;
+      const h = Math.max(o, c) + Math.random() * Math.abs(move) * 0.6;
+      const l = Math.min(o, c) - Math.random() * Math.abs(move) * 0.6;
+      return { o, h, l, c };
+    }
+    for (let i = 0; i < MAX; i++) { candles.push(makeCandle(price)); price = candles[candles.length - 1].c; }
+    function draw() {
+      const W = canvas.offsetWidth || canvas.parentElement.offsetWidth || 400;
+      const H = canvas.offsetHeight || 200;
+      canvas.width = W; canvas.height = H;
+      const prices = candles.flatMap(c => [c.h, c.l]);
+      const mn = Math.min(...prices); const mx = Math.max(...prices);
+      const pad = (mx - mn) * 0.12;
+      const lo = mn - pad; const hi = mx + pad;
+      const toY = v => H - ((v - lo) / (hi - lo)) * H;
+      const cw = Math.max(4, (W / MAX) * 0.6);
+      const gap = W / MAX;
+      candles.forEach((c, i) => {
+        const x = i * gap + gap / 2;
+        const bull = c.c >= c.o;
+        const col = bull ? "#3ddc97" : "#ff453a";
+        ctx.strokeStyle = col; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(x, toY(c.h)); ctx.lineTo(x, toY(c.l)); ctx.stroke();
+        ctx.fillStyle = bull ? col : col;
+        const y1 = toY(Math.max(c.o, c.c)); const y2 = toY(Math.min(c.o, c.c));
+        ctx.fillRect(x - cw / 2, y1, cw, Math.max(1, y2 - y1));
+      });
+    }
+    draw();
+    window.addEventListener("load", draw);
+    setInterval(() => {
+      price = candles[candles.length - 1].c;
+      candles.push(makeCandle(price));
+      if (candles.length > MAX) candles.shift();
+      draw();
+      const latest = candles[candles.length - 1];
+      const el = document.getElementById("heroPatrimonio");
+      const el2 = document.getElementById("heroCrecimiento");
+      if (el) el.textContent = "$" + latest.c.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      const pctNum = candles[0].o !== 0 ? (latest.c - candles[0].o) / candles[0].o * 100 : 0;
+      const pct = pctNum.toFixed(2);
+      if (el2) { el2.textContent = (pctNum >= 0 ? "+" : "") + pct + "%"; el2.className = "metric-val " + (pctNum >= 0 ? "green" : "red"); }
+    }, 1200);
+    window.addEventListener("resize", draw);
+  })();
+
+  /* ── MAIN CANDLESTICK CHART ─────────────────────── */
+  (function mainChart() {
+    const canvas = document.getElementById("candleChart");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const axisEl = document.getElementById("chartAxisY");
+    let price = 100;
+    const candles = [];
+    const MAX_CANDLES = 60;
+
+    function makeCandle(prev) {
+      const volatility = 0.018 + Math.random() * 0.06;
+      const spike = Math.random() < 0.08 ? (Math.random() * 0.12 + 0.06) : 0;
+      const dir = Math.random() > 0.45 ? 1 : -1;
+      const move = (volatility + spike) * prev * dir;
+      const o = prev;
+      const c = Math.max(1, prev + move);
+      const wickExtra = Math.random() * Math.abs(move) * 0.8;
+      const h = Math.max(o, c) + wickExtra;
+      const l = Math.min(o, c) - wickExtra * 0.6;
+      const vol = 0.3 + Math.random() * 0.7;
+      return { o, h: Math.max(h, Math.max(o,c)), l: Math.min(l, Math.min(o,c)), c, vol };
+    }
+    for (let i = 0; i < MAX_CANDLES; i++) {
+      candles.push(makeCandle(price));
+      price = candles[candles.length - 1].c;
     }
 
-    const forceTop = () => {
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-      window.scrollTo(0, 0);
-    };
+    function draw() {
+      const W = canvas.offsetWidth || canvas.parentElement.offsetWidth || 800;
+      const H = canvas.offsetHeight || 420;
+      if (W < 10 || H < 10) return;
+      canvas.width = W; canvas.height = H;
+      const CHART_H = H * 0.78;
+      const VOL_H = H * 0.14;
+      const VOL_TOP = H * 0.86;
 
-    window.addEventListener("load", () => {
-      forceTop();
-      requestAnimationFrame(forceTop);
-      setTimeout(forceTop, 50);
+      // Background grid
+      ctx.strokeStyle = "rgba(255,255,255,0.04)";
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i <= 5; i++) {
+        const y = (CHART_H / 5) * i;
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+      }
+      for (let i = 0; i <= 10; i++) {
+        const x = (W / 10) * i;
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, CHART_H); ctx.stroke();
+      }
+
+      const prices = candles.flatMap(c => [c.h, c.l]);
+      const mn = Math.min(...prices); const mx = Math.max(...prices);
+      const pad = (mx - mn) * 0.08;
+      const lo = mn - pad; const hi = mx + pad;
+      const toY = v => CHART_H - ((v - lo) / (hi - lo)) * CHART_H;
+      const maxVol = Math.max(...candles.map(c => c.vol));
+      const cw = Math.max(3, (W / MAX_CANDLES) * 0.55);
+      const gap = W / MAX_CANDLES;
+
+      candles.forEach((c, i) => {
+        const x = i * gap + gap / 2;
+        const bull = c.c >= c.o;
+        const bull_col = "#3ddc97";
+        const bear_col = "#ff453a";
+        const col = bull ? bull_col : bear_col;
+
+        // Wick
+        ctx.strokeStyle = col + "cc";
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(x, toY(c.h)); ctx.lineTo(x, toY(c.l)); ctx.stroke();
+
+        // Body
+        const y1 = toY(Math.max(c.o, c.c));
+        const y2 = toY(Math.min(c.o, c.c));
+        const bodyH = Math.max(1.5, y2 - y1);
+        if (bull) {
+          ctx.fillStyle = bull_col;
+        } else {
+          ctx.fillStyle = bear_col;
+        }
+        ctx.fillRect(x - cw / 2, y1, cw, bodyH);
+
+        // Volume bar
+        const volH = (c.vol / maxVol) * VOL_H;
+        ctx.fillStyle = col + "55";
+        ctx.fillRect(x - cw / 2, VOL_TOP + VOL_H - volH, cw, volH);
+      });
+
+      // Current price line
+      const lastC = candles[candles.length - 1].c;
+      const lineY = toY(lastC);
+      ctx.strokeStyle = "rgba(255,255,255,0.3)";
+      ctx.setLineDash([4, 4]);
+      ctx.lineWidth = 0.7;
+      ctx.beginPath(); ctx.moveTo(0, lineY); ctx.lineTo(W * 0.92, lineY); ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Current price label
+      ctx.fillStyle = "rgba(255,255,255,0.85)";
+      ctx.font = "bold 11px -apple-system, Inter, sans-serif";
+      ctx.textAlign = "right";
+      ctx.fillText(lastC.toFixed(2), W - 4, lineY - 3);
+
+      // Y axis labels
+      if (axisEl) {
+        axisEl.innerHTML = "";
+        for (let i = 0; i <= 4; i++) {
+          const v = lo + (hi - lo) * (i / 4);
+          const y = toY(v);
+          const span = document.createElement("span");
+          span.style.cssText = `position:absolute;right:4px;top:${y}px;transform:translateY(-50%);font-size:10px;color:rgba(255,255,255,0.35);pointer-events:none;`;
+          span.textContent = v.toFixed(1);
+          axisEl.appendChild(span);
+        }
+      }
+    }
+
+    draw();
+    window.addEventListener("load", draw);
+    setInterval(() => {
+      const prev = candles[candles.length - 1].c;
+      candles.push(makeCandle(prev));
+      if (candles.length > MAX_CANDLES) candles.shift();
+      draw();
+    }, 1000);
+    window.addEventListener("resize", draw);
+  })();
+
+  /* ── LOGO TOOLTIP ───────────────────────────────── */
+  (function logoTooltip() {
+    const tip = document.createElement("div");
+    tip.className = "global-logo-tip";
+    document.body.appendChild(tip);
+    let hideTimer;
+    document.querySelectorAll(".logo-item[data-info]").forEach(item => {
+      item.addEventListener("mouseenter", () => {
+        clearTimeout(hideTimer);
+        const name = item.querySelector("em") ? item.querySelector("em").textContent : "";
+        const flag = item.querySelector("small") ? item.querySelector("small").textContent : "";
+        tip.innerHTML = `<strong>${flag} ${name}</strong><p>${item.dataset.info}</p>`;
+        tip.classList.add("tip-visible");
+      });
+      item.addEventListener("mousemove", (e) => {
+        const tw = tip.offsetWidth;
+        const th = tip.offsetHeight;
+        let x = e.clientX - tw / 2;
+        let y = e.clientY - th - 18;
+        if (x < 8) x = 8;
+        if (x + tw > window.innerWidth - 8) x = window.innerWidth - tw - 8;
+        if (y < 8) y = e.clientY + 18;
+        tip.style.left = x + "px";
+        tip.style.top  = y + "px";
+      });
+      item.addEventListener("mouseleave", () => {
+        hideTimer = setTimeout(() => tip.classList.remove("tip-visible"), 120);
+      });
     });
+  })();
 
-    window.addEventListener("pageshow", forceTop);
+  /* ── GLOBE CARD EXPAND ──────────────────────────── */
+  document.querySelectorAll(".globe-card").forEach(card => {
+    card.addEventListener("click", () => {
+      const wasOpen = card.classList.contains("expanded");
+      document.querySelectorAll(".globe-card.expanded").forEach(c => c.classList.remove("expanded"));
+      if (!wasOpen) card.classList.add("expanded");
+    });
+  });
+
   </script>
+
 </body>
 </html>

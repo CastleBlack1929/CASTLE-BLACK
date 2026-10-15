@@ -363,7 +363,7 @@ const MONTHLY_MARGIN_BY_YEAR = {
     julio: 1.75,
     agosto: 0.45,
     septiembre: 3.84,
-    octubre: 0.45
+    octubre: 0.51
   }
 };
 
@@ -1952,7 +1952,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         if (Number.isFinite(marginPct)) {
           const baseTotal = basePrev + aporteMes;
           if (baseTotal !== 0) {
-            margen = (g_p / Math.abs(baseTotal)) * 100;
+            margen = marginPct;
           }
         }
       }
@@ -3419,7 +3419,9 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const cAporte = document.createElement("td");
           cAporte.className = aporte > 0 ? "aporte-in" : (aporte < 0 ? "aporte-out" : "");
           cAporte.textContent = `$ ${formatNumber(aporte)}`;
+          cAporte.setAttribute("translate", "no");
           const cPatr = document.createElement("td");
+          cPatr.setAttribute("translate", "no");
           const isCurrentYear2026 = isActualYear && Number(displayYear) === 2026;
           const snapshot = monthSnapshots[mes];
           const snapshotPatr = Number.isFinite(snapshot?.patrimonio) ? snapshot.patrimonio : null;
@@ -3442,8 +3444,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const cMarg = document.createElement("td");
           cMarg.className = trendClass(margenToShow);
           cMarg.textContent = formatPercent(margenToShow);
+          cMarg.setAttribute("translate", "no");
           const cGp = document.createElement("td");
           cGp.className = trendClass(gpToShow);
+          cGp.setAttribute("translate", "no");
           const gpSpan = document.createElement("span");
           const gpArrow = document.createElement("span");
           gpArrow.className = "arrow-indicator";
@@ -3910,6 +3914,127 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const logoUrl = await getLogoDataUrl();
           const { jsPDF } = window.jspdf;
           const doc = new jsPDF();
+
+          const isEn = (document.documentElement.lang || navigator.language || "es").toLowerCase().startsWith("en");
+          const tM = (m) => { if (!isEn) return m; return ({enero:"Jan",febrero:"Feb",marzo:"Mar",abril:"Apr",mayo:"May",junio:"Jun",julio:"Jul",agosto:"Aug",septiembre:"Sep",octubre:"Oct",noviembre:"Nov",diciembre:"Dec"})[m?.toLowerCase()] || m; };
+          const T = {
+            locale: isEn ? "en-US" : "es-CO",
+            from: isEn ? "From" : "De",
+            accountTitle: isEn ? "GENERAL ACCOUNT STATEMENT" : "ESTADO DE CUENTA GENERAL",
+            dear: isEn ? "Dear" : "Estimado(a)",
+            contact: "castleblack.inc@gmail.com | Tel: (+57) 320 901 7438",
+            intro: isEn
+              ? "We are pleased to reach out on behalf of Castle Black to present the results of our investment operations and provide a summary of portfolio activity at year close."
+              : "Nos complace dirigirnos a usted en nombre de Castle Black para presentar los resultados de nuestras operaciones de inversión y dar un recuento de los movimientos del portafolio al cierre del año.",
+            dashboardNote: isEn
+              ? "This report reflects exactly what you see in your dashboard: contributions, net worth, profits, fees, and transactions. Zero values indicate months not yet closed or with no data loaded."
+              : "Este informe refleja exactamente lo que ves en tu dashboard: aportes, patrimonio, utilidades, honorarios y movimientos. Los valores en cero indican meses no cerrados o sin datos cargados.",
+            methodUsd: isEn
+              ? "Methodology: figures in USD based on your contributions and net worth. Profits account for gains/losses and commissions. The historical section shows total evolution since your join date."
+              : "Metodología: cifras en USD basadas en tus aportes y patrimonio. Las utilidades consideran ganancias/pérdidas y comisiones. El apartado histórico muestra la evolución total desde tu fecha de ingreso.",
+            clientLabel: isEn ? "Client" : "Cliente",
+            yearLabel: isEn ? "Year" : "Año",
+            updatedLabel: isEn ? "Updated" : "Actualizado",
+            clientInfoParagraph: (name, id, tel, ced) => isEn
+              ? `Report addressed to ${name} (${id}). Registered contact information: Phone ${tel} | ID ${ced}. This document consolidates the current dashboard information for your reference.`
+              : `Informe dirigido a ${name} (${id}). Datos de contacto registrados: Teléfono ${tel} | Identificación ${ced}. Este documento consolida la información actual del dashboard para su referencia y soporte.`,
+            accountSummaryIntro: (year) => isEn
+              ? `As a result of movements made throughout the selected period — considering only the interval from January 1st of ${year} or from the date you joined the portfolio during that year — the following shows the profit margin obtained. This information precisely reflects the returns generated exclusively in ${year} within your participation in the investment fund.`
+              : `Como resultado de los movimientos realizados a lo largo del periodo seleccionado, y considerando únicamente el intervalo comprendido desde el 1 de enero de ${year} o desde la fecha en la que usted se unió al portafolio durante ese mismo año, a continuación podrá ver el margen de utilidad obtenido. Esta información refleja de manera precisa los rendimientos generados exclusivamente en ${year} dentro de su participación en el fondo de inversión, permitiéndole evaluar el desempeño de su inversión con base en los resultados alcanzados al cierre de dicho periodo.`,
+            accountSummaryParagraph: isEn
+              ? "As a result of movements made during the current year (or since your join date in this period), this account statement shows the profit margin obtained. The focus is on the returns of the selected year to evaluate the current performance of your investment, including contributions, withdrawals, and fees."
+              : "Como resultado de los movimientos realizados durante el presente año (o desde tu fecha de ingreso en este periodo), este estado de cuenta muestra el margen de utilidad obtenido. El enfoque está en los rendimientos del año seleccionado para evaluar el desempeño actual de tu inversión, incluyendo aportes, retiros y comisiones.",
+            usdOnlyNote: (startMonth) => isEn
+              ? `Account condition: this client is presented in USD only, with no local currency comparison table or conversion rate. The first-year operating period begins in ${startMonth}.`
+              : `Condición particular de la cuenta: este cliente se presenta únicamente en USD, sin tabla comparativa de moneda externa ni tasa de conversión. El periodo operativo del primer año inicia en ${startMonth}.`,
+            summaryTitle: isEn ? "Account Summary" : "Resumen de cuenta",
+            concept: isEn ? "Item" : "Concepto",
+            contribution: isEn ? "Contribution" : "Aporte",
+            netWorth: isEn ? "Net Worth" : "Patrimonio",
+            growth: isEn ? "Growth" : "Crecimiento",
+            profit: isEn ? "Profit" : "Utilidad",
+            realProfit: isEn ? "Real Profit" : "Utilidad R",
+            interpUsd: isEn
+              ? "Summary: net worth and profit in USD, percentage growth over accumulated contributions."
+              : "Interpretación: Patrimonio y utilidad en USD, crecimiento porcentual sobre aportes acumulados.",
+            interpLocal: (cur, stamp, pair, rate) => isEn
+              ? `Summary: net worth and profit in USD, percentage growth over accumulated contributions. Conversion to ${cur} using the closing rate for the visible period (closing rate ${stamp}: ${pair} ${rate}).`
+              : `Interpretación: Patrimonio y utilidad en USD, crecimiento porcentual sobre aportes acumulados. Conversión a ${cur} usando la tasa vigente al cierre del periodo visible (tasa de cierre ${stamp}: ${pair} ${rate}).`,
+            networthChartTitle: isEn ? "Net Worth (USD)" : "Patrimonio (USD)",
+            networthChartDesc: isEn
+              ? "This chart clearly shows net worth evolution throughout the year. It accounts for deposits that increase capital, withdrawals that reduce it, and market gains or losses. The green line with dots marks each month's close."
+              : "El gráfico refleja claramente la evolución del patrimonio a lo largo del año. Se consideran depósitos que incrementan el capital, retiros que lo reducen y las ganancias o pérdidas del mercado. Cada movimiento impacta el balance general del patrimonio, permitiendo un seguimiento detallado del crecimiento o disminución. La línea verde con puntos muestra el cierre de cada mes.",
+            noData: isEn ? "No data" : "Sin datos",
+            monthlyTableTitle: isEn ? "Monthly Returns (USD)" : "Utilidades y rentabilidades por mes (USD)",
+            monthlyTableDesc: isEn
+              ? "Monthly figures for the selected period: contribution and net worth at close, percentage margin over the month's capital, and net gain/loss per month. Zero values mean the month hasn't closed yet or has no data loaded."
+              : "Utilidades mensuales del periodo seleccionado: aporte y patrimonio al cierre, margen porcentual sobre el capital del mes y ganancia/pérdida neta de cada mes. Si algún valor está en cero, es porque el mes no se ha cerrado o no tiene datos cargados. El acumulado se visualiza en el gráfico de barras continuo.",
+            month: isEn ? "Month" : "Mes",
+            margin: isEn ? "Margin %" : "Margen %",
+            gainLoss: isEn ? "Gain/Loss" : "Gan/Pérd",
+            barChartTitle: isEn ? "Monthly Profit (USD)" : "Utilidad mensual (USD)",
+            barChartDesc: (from) => isEn
+              ? `Complementary chart: bars (green/red) for each month's gain or loss, and a parallel thin bar showing cumulative profit since ${from}. Zeros indicate months not yet closed or loaded.`
+              : `Gráfico complementario: barras (verde/rojo) para la ganancia o pérdida de cada mes y una barra delgada paralela que muestra la utilidad acumulada desde ${from}. Si ves ceros, es porque el mes aún no está cerrado o cargado.`,
+            feeStructureTitle: isEn ? "Fee Structure (SILVER–SAPPHIRE)" : "Estructura de honorarios (PLATA–ZAFIRO)",
+            feeStructureDesc: isEn
+              ? "These are all the fees that will be applied to the account throughout the year. Fees correspond to quarterly charges based on portfolio profits in each period. Commissions are not fixed — they vary according to the quarterly return."
+              : "Esta es la totalidad de los cobros que se efectuarán en la cuenta durante el transcurso del año. Estos valores corresponden a los honorarios trimestrales aplicados en función de las utilidades generadas por el portafolio en cada periodo. Las comisiones no son fijas, sino que varían según el rendimiento obtenido en cada trimestre, de acuerdo con la estructura anterior.",
+            feeLevel: isEn ? "Level" : "Nivel",
+            feeProfitRange: isEn ? "Profit Range (USD)" : "Rango de utilidad (USD)",
+            feeCommission: isEn ? "Commission" : "Comisión",
+            feeTiers: isEn
+              ? [["SILVER","Less than 40","$10 flat"],["GOLD","40 to 100","25%"],["PLATINUM","100 to 500","20%"],["DIAMOND","500 to 1,000","15%"],["RUBY","1,000 to 5,000","10%"],["SAPPHIRE","Over 5,000","5%"]]
+              : [["PLATA","Menor a 40","$10 fijo"],["ORO","40 a 100","25%"],["PLATINO","100 a 500","20%"],["DIAMANTE","500 a 1.000","15%"],["RUBÍ","1.000 a 5.000","10%"],["ZAFIRO","Mayor a 5.000","5%"]],
+            abrMergeNote: isEn
+              ? "First-year condition: Q1 and Q2 generate no charge for this client. April profits accumulate into Q3, so Q3 is calculated over four months: April, May, June, and July."
+              : "Condición de primer año: el primer y segundo trimestre no generan cobro para este cliente. Las utilidades de abril se acumulan al tercer trimestre, por lo que el T3 se calcula con cuatro meses: abril, mayo, junio y julio.",
+            annualFeesTitle: isEn ? "Annual Fees (USD)" : "Honorarios del año (USD)",
+            annualFeesDesc: (isAbr) => isEn
+              ? (isAbr
+                  ? "For this first year, Q1 and Q2 have no charge. The first applicable charge accumulates in Q3 and includes profits from April, May, June, and July."
+                  : "Charges are applied automatically, deducted from the account balance during the first days of the month corresponding to the following quarter. These amounts reflect only your individual profits and may increase or decrease based on quarterly performance.")
+              : (isAbr
+                  ? "Para este primer año, el T1 y T2 quedan sin cobro. El primer cobro aplicable se acumula en el T3 e incluye las utilidades de abril, mayo, junio y julio."
+                  : "Los cobros se realizan de forma automática, descontándose del saldo de la cuenta durante los primeros días del mes correspondiente al trimestre siguiente. Estos montos reflejan únicamente lo correspondiente a sus utilidades individuales, y pueden aumentar o disminuir según el rendimiento obtenido."),
+            quarter: isEn ? "Quarter" : "Trimestre",
+            tier: isEn ? "Tier" : "Tarifa",
+            value: isEn ? "Value" : "Valor",
+            feePeriodLabel: isEn ? "Applied fee period" : "Corte de honorarios aplicado",
+            totalFeesLabel: isEn ? "Total fees" : "Total honorarios",
+            quarterAppliedNote: isEn ? "Quarter(s) applied based on your generated profit" : "Trimestre(s) aplicados según tu utilidad generada",
+            historicalTitle: isEn ? "Total Account Statement (Historical)" : "Estado de cuenta total (histórico)",
+            joinDateLabel: isEn ? "Join date" : "Fecha de unión",
+            historicalParagraph: isEn
+              ? "As a result of contributions and movements made during the time you have maintained your relationship with us, the following shows the historical accumulated profit margin and real capital growth, accounting for profits, withdrawals, and fees. This analysis reflects performance since your join date, even if it was in prior years."
+              : "Como consecuencia de los aportes y movimientos realizados durante el tiempo que ha mantenido su relación con nosotros, aquí se muestra el margen de utilidad acumulado histórico y el crecimiento real del capital, considerando utilidades, retiros y comisiones. Este análisis refleja el desempeño desde su fecha de ingreso, incluso si fue en años anteriores.",
+            historicalTotalsTitle: isEn ? "Historical Totals" : "Totales históricos",
+            historicalTotalsDesc: isEn
+              ? "Cumulative figures since your join date. Growth reflects the return on total contributed capital."
+              : "Cifras acumuladas desde tu fecha de ingreso. El crecimiento refleja el rendimiento sobre el total aportado.",
+            rateTitle: isEn ? "Applied Exchange Rate" : "Tasa aplicada",
+            updatedOn: isEn ? "Updated on" : "Actualizada a",
+            noTransactions: isEn ? "No transactions" : "Sin movimientos",
+            transactionsTitle: isEn ? "Transactions" : "Movimientos",
+            transactionsDesc: isEn
+              ? "The following shows all movements made in your portfolio during the current year: capital entries, withdrawals, and partial or full liquidations. Each transaction is recorded with its corresponding detail for full transparency over your investment activity."
+              : "A continuación, se presentan todos los movimientos realizados por usted en el portafolio durante el presente año. Este registro incluye entradas de capital, retiros (salidas) y liquidaciones parciales o totales, reflejando la actividad completa de su cuenta en el período.",
+            receipt: isEn ? "Receipt" : "Recibo",
+            date: isEn ? "Date" : "Fecha",
+            amount: isEn ? "Amount" : "Cantidad",
+            type: isEn ? "Type" : "Tipo",
+            rate: isEn ? "Rate" : "Tasa",
+            change: isEn ? "USD" : "Cambio",
+            portfolioTitle: isEn ? "Portfolio Assets" : "Activos en cartera",
+            regulatoryTitle: isEn ? "Regulatory Framework & Brokers" : "Marco regulatorio y brokers",
+            sources: isEn ? "Sources" : "Fuentes",
+            closingParagraph: isEn
+              ? "If you have any questions or wish to review your portfolio performance in greater depth, please do not hesitate to contact us. We sincerely appreciate your trust in Castle Black. It is an honor to accompany you in managing your wealth, and we will continue working with commitment and transparency to build together a solid, stable, and successful financial future."
+              : "Si tiene alguna pregunta, inquietud o desea revisar en mayor profundidad el desempeño de su portafolio, no dude en ponerse en contacto con nosotros. Estaremos encantados de atenderle y brindarle el acompañamiento necesario para resolver cualquier duda o analizar nuevas oportunidades de crecimiento. Agradecemos sinceramente su confianza en Castle Black. Para nosotros es un honor acompañarlo en la gestión de su patrimonio, y seguiremos trabajando con compromiso y transparencia para construir juntos un futuro financiero sólido, estable y exitoso.",
+            sincerely: isEn ? "Sincerely," : "Atentamente,",
+            pageOf: (i, total) => isEn ? `Page ${i} of ${total}` : `Página ${i} de ${total}`,
+          };
+
           const pageWidth = doc.internal.pageSize.getWidth();
           const pageHeight = doc.internal.pageSize.getHeight();
           const marginX = 14;
@@ -4115,8 +4240,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
           const updatedLabel = reportUpdatedLabel || safeText(rateTime) || safeText(datetimeEl);
           const fullClientName = selectedUserData?.nombre || selectedUserData?.socio || nombreCliente?.dataset?.fullName || safeText(nombreCliente);
-          let fileName = `estado-cuenta-${(reportYearText || selectedYear || "actual").replace(/[^0-9a-zA-Z-]/g, "") || "actual"}.pdf`;
-          const todayLabel = new Date().toLocaleDateString("es-CO", {
+          let fileName = isEn
+            ? `account-statement-${(reportYearText || selectedYear || "current").replace(/[^0-9a-zA-Z-]/g, "") || "current"}.pdf`
+            : `estado-cuenta-${(reportYearText || selectedYear || "actual").replace(/[^0-9a-zA-Z-]/g, "") || "actual"}.pdf`;
+          const todayLabel = new Date().toLocaleDateString(T.locale, {
             weekday: "long",
             year: "numeric",
             month: "long",
@@ -4141,24 +4268,26 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           y += 14;
           doc.setFont("times", "normal");
           doc.setFontSize(11);
-          doc.text(`De Juan Federico Peralta Gonzalez, ${todayLabel}.`, marginX, y);
+          doc.text(`${T.from} Juan Federico Peralta Gonzalez, ${todayLabel}.`, marginX, y);
           y += 12;
           doc.setFont("times", "bold");
           doc.setFontSize(16);
-          doc.text(`ESTADO DE CUENTA GENERAL ${reportYearText || "2025"}`, centerX, y, { align: "center" });
+          doc.text(`${T.accountTitle} ${reportYearText || "2025"}`, centerX, y, { align: "center" });
           y += 16;
           doc.setFont("times", "normal");
           doc.setFontSize(11);
-          doc.text(`Estimado(a) ${fullClientName}`, marginX, y);
+          doc.text(`${T.dear} ${fullClientName}`, marginX, y);
           y += 12;
           doc.setFontSize(9);
-          addParagraph("Nos complace dirigirnos a usted en nombre de Castle Black para presentar los resultados de nuestras operaciones de inversión y dar un recuento de los movimientos del portafolio al cierre del año.");
-          doc.text("castleblack.inc@gmail.com | Tel: (+57) 320 901 7438", marginX, y);
+          addParagraph(T.intro);
+          doc.text(T.contact, marginX, y);
           y += 5;
-          addParagraph("Este informe refleja exactamente lo que ves en tu dashboard: aportes, patrimonio, utilidades, honorarios y movimientos. Los valores en cero indican meses no cerrados o sin datos cargados.");
+          addParagraph(T.dashboardNote);
           addParagraph(hideLocalCurrency
-            ? "Metodología: cifras en USD basadas en tus aportes y patrimonio. Las utilidades consideran ganancias/pérdidas y comisiones. El apartado histórico muestra la evolución total desde tu fecha de ingreso."
-            : `Metodología: cifras en USD basadas en tus aportes y patrimonio; ${localCurrencyShort} convertidos con la tasa visible. Las utilidades consideran ganancias/pérdidas y comisiones. El apartado histórico muestra la evolución total desde tu fecha de ingreso.`
+            ? T.methodUsd
+            : (isEn
+                ? `Methodology: figures in USD based on your contributions and net worth; ${localCurrencyShort} converted using the visible rate. Profits account for gains/losses and commissions. The historical section shows total evolution since your join date.`
+                : `Metodología: cifras en USD basadas en tus aportes y patrimonio; ${localCurrencyShort} convertidos con la tasa visible. Las utilidades consideran ganancias/pérdidas y comisiones. El apartado histórico muestra la evolución total desde tu fecha de ingreso.`)
           );
           y += 4;
           doc.setDrawColor(40);
@@ -4166,18 +4295,20 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           doc.line(marginX, y, pageWidth - marginX, y);
           y += 4;
 
-          addLine(`Cliente: ${fullClientName}`);
+          addLine(`${T.clientLabel}: ${fullClientName}`);
           const cleanId = safeText(idClienteHeader).replace(/^ID:\\s*/i, "") || "N/D";
           addLine(cleanId);
           addLine(safeText(nivelText));
-          addLine(`Año: ${reportYearText}`);
-          addLine(`Actualizado: ${updatedLabel}`);
-          addParagraph(`Informe dirigido a ${fullClientName} (${cleanId}). Datos de contacto registrados: Teléfono ${safeText(menuTelefono)} | Identificación ${safeText(menuCedula)}. Este documento consolida la información actual del dashboard para su referencia y soporte.`);
-          addParagraph("Como resultado de los movimientos realizados durante el presente año (o desde tu fecha de ingreso en este periodo), este estado de cuenta muestra el margen de utilidad obtenido. El enfoque está en los rendimientos del año seleccionado para evaluar el desempeño actual de tu inversión, incluyendo aportes, retiros y comisiones.");
+          addLine(`${T.yearLabel}: ${reportYearText}`);
+          addLine(`${T.updatedLabel}: ${updatedLabel}`);
+          addParagraph(T.clientInfoParagraph(fullClientName, cleanId, safeText(menuTelefono), safeText(menuCedula)));
+          addParagraph(T.accountSummaryParagraph);
           const cleanIdForFile = (cleanId || "sin-id").replace(/[^0-9a-zA-Z-]/g, "") || "sin-id";
           const yearMatch = (reportYearText || selectedYear || "").match(/\d{4}/);
           const docYearTag = yearMatch ? yearMatch[0] : String(new Date().getFullYear());
-          fileName = `estado-cuenta-${cleanIdForFile}-${docYearTag}.pdf`;
+          fileName = isEn
+            ? `account-statement-${cleanIdForFile}-${docYearTag}.pdf`
+            : `estado-cuenta-${cleanIdForFile}-${docYearTag}.pdf`;
 
           y += 4;
           const reportYearNumber = (reportYearText || selectedYear || "").match(/\d{4}/)?.[0] || String(new Date().getFullYear());
@@ -4195,40 +4326,40 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             return m.aporte !== 0 || m.patrimonio !== 0 || m.g_p !== 0;
           });
           if (hideLocalCurrency) {
-            addParagraph(`Condición particular de la cuenta: este cliente se presenta únicamente en USD, sin tabla comparativa de moneda externa ni tasa de conversión. El periodo operativo del primer año inicia en ${pdfStartMonthKey}.`);
+            addParagraph(T.usdOnlyNote(pdfStartMonthKey));
           }
           addTable(
-            "Resumen de cuenta",
-            `Como resultado de los movimientos realizados a lo largo del periodo seleccionado, y considerando únicamente el intervalo comprendido desde el 1 de enero de ${reportYearNumber} o desde la fecha en la que usted se unió al portafolio durante ese mismo año, a continuación podrá ver el margen de utilidad obtenido. Esta información refleja de manera precisa los rendimientos generados exclusivamente en ${reportYearNumber} dentro de su participación en el fondo de inversión, permitiéndole evaluar el desempeño de su inversión con base en los resultados alcanzados al cierre de dicho periodo.`,
-            hideLocalCurrency ? ["Concepto", "USD"] : ["Concepto", "USD", localCurrencyShort],
+            T.summaryTitle,
+            T.accountSummaryIntro(reportYearNumber),
+            hideLocalCurrency ? [T.concept, "USD"] : [T.concept, "USD", localCurrencyShort],
             hideLocalCurrency
               ? [
-                ["Aporte", safeText(aporte)],
-                ["Patrimonio", safeText(patrimonio)],
-                ["Crecimiento", safeText(crcmnt)],
-                ["Utilidad", safeText(utilidad)]
+                [T.contribution, safeText(aporte)],
+                [T.netWorth, safeText(patrimonio)],
+                [T.growth, safeText(crcmnt)],
+                [T.profit, safeText(utilidad)]
               ]
               : [
-                ["Aporte", safeText(aporte), safeText(aporteL)],
-                ["Patrimonio", safeText(patrimonio), safeText(patrimonioL)],
-                ["Crecimiento", safeText(crcmnt), safeText(crcmntL)],
-                ["Utilidad R", safeText(utilidad), safeText(utilidadL)],
-                ["Utilidad", safeText(utilidadTotal), safeText(utilidadTotalL)]
+                [T.contribution, safeText(aporte), safeText(aporteL)],
+                [T.netWorth, safeText(patrimonio), safeText(patrimonioL)],
+                [T.growth, safeText(crcmnt), safeText(crcmntL)],
+                [T.realProfit, safeText(utilidad), safeText(utilidadL)],
+                [T.profit, safeText(utilidadTotal), safeText(utilidadTotalL)]
               ]
           );
           const rateStamp = selectedYear === "actual" ? "31/12/2025" : `31/12/${reportYearNumber}`;
           const summaryRateNumber = Number(currentRate || baseRate);
           const summaryRateText = Number.isFinite(summaryRateNumber) ? formatNumber(summaryRateNumber) : safeText(rateValue) || "N/D";
           addParagraph(hideLocalCurrency
-            ? "Interpretación: Patrimonio y utilidad en USD, crecimiento porcentual sobre aportes acumulados."
-            : `Interpretación: Patrimonio y utilidad en USD, crecimiento porcentual sobre aportes acumulados. Conversión a ${localCurrencyShort} usando la tasa vigente al cierre del periodo visible (tasa de cierre ${rateStamp}: ${ratePairLabel} ${summaryRateText}).`
+            ? T.interpUsd
+            : T.interpLocal(localCurrencyShort, rateStamp, ratePairLabel, summaryRateText)
           );
           if (monthlySrc.length) {
             const patrSeries = monthlySrc.map((m) => Number(m.patrimonio) || 0);
             if (patrSeries.some((v) => v !== 0)) {
               addSparkline(
-                "Patrimonio (USD)",
-                "El gráfico refleja claramente la evolución del patrimonio a lo largo del año. Se consideran depósitos que incrementan el capital, retiros que lo reducen y las ganancias o pérdidas del mercado. Cada movimiento impacta el balance general del patrimonio, permitiendo un seguimiento detallado del crecimiento o disminución. La línea verde con puntos muestra el cierre de cada mes.",
+                T.networthChartTitle,
+                T.networthChartDesc,
                 patrSeries,
                 monthlySrc.map((m) => m.mes || ""),
                 [15, 81, 50]
@@ -4238,18 +4369,18 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
             const monthlyRows = monthlySrc.length
               ? monthlySrc.map((m) => [
-                m.mes,
+                tM(m.mes),
                 fmtMoney(m.aporte),
               fmtMoney(m.patrimonio),
               formatPercent(m.margen),
               fmtMoney(m.g_p)
             ])
-            : [["Sin datos", "—", "—", "—", "—"]];
+            : [[T.noData, "—", "—", "—", "—"]];
           y += 10;
           addTable(
-            "Utilidades y rentabilidades por mes (USD)",
-            "Utilidades mensuales del periodo seleccionado: aporte y patrimonio al cierre, margen porcentual sobre el capital del mes y ganancia/pérdida neta de cada mes. Si algún valor está en cero, es porque el mes no se ha cerrado o no tiene datos cargados. El acumulado se visualiza en el gráfico de barras continuo.",
-            ["Mes", "Aporte", "Patrimonio", "Margen %", "Gan/Pérd"],
+            T.monthlyTableTitle,
+            T.monthlyTableDesc,
+            [T.month, T.contribution, T.netWorth, T.margin, T.gainLoss],
             monthlyRows
           );
           if (monthlySrc.length) {
@@ -4264,8 +4395,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
                 return next;
               }, 0);
               addBarChart(
-                "Utilidad mensual (USD)",
-                `Gráfico complementario: barras (verde/rojo) para la ganancia o pérdida de cada mes y una barra delgada paralela que muestra la utilidad acumulada desde ${utilidadAcumuladaDesde}. Si ves ceros, es porque el mes aún no está cerrado o cargado.`,
+                T.barChartTitle,
+                T.barChartDesc(tM(utilidadAcumuladaDesde)),
                 labels,
                 utilSeries,
                 cumulative,
@@ -4292,39 +4423,30 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             ? trimestresData.map((t) => [t.nombre, t.tarifa, t.comision, fmtMoney(t.valor)])
             : [["Sin datos", "—", "—", "—"]];
           addTable(
-            "Estructura de honorarios (PLATA–ZAFIRO)",
-            "Esta es la totalidad de los cobros que se efectuarán en la cuenta durante el transcurso del año. Estos valores corresponden a los honorarios trimestrales aplicados en función de las utilidades generadas por el portafolio en cada periodo. Las comisiones no son fijas, sino que varían según el rendimiento obtenido en cada trimestre, de acuerdo con la estructura anterior.",
-            ["Nivel", "Rango de utilidad (USD)", "Comisión"],
-            [
-              ["PLATA", "Menor a 40", "$10 fijo"],
-              ["ORO", "40 a 100", "25%"],
-              ["PLATINO", "100 a 500", "20%"],
-              ["DIAMANTE", "500 a 1.000", "15%"],
-              ["RUBÍ", "1.000 a 5.000", "10%"],
-              ["ZAFIRO", "Mayor a 5.000", "5%"]
-            ]
+            T.feeStructureTitle,
+            T.feeStructureDesc,
+            [T.feeLevel, T.feeProfitRange, T.feeCommission],
+            T.feeTiers
           );
-          addParagraph("Esta es la totalidad de los cobros que se efectuarán en la cuenta durante el transcurso del año. Estos valores corresponden a los honorarios trimestrales aplicados en función de las utilidades generadas por el portafolio en cada periodo. Las comisiones no son fijas, sino que varían según el rendimiento obtenido en cada trimestre, de acuerdo con la estructura anterior.");
+          addParagraph(T.feeStructureDesc);
           if (isAbrMergeFirstYear) {
-            addParagraph("Condición de primer año: el primer y segundo trimestre no generan cobro para este cliente. Las utilidades de abril se acumulan al tercer trimestre, por lo que el T3 se calcula con cuatro meses: abril, mayo, junio y julio.");
+            addParagraph(T.abrMergeNote);
           }
 
           addTable(
-            "Honorarios del año (USD)",
-            isAbrMergeFirstYear
-              ? "Para este primer año, el T1 y T2 quedan sin cobro. El primer cobro aplicable se acumula en el T3 e incluye las utilidades de abril, mayo, junio y julio."
-              : "Los cobros se realizan de forma automática, descontándose del saldo de la cuenta durante los primeros días del mes correspondiente al trimestre siguiente. Estos montos reflejan únicamente lo correspondiente a sus utilidades individuales, y pueden aumentar o disminuir según el rendimiento obtenido.",
-            ["Trimestre", "Tarifa", "Comisión", "Valor"],
+            T.annualFeesTitle,
+            T.annualFeesDesc(isAbrMergeFirstYear),
+            [T.quarter, T.tier, T.feeCommission, T.value],
             honorariosRows
           );
           
-          addLine(`Corte de honorarios aplicado: ${corteAplicado}`, 11, 8, "bold");
-          addLine(`Total honorarios: ${fmtMoney(honorariosTotalUsd)} | Trimestre(s) aplicados según tu utilidad generada`, 10, 6, "bold");
+          addLine(`${T.feePeriodLabel}: ${corteAplicado}`, 11, 8, "bold");
+          addLine(`${T.totalFeesLabel}: ${fmtMoney(honorariosTotalUsd)} | ${T.quarterAppliedNote}`, 10, 6, "bold");
 
           y += 6;
-          addLine("Estado de cuenta total (histórico)", 12, 8, "bold");
-          addLine(`Fecha de unión: ${safeText(fechaUnionHist)}`);
-          addParagraph("Como consecuencia de los aportes y movimientos realizados durante el tiempo que ha mantenido su relación con nosotros, aquí se muestra el margen de utilidad acumulado histórico y el crecimiento real del capital, considerando utilidades, retiros y comisiones. Este análisis refleja el desempeño desde su fecha de ingreso, incluso si fue en años anteriores.");
+          addLine(T.historicalTitle, 12, 8, "bold");
+          addLine(`${T.joinDateLabel}: ${safeText(fechaUnionHist)}`);
+          addParagraph(T.historicalParagraph);
           const latestHistoricalRate = getHistoricalRate();
           const histAporteUsd = toNumber(safeText(aporteHist)) || 0;
           const histPatrUsd = toNumber(safeText(patrimonioHist)) || 0;
@@ -4335,31 +4457,31 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const histUtilRCop = histPatrCop - histAporteCop;
           const histUtilCop = usdToLocal(histUtilUsd, latestHistoricalRate);
           addTable(
-            "Totales históricos",
-            "Cifras acumuladas desde tu fecha de ingreso. El crecimiento refleja el rendimiento sobre el total aportado.",
-            hideLocalCurrency ? ["Concepto", "USD"] : ["Concepto", "USD", localCurrencyShort],
+            T.historicalTotalsTitle,
+            T.historicalTotalsDesc,
+            hideLocalCurrency ? [T.concept, "USD"] : [T.concept, "USD", localCurrencyShort],
             hideLocalCurrency
               ? [
-                ["Aporte", fmtMoney(histAporteUsd)],
-                ["Patrimonio", fmtMoney(histPatrUsd)],
-                ["Crecimiento", safeText(crcmntHist)],
-                ["Utilidad", fmtMoney(histUtilRUsd)]
+                [T.contribution, fmtMoney(histAporteUsd)],
+                [T.netWorth, fmtMoney(histPatrUsd)],
+                [T.growth, safeText(crcmntHist)],
+                [T.profit, fmtMoney(histUtilRUsd)]
               ]
               : [
-                ["Aporte", fmtMoney(histAporteUsd), fmtMoney(histAporteCop)],
-                ["Patrimonio", fmtMoney(histPatrUsd), fmtMoney(histPatrCop)],
-                ["Crecimiento", safeText(crcmntHist), safeText(crcmntHistL)],
-                ["Utilidad R", fmtMoney(histUtilRUsd), fmtMoney(histUtilRCop)],
-                ["Utilidad", fmtMoney(histUtilUsd), fmtMoney(histUtilCop)]
+                [T.contribution, fmtMoney(histAporteUsd), fmtMoney(histAporteCop)],
+                [T.netWorth, fmtMoney(histPatrUsd), fmtMoney(histPatrCop)],
+                [T.growth, safeText(crcmntHist), safeText(crcmntHistL)],
+                [T.realProfit, fmtMoney(histUtilRUsd), fmtMoney(histUtilRCop)],
+                [T.profit, fmtMoney(histUtilUsd), fmtMoney(histUtilCop)]
               ]
           );
 
           if (!hideLocalCurrency) {
             y += 2;
-            addLine("Tasa aplicada", 12, 8, "bold");
+            addLine(T.rateTitle, 12, 8, "bold");
             addLine(`${ratePairLabel}: ${formatNumber(latestHistoricalRate)}`);
-            const todayRateStamp = new Date().toLocaleDateString("es-CO");
-            addLine(`Actualizada a ${todayRateStamp}`);
+            const todayRateStamp = new Date().toLocaleDateString(T.locale);
+            addLine(`${T.updatedOn} ${todayRateStamp}`);
           }
 
           y += 10;
@@ -4380,11 +4502,11 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
                 m.tasa ? fmtMoney(m.tasa) : "",
                 fmtMoney(m.cambio)
               ])
-            : [hideLocalCurrency ? ["Sin movimientos", "—", "—", "—", "—"] : ["Sin movimientos", "—", "—", "—", "—", "—"]];
+            : [hideLocalCurrency ? [T.noTransactions, "—", "—", "—", "—"] : [T.noTransactions, "—", "—", "—", "—", "—"]];
           addTable(
-            "Movimientos",
-            "A continuación, se presentan todos los movimientos realizados por usted en el portafolio durante el presente año. Este registro incluye entradas de capital, retiros (salidas) y liquidaciones parciales o totales, reflejando la actividad completa de su cuenta en el período. Cada operación ha sido registrada con el detalle correspondiente, permitiéndole tener un control claro y transparente sobre la evolución de su inversión.",
-            hideLocalCurrency ? ["Recibo", "Fecha", "Cantidad", "Tipo", "Cambio"] : ["Recibo", "Fecha", "Cantidad", "Tipo", "Tasa", "Cambio"],
+            T.transactionsTitle,
+            T.transactionsDesc,
+            hideLocalCurrency ? [T.receipt, T.date, T.amount, T.type, T.change] : [T.receipt, T.date, T.amount, T.type, T.rate, T.change],
             movimientosRows
           );
 
@@ -4392,7 +4514,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           footerReserve = 28;
           const portfolioYear = Number(reportYearNumber || displayYear || new Date().getFullYear());
           const assetsForPdf = getAssetSetForYear(portfolioYear);
-          addLine("Activos en cartera", 12, 8, "bold");
+          addLine(T.portfolioTitle, 12, 8, "bold");
           if (portfolioYear === 2024 || portfolioYear === 2025) {
             addParagraph("El portafolio propuesto está estructurado con un criterio de diversificación deliberada entre acciones de alta calidad, activos refugio, exposición tecnológica, criptomonedas y una porción de liquidez táctica. La distribución no responde solamente a una preferencia subjetiva, sino a una lógica de equilibrio entre estabilidad, crecimiento, cobertura y flexibilidad operativa. En este caso, la cartera se compone de Coca-Cola Consolidated, Inc. con 10%, Apple Inc. con 20%, Microsoft con 20%, Berkshire Hathaway Inc. Class B con 20%, oro con 10%, Bitcoin con 10%, liquidez en dólares estadounidenses con 5% y una categoría complementaria denominada “Others” con 5%.");
 
@@ -4459,7 +4581,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           }
 
           y += 6;
-          addLine("Marco regulatorio y brokers", 12, 8, "bold");
+          addLine(T.regulatoryTitle, 12, 8, "bold");
           addLine("Hapi", 11, 6, "bold");
           addParagraph("Hapi informa en su sitio oficial que está regulado por la SEC, es miembro de FINRA y ofrece protección SIPC para valores hasta 500.000 dólares, con custodia a través de Apex Clearing. También aclara que la protección SIPC aplica a valores como acciones y ETFs, no a criptoactivos. Esto significa que, para operaciones sobre acciones estadounidenses, Hapi se presenta bajo un marco regulatorio de mercado de valores de Estados Unidos, pero el usuario debe entender que esa protección no equivale a cobertura contra pérdidas de mercado, sino a un esquema orientado a la custodia y restitución en ciertos supuestos de insolvencia del intermediario.");
 
@@ -4472,7 +4594,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           addLine("Binance", 11, 6, "bold");
           addParagraph("Binance pertenece al universo de criptointermediarios y su estructura regulatoria es más fragmentada y dependiente de licencias locales. En publicaciones oficiales recientes, Binance afirma contar con licencias, registros o autorizaciones en 20 jurisdicciones y destaca una autorización integral bajo el marco de la FSRA de ADGM, indicando que allí está habilitada para operar como exchange, broker-dealer y custodio. Al mismo tiempo, la propia comunicación de Binance insiste en la importancia de verificar licencias y regulaciones aplicables según el mercado concreto. La lectura prudente aquí es que Binance ha avanzado de forma visible en su estrategia de cumplimiento, pero la experiencia regulatoria del usuario todavía depende mucho del país desde donde opera, del tipo de producto usado y de la entidad específica que le presta el servicio. A diferencia de un broker clásico de acciones regulado bajo marcos bien consolidados de custodia de valores, en cripto el nivel de protección legal y operativa puede ser más heterogéneo.");
 
-          addLine("Fuentes", 11, 6, "bold");
+          addLine(T.sources, 11, 6, "bold");
           addParagraph("Hapi: https://hapi.trade/en");
           addParagraph("Interactive Brokers: https://www.interactivebrokers.com/en/general/about/info-and-history.php");
           addParagraph("Interactive Brokers (home): https://www.interactivebrokers.com/");
@@ -4482,10 +4604,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           addParagraph("Binance: https://www.binance.com/en/square/post/27459429566010");
 
           y += 6;
-          addParagraph("Si tiene alguna pregunta, inquietud o desea revisar en mayor profundidad el desempeño de su portafolio, no dude en ponerse en contacto con nosotros. Estaremos encantados de atenderle y brindarle el acompañamiento necesario para resolver cualquier duda o analizar nuevas oportunidades de crecimiento. Agradecemos sinceramente su confianza en Castle Black. Para nosotros es un honor acompañarlo en la gestión de su patrimonio, y seguiremos trabajando con compromiso y transparencia para construir juntos un futuro financiero sólido, estable y exitoso.");
+          addParagraph(T.closingParagraph);
 
           y += 10;
-          addLine("Atentamente,", 11, 6, "normal");
+          addLine(T.sincerely, 11, 6, "normal");
           doc.setFont("times", "italic");
           doc.setFontSize(11);
           doc.text("Juan Federico Peralta Gonzalez - Castle Black", marginX, y);
@@ -4498,7 +4620,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             doc.setPage(i);
             doc.setFont("times", "italic");
             doc.setFontSize(9);
-            const footerText = `Página ${i} de ${pageCount}`;
+            const footerText = T.pageOf(i, pageCount);
             doc.text(footerText, marginX, pageHeight - 14, { align: "left" });
           }
 
