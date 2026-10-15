@@ -364,5 +364,65 @@
     });
   })();
   </script>
+  <script>
+  /* ── HALLOWEEN: BAT 🦇 ──────────────────────────────── */
+  (function () {
+    const now = new Date();
+    const y = now.getFullYear();
+    if (now < new Date(y, 9, 1) || now >= new Date(y, 10, 2)) return;
+
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes batLTR {
+        0%   { transform: translate(-90px, 0px); }
+        12%  { transform: translate(12vw, -22px); }
+        25%  { transform: translate(25vw,  10px); }
+        38%  { transform: translate(38vw, -18px); }
+        50%  { transform: translate(50vw,   8px); }
+        63%  { transform: translate(63vw, -16px); }
+        76%  { transform: translate(76vw,   7px); }
+        88%  { transform: translate(88vw, -12px); }
+        100% { transform: translate(calc(100vw + 90px), 0px); }
+      }
+      @keyframes batRTL {
+        0%   { transform: translate(calc(100vw + 90px), 0px); }
+        12%  { transform: translate(88vw, -22px); }
+        25%  { transform: translate(75vw,  10px); }
+        38%  { transform: translate(62vw, -18px); }
+        50%  { transform: translate(50vw,   8px); }
+        63%  { transform: translate(37vw, -16px); }
+        76%  { transform: translate(24vw,   7px); }
+        88%  { transform: translate(12vw, -12px); }
+        100% { transform: translate(-90px, 0px); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    const bat = document.createElement('div');
+    bat.textContent = '🦇';
+    Object.assign(bat.style, { position:'fixed', left:'0', opacity:'0',
+      lineHeight:'1', pointerEvents:'none', zIndex:'9990' });
+    document.body.appendChild(bat);
+
+    function launch() {
+      const ltr = Math.random() < 0.5;
+      const top  = 6 + Math.random() * 38;
+      const dur  = 5200 + Math.random() * 3800;
+      const size = 26 + Math.floor(Math.random() * 14);
+      bat.style.top       = top + 'vh';
+      bat.style.fontSize  = size + 'px';
+      bat.style.opacity   = '1';
+      bat.style.animation = (ltr ? 'batLTR' : 'batRTL') + ' ' + dur + 'ms linear forwards';
+      setTimeout(() => {
+        bat.style.opacity   = '0';
+        bat.style.animation = 'none';
+        setTimeout(launch, 38000 + Math.random() * 42000);
+      }, dur + 300);
+    }
+
+    setTimeout(launch, 7000 + Math.random() * 13000);
+  })();
+  </script>
+
 </body>
 </html>
