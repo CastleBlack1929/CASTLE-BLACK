@@ -750,7 +750,11 @@ h1, h2, h3, h4 {
   transition: transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s;
   cursor: default;
 }
-.globe-card:hover { transform: translateY(-6px) scale(1.01); }
+.globe-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255,255,255,0.14);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.55);
+}
 
 .gc-glow {
   position: absolute; inset: 0; pointer-events: none;
@@ -760,28 +764,16 @@ h1, h2, h3, h4 {
 }
 .globe-card:hover .gc-glow { opacity: 1; }
 
-.gc-usa     { background: linear-gradient(145deg, #0a0e1a 0%, #0d1f4a 60%, #1a0a14 100%); }
-.gc-usa     .gc-glow { background: radial-gradient(circle at 70% 30%, rgba(60,100,200,0.4) 0%, rgba(180,20,50,0.15) 60%, transparent 80%); }
-.gc-china   { background: linear-gradient(145deg, #140000 0%, #3a0000 60%, #1a1000 100%); }
-.gc-china   .gc-glow { background: radial-gradient(circle at 30% 50%, rgba(196,10,10,0.45) 0%, rgba(220,150,0,0.15) 60%, transparent 80%); }
-.gc-japan   { background: linear-gradient(145deg, #0a0a14 0%, #1c0a14 60%, #0a0a14 100%); }
-.gc-japan   .gc-glow { background: radial-gradient(circle at 80% 30%, rgba(188,0,45,0.4) 0%, rgba(30,20,50,0.1) 60%, transparent 80%); }
-.gc-france  { background: linear-gradient(145deg, #050b1e 0%, #0d1a4a 55%, #1a0507 100%); }
-.gc-france  .gc-glow { background: radial-gradient(circle at 30% 40%, rgba(0,35,149,0.45) 0%, rgba(237,41,57,0.2) 60%, transparent 80%); }
-.gc-israel  { background: linear-gradient(145deg, #030a1c 0%, #081840 60%, #030a1c 100%); }
-.gc-israel  .gc-glow { background: radial-gradient(circle at 50% 40%, rgba(0,60,170,0.4) 0%, rgba(200,210,255,0.08) 60%, transparent 80%); }
-.gc-iran    { background: linear-gradient(145deg, #0f0a00 0%, #2a1500 60%, #1a0a05 100%); }
-.gc-iran    .gc-glow { background: radial-gradient(circle at 40% 60%, rgba(210,80,0,0.45) 0%, rgba(0,100,50,0.15) 60%, transparent 80%); }
-.gc-india   { background: linear-gradient(145deg, #0f0800 0%, #251500 55%, #0a1200 100%); }
-.gc-india   .gc-glow { background: radial-gradient(circle at 60% 40%, rgba(255,140,0,0.35) 0%, rgba(0,120,50,0.2) 60%, transparent 80%); }
-.gc-saudi   { background: linear-gradient(145deg, #030d03 0%, #062006 60%, #030d03 100%); }
-.gc-saudi   .gc-glow { background: radial-gradient(circle at 50% 30%, rgba(0,160,0,0.35) 0%, rgba(200,180,0,0.1) 60%, transparent 80%); }
-.gc-germany { background: linear-gradient(145deg, #080808 0%, #141414 60%, #0a0a08 100%); }
-.gc-germany .gc-glow { background: radial-gradient(circle at 50% 50%, rgba(220,160,0,0.3) 0%, rgba(220,0,0,0.1) 60%, transparent 80%); }
-.gc-uk      { background: linear-gradient(145deg, #030818 0%, #080f2a 60%, #180308 100%); }
-.gc-uk      .gc-glow { background: radial-gradient(circle at 60% 40%, rgba(0,30,150,0.45) 0%, rgba(200,0,0,0.2) 60%, transparent 80%); }
-.gc-brazil  { background: linear-gradient(145deg, #021402 0%, #042004 55%, #141400 100%); }
-.gc-brazil  .gc-glow { background: radial-gradient(circle at 50% 50%, rgba(0,160,60,0.35) 0%, rgba(220,180,0,0.2) 60%, transparent 80%); }
+.gc-usa, .gc-china, .gc-japan, .gc-france, .gc-israel,
+.gc-iran, .gc-india, .gc-saudi, .gc-germany, .gc-uk, .gc-brazil {
+  background: linear-gradient(160deg, #111116 0%, #0c0c10 100%);
+}
+.gc-usa .gc-glow, .gc-china .gc-glow, .gc-japan .gc-glow,
+.gc-france .gc-glow, .gc-israel .gc-glow, .gc-iran .gc-glow,
+.gc-india .gc-glow, .gc-saudi .gc-glow, .gc-germany .gc-glow,
+.gc-uk .gc-glow, .gc-brazil .gc-glow {
+  background: radial-gradient(circle at 55% 25%, rgba(61,220,151,0.07) 0%, transparent 70%);
+}
 
 .gc-bg-text {
   position: absolute;
@@ -847,16 +839,12 @@ h1, h2, h3, h4 {
   border-radius: 50%;
 }
 .lc-avatar span { display: none; }
-.lca-trump  { background: linear-gradient(135deg, #0d1f3c, #1a3a6e); }
-.lca-putin  { background: linear-gradient(135deg, #2b0a0a, #5a1010); }
-.lca-xi     { background: linear-gradient(135deg, #2a0000, #660000); color: #ffcc00; }
-.lca-ishiba { background: linear-gradient(135deg, #1a0a2a, #38126a); }
-.lca-macron { background: linear-gradient(135deg, #08163a, #1a3080); }
-.lca-modi   { background: linear-gradient(135deg, #1a0800, #4a2000); color: #ff9500; }
-.lca-mbs    { background: linear-gradient(135deg, #051405, #0a2a0a); color: #4cff4c; }
-.lca-musk   { background: linear-gradient(135deg, #050510, #0d0d20); color: var(--green); }
-.lca-huang  { background: linear-gradient(135deg, #061206, #0a2a0a); color: #76ff76; }
-.lca-altman { background: linear-gradient(135deg, #080318, #180630); color: #c084fc; }
+.lca-trump, .lca-putin, .lca-xi, .lca-ishiba,
+.lca-modi, .lca-mbs, .lca-musk, .lca-huang,
+.lca-altman, .lca-buffett, .lca-zuck {
+  background: linear-gradient(135deg, #1a1a22, #0e0e14);
+  color: rgba(255,255,255,0.75);
+}
 
 
 /* ── PLATFORM ────────────────────────────────────────── */
@@ -1457,20 +1445,7 @@ footer {
   transform: translateY(-6px);
   box-shadow: 0 30px 80px rgba(0,0,0,0.6);
 }
-.lc-scanlines {
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0,0,0,0) 0px,
-    rgba(0,0,0,0) 3px,
-    rgba(0,0,0,0.18) 3px,
-    rgba(0,0,0,0.18) 4px
-  );
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.6;
-}
+.lc-scanlines { display: none; }
 .lc-badge {
   position: absolute;
   top: 18px; right: 18px;
@@ -1540,27 +1515,27 @@ footer {
   font-family: "SF Mono", "Fira Code", monospace;
 }
 
-/* card backgrounds */
-.lc-usa    { background: linear-gradient(145deg, #0a0f1e 0%, #0d1f3c 100%); }
-.lc-usa    .lc-name { color: #5ca8ff; }
-.lc-russia { background: linear-gradient(145deg, #1a0505 0%, #2b0a0a 100%); }
-.lc-russia .lc-name { color: #ff6060; }
-.lc-china  { background: linear-gradient(145deg, #1a0000 0%, #2a0505 100%); }
-.lc-china  .lc-name { color: #ffcc00; }
-.lc-japan  { background: linear-gradient(145deg, #0d0d1a 0%, #15102a 100%); }
-.lc-japan  .lc-name { color: #c084fc; }
-.lc-france { background: linear-gradient(145deg, #080f1a 0%, #0a1825 100%); }
-.lc-france .lc-name { color: #60b8ff; }
-.lc-india  { background: linear-gradient(145deg, #180800 0%, #2e1200 100%); }
-.lc-india  .lc-name { color: #ff9500; }
-.lc-saudi  { background: linear-gradient(145deg, #031203 0%, #062006 100%); }
-.lc-saudi  .lc-name { color: #4cff80; }
-.lc-elon   { background: linear-gradient(145deg, #050505 0%, #111118 100%); }
-.lc-elon   .lc-name { color: var(--green); }
-.lc-nvidia { background: linear-gradient(145deg, #041004 0%, #082008 100%); }
-.lc-nvidia .lc-name { color: #76ff76; }
-.lc-openai { background: linear-gradient(145deg, #06020e 0%, #120520 100%); }
-.lc-openai .lc-name { color: #c084fc; }
+/* card backgrounds — uniforme, estilo Apple */
+.lc-usa, .lc-russia, .lc-china, .lc-japan, .lc-india,
+.lc-saudi, .lc-elon, .lc-nvidia, .lc-openai,
+.lc-berkshire, .lc-meta {
+  background: linear-gradient(160deg, #111116 0%, #0c0c10 100%);
+}
+
+/* hover: borde izquierdo verde sutil */
+.leader-card:hover {
+  border-left-color: rgba(61,220,151,0.35);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.55), inset 1px 0 0 rgba(61,220,151,0.18);
+}
+
+/* nombres en blanco uniforme */
+.lc-usa .lc-name, .lc-russia .lc-name, .lc-china .lc-name,
+.lc-japan .lc-name, .lc-india .lc-name, .lc-saudi .lc-name,
+.lc-elon .lc-name, .lc-nvidia .lc-name, .lc-openai .lc-name,
+.lc-berkshire .lc-name, .lc-meta .lc-name { color: var(--white); }
+
+/* ticker en verde para todos */
+.lc-ticker { color: rgba(61,220,151,0.55); }
 
 @media (max-width: 900px) {
   .intel-marquee-wrap .globe-card,
