@@ -895,5 +895,119 @@
 
   </script>
 
+  <script>
+  /* ── HALLOWEEN: BOO 👻 ──────────────────────────────── */
+  (function () {
+    const now = new Date();
+    const y = now.getFullYear();
+    if (now < new Date(y, 9, 1) || now >= new Date(y, 10, 2)) return;
+
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes booFlash {
+        0%   { opacity: 0; }
+        7%   { opacity: 0.9; }
+        100% { opacity: 0; }
+      }
+      @keyframes booGhost {
+        0%   { transform: translate(-50%,-62%) scale(0.15); opacity: 0; }
+        11%  { transform: translate(-50%,-50%) scale(1.28); opacity: 1; }
+        42%  { transform: translate(-50%,-50%) scale(1);    opacity: 1; }
+        100% { transform: translate(-50%,-72%) scale(0.9);  opacity: 0; }
+      }
+      #booFlashEl.boo-run { animation: booFlash 0.75s ease-out forwards; }
+      #booGhostEl.boo-run { animation: booGhost 2.1s cubic-bezier(0.22,1,0.36,1) forwards; }
+    `;
+    document.head.appendChild(style);
+
+    const flashEl = document.createElement('div');
+    flashEl.id = 'booFlashEl';
+    Object.assign(flashEl.style, {
+      position:'fixed', inset:'0', background:'#fff',
+      opacity:'0', pointerEvents:'none', zIndex:'9998'
+    });
+
+    const ghostEl = document.createElement('div');
+    ghostEl.id = 'booGhostEl';
+    ghostEl.textContent = '👻';
+    Object.assign(ghostEl.style, {
+      position:'fixed', top:'50%', left:'50%',
+      fontSize:'min(40vw, 230px)', lineHeight:'1',
+      pointerEvents:'none', zIndex:'9999',
+      opacity:'0', willChange:'transform, opacity',
+      filter:'drop-shadow(0 0 48px rgba(200,255,200,0.5))'
+    });
+
+    document.body.appendChild(flashEl);
+    document.body.appendChild(ghostEl);
+
+    let seq = '', busy = false;
+    document.addEventListener('keydown', e => {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      seq = (seq + e.key.toLowerCase()).slice(-3);
+      if (seq === 'boo') { seq = ''; triggerBoo(); }
+    });
+
+    function triggerBoo() {
+      if (busy) return;
+      busy = true;
+      playBooSound();
+      [flashEl, ghostEl].forEach(el => {
+        el.classList.remove('boo-run');
+        void el.offsetWidth;
+        el.classList.add('boo-run');
+      });
+      setTimeout(() => {
+        flashEl.classList.remove('boo-run');
+        ghostEl.classList.remove('boo-run');
+        busy = false;
+      }, 2300);
+    }
+
+    function playBooSound() {
+      try {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AC();
+        const t = ctx.currentTime;
+
+        /* ruido blanco — terror súbito */
+        const bufLen = Math.floor(ctx.sampleRate * 2);
+        const buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < bufLen; i++) d[i] = Math.random() * 2 - 1;
+        const noise = ctx.createBufferSource();
+        noise.buffer = buf;
+        const nG = ctx.createGain();
+        noise.connect(nG); nG.connect(ctx.destination);
+        nG.gain.setValueAtTime(0.36, t);
+        nG.gain.exponentialRampToValueAtTime(0.001, t + 1.7);
+        noise.start(t); noise.stop(t + 1.8);
+
+        /* grito — saw que baja rápido */
+        const scr = ctx.createOscillator();
+        const sG  = ctx.createGain();
+        scr.type = 'sawtooth';
+        scr.frequency.setValueAtTime(900, t);
+        scr.frequency.exponentialRampToValueAtTime(150, t + 1.4);
+        sG.gain.setValueAtTime(0.28, t);
+        sG.gain.exponentialRampToValueAtTime(0.001, t + 1.6);
+        scr.connect(sG); sG.connect(ctx.destination);
+        scr.start(t); scr.stop(t + 1.7);
+
+        /* golpe sub */
+        const sub = ctx.createOscillator();
+        const subG = ctx.createGain();
+        sub.type = 'sine';
+        sub.frequency.setValueAtTime(95, t);
+        sub.frequency.exponentialRampToValueAtTime(28, t + 0.32);
+        subG.gain.setValueAtTime(0.75, t);
+        subG.gain.exponentialRampToValueAtTime(0.001, t + 0.36);
+        sub.connect(subG); subG.connect(ctx.destination);
+        sub.start(t); sub.stop(t + 0.4);
+      } catch(e) {}
+    }
+  })();
+  </script>
+
 </body>
 </html>
