@@ -860,13 +860,25 @@
   })();
 
   /* ── GLOBE CARD EXPAND ──────────────────────────── */
+  function closeAllCards() {
+    document.querySelectorAll(".globe-card.expanded").forEach(c => c.classList.remove("expanded"));
+  }
+
   document.querySelectorAll(".globe-card").forEach(card => {
-    card.addEventListener("click", () => {
+    card.addEventListener("click", e => {
+      e.stopPropagation();
       const wasOpen = card.classList.contains("expanded");
-      document.querySelectorAll(".globe-card.expanded").forEach(c => c.classList.remove("expanded"));
+      closeAllCards();
       if (!wasOpen) card.classList.add("expanded");
     });
   });
+
+  /* cerrar al tocar fuera o al hacer scroll */
+  document.addEventListener("click", closeAllCards);
+  document.addEventListener("touchstart", e => {
+    if (!e.target.closest(".globe-card")) closeAllCards();
+  }, { passive: true });
+  window.addEventListener("scroll", closeAllCards, { passive: true });
 
   /* ── NEWS CARD DECK ──────────────────────────── */
   (function() {
