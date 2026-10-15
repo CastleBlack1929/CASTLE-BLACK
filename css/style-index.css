@@ -734,9 +734,6 @@ h1, h2, h3, h4 {
 .intel-track-fwd:hover,
 .intel-track-rev:hover { animation-play-state: paused; }
 
-.section-intel.intel-visible .intel-track-fwd,
-.section-intel.intel-visible .intel-track-rev { animation-play-state: paused; }
-
 .globe-grid { display: none; } /* replaced by marquee */
 
 .globe-card {
