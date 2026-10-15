@@ -350,9 +350,11 @@ h1, h2, h3, h4 {
 }
 .logos-track-a {
   animation: marquee-left 55s linear infinite;
+  will-change: transform;
 }
 .logos-track-b {
   animation: marquee-right 50s linear infinite;
+  will-change: transform;
 }
 .logos-track-a:hover,
 .logos-track-b:hover { animation-play-state: paused; }
@@ -727,8 +729,8 @@ h1, h2, h3, h4 {
   gap: 14px;
   width: max-content;
 }
-.intel-track-fwd { animation: marquee-left 75s linear infinite; }
-.intel-track-rev { animation: marquee-right 70s linear infinite; }
+.intel-track-fwd { animation: marquee-left 75s linear infinite; will-change: transform; }
+.intel-track-rev { animation: marquee-right 70s linear infinite; will-change: transform; }
 .intel-track-fwd:hover,
 .intel-track-rev:hover { animation-play-state: paused; }
 
@@ -1230,6 +1232,27 @@ footer {
   .section-split, .section-services, .section-chart,
   .section-intel,
   .section-fees, .section-terms-docs { padding-left: 20px; padding-right: 20px; }
+
+  /* ── PERFORMANCE: desactivar animaciones costosas en móvil ── */
+  .hero::before { animation: none; }
+  .aurora-bg    { animation: none; }
+  .hero-scroll  { display: none; }
+
+  /* marquees: quitar GPU hint innecesario, pausar hover en touch */
+  .logos-track-a, .logos-track-b,
+  .intel-track-fwd, .intel-track-rev { will-change: auto; }
+
+  /* deck: will-change solo en la tarjeta activa, no en todas */
+  .news-card { will-change: auto; }
+  .news-card.ndc-0 { will-change: transform; }
+
+  /* reveal: solo opacidad, sin translateY (evita repaints de layout) */
+  .reveal { transform: none !important; }
+  .reveal.visible { transform: none !important; }
+
+  /* hover transforms: sin efecto en touch */
+  .globe-card:hover, .doc-card:hover,
+  .news-card.ndc-0:hover, .svc-row:hover::before { transform: none; }
 }
 
 /* ── GLOBAL LOGO TOOLTIP ─────────────────────────────── */
@@ -1546,4 +1569,16 @@ footer {
 @media (max-width: 600px) {
   .intel-marquee-wrap .globe-card,
   .intel-marquee-wrap .leader-card { width: 200px; }
+}
+
+/* ── REDUCED MOTION ──────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .intel-track-fwd, .intel-track-rev,
+  .logos-track-a, .logos-track-b { animation: none; }
+  .reveal { transition: none !important; opacity: 1 !important; transform: none !important; }
 }
