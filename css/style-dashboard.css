@@ -3636,27 +3636,54 @@ table td, .tabla-resumen td, #tablaHonorarios td,
   opacity: 1;
 }
 
-/* ─── Tablas móvil — valores completos, tamaño que escala ───────── */
+/* ─── Tablas móvil — todo visible, sin scroll, sin solapamiento ─── */
 @media (max-width: 768px) {
-  table,
+
   .tabla-resumen,
   #tablaHonorarios,
   #tablaMeses,
   .movimientos table,
   .reportes table {
-    table-layout: auto !important;
+    table-layout: fixed !important;
     width: 100% !important;
   }
 
-  table th, .tabla-resumen th, #tablaHonorarios th,
-  #tablaMeses th, .movimientos table th, .reportes table th,
-  table td, .tabla-resumen td, #tablaHonorarios td,
-  #tablaMeses td, .movimientos table td, .reportes table td {
-    font-size: clamp(8px, 2.2vw, 11px) !important;
-    padding: 6px clamp(2px, 1vw, 5px) !important;
+  /* Base: fuente 11px, padding mínimo, sin wrap */
+  .tabla-resumen th, .tabla-resumen td,
+  #tablaHonorarios th, #tablaHonorarios td,
+  #tablaMeses th, #tablaMeses td,
+  .movimientos table th, .movimientos table td,
+  .reportes table th, .reportes table td {
+    font-size: 11px !important;
+    padding: 6px 4px !important;
     white-space: nowrap !important;
-    overflow: visible !important;
+    overflow: hidden !important;
     text-overflow: clip !important;
-    max-width: none !important;
   }
+
+  /* ── tablaMeses: Mes | Aporte | Patrimonio | U% | Ganancia ─── */
+  #tablaMeses th:nth-child(1), #tablaMeses td:nth-child(1) { width: 13% !important; text-overflow: ellipsis !important; }
+  #tablaMeses th:nth-child(2), #tablaMeses td:nth-child(2) { width: 20% !important; }
+  #tablaMeses th:nth-child(3), #tablaMeses td:nth-child(3) { width: 25% !important; }
+  #tablaMeses th:nth-child(4), #tablaMeses td:nth-child(4) { width: 13% !important; }
+  #tablaMeses th:nth-child(5), #tablaMeses td:nth-child(5) { width: 29% !important; }
+
+  /* ── movimientos: Recibo | Fecha | Cantidad | Tipo | Cotiz. | Cambio ── */
+  .movimientos table th:nth-child(1), .movimientos table td:nth-child(1) { width: 10% !important; text-overflow: ellipsis !important; }
+  .movimientos table th:nth-child(2), .movimientos table td:nth-child(2) { width: 14% !important; }
+  .movimientos table th:nth-child(3), .movimientos table td:nth-child(3) { width: 20% !important; }
+  .movimientos table th:nth-child(4), .movimientos table td:nth-child(4) { width: 14% !important; text-overflow: ellipsis !important; }
+  .movimientos table th:nth-child(5), .movimientos table td:nth-child(5) { width: 20% !important; }
+  .movimientos table th:nth-child(6), .movimientos table td:nth-child(6) { width: 22% !important; }
+
+  /* ── tablaHonorarios: Trimestre | Tarifa | Comisión | Valor ── */
+  #tablaHonorarios th:nth-child(1), #tablaHonorarios td:nth-child(1) { width: 18% !important; text-overflow: ellipsis !important; }
+  #tablaHonorarios th:nth-child(2), #tablaHonorarios td:nth-child(2) { width: 14% !important; }
+  #tablaHonorarios th:nth-child(3), #tablaHonorarios td:nth-child(3) { width: 30% !important; }
+  #tablaHonorarios th:nth-child(4), #tablaHonorarios td:nth-child(4) { width: 38% !important; }
+
+  /* ── tabla-resumen: Label | USD | COP ── */
+  .tabla-resumen th:nth-child(1), .tabla-resumen td:nth-child(1) { width: 30% !important; white-space: normal !important; line-height: 1.3 !important; }
+  .tabla-resumen th:nth-child(2), .tabla-resumen td:nth-child(2) { width: 35% !important; }
+  .tabla-resumen th:nth-child(3), .tabla-resumen td:nth-child(3) { width: 35% !important; }
 }
