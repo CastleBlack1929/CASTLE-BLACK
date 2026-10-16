@@ -3695,3 +3695,12 @@ table td, .tabla-resumen td, #tablaHonorarios td,
     font-size: 10px !important;
   }
 }
+
+/* ─── Movimientos: compresión extra en vertical de teléfono ─── */
+@media (max-width: 480px) {
+  .movimientos table th,
+  .movimientos table td {
+    font-size: 9px !important;
+    padding: 5px 2px !important;
+  }
+}

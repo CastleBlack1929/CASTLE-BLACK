@@ -896,13 +896,12 @@
       setTimeout(() => { top = (top + 1) % N; paint(); busy = false; }, 400);
     }
 
-    deck.addEventListener('click', goNext);
-
-    let sx = 0;
-    deck.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, { passive: true });
+    let sx = 0, touchFired = false;
+    deck.addEventListener('touchstart', e => { sx = e.touches[0].clientX; touchFired = false; }, { passive: true });
     deck.addEventListener('touchend', e => {
-      if (Math.abs(e.changedTouches[0].clientX - sx) > 40) goNext();
+      if (Math.abs(e.changedTouches[0].clientX - sx) > 40) { touchFired = true; goNext(); }
     });
+    deck.addEventListener('click', () => { if (touchFired) { touchFired = false; return; } goNext(); });
 
     paint();
   })();

@@ -1497,6 +1497,7 @@ footer {
 .news-deck-wrap {
   display: flex; flex-direction: column;
   align-items: center;
+  overflow: hidden;
 }
 .news-deck {
   position: relative;
