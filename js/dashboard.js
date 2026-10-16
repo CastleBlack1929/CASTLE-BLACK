@@ -3349,10 +3349,10 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
                 const baseCum = Number.isFinite(cumulative[monthIdx]) ? cumulative[monthIdx] : 0;
                 cumulative[monthIdx] = baseCum + (updated[monthIdx] - baseVal);
               }
-              const utilColors = updated.map(v => (v >= 0 ? "rgba(34, 197, 94, 0.6)" : "rgba(239, 68, 68, 0.6)"));
-              const utilBorders = updated.map(v => (v >= 0 ? "#22c55e" : "#ef4444"));
-              const acumColors = cumulative.map(v => (v >= 0 ? "rgba(15, 81, 50, 0.6)" : "rgba(127, 29, 29, 0.75)"));
-              const acumBorders = cumulative.map(v => (v >= 0 ? "#0f5132" : "#7f1d1d"));
+              const utilColors = updated.map(v => (v >= 0 ? "rgba(61,220,151,0.55)" : "rgba(255,92,122,0.55)"));
+              const utilBorders = updated.map(v => (v >= 0 ? "#3ddc97" : "#ff5c7a"));
+              const acumColors = cumulative.map(v => (v >= 0 ? "rgba(61,220,151,0.18)" : "rgba(255,92,122,0.18)"));
+              const acumBorders = cumulative.map(v => (v >= 0 ? "rgba(61,220,151,0.55)" : "rgba(255,92,122,0.55)"));
               chartUtilidades.data.datasets[0].data = updated;
               chartUtilidades.data.datasets[0].backgroundColor = utilColors;
               chartUtilidades.data.datasets[0].borderColor = utilBorders;
@@ -3690,7 +3690,28 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       }, 0);
       baseUtilCumulativeData = utilidadAcumulada.slice();
 
-      chartPatrimonio = new Chart(graficoPatrimonio.getContext("2d"), {
+      const chartDefaults = {
+        color: "rgba(255,255,255,0.45)",
+        font: { family: "-apple-system,'SF Pro Text',Inter,sans-serif", size: 11 }
+      };
+      const gridColor = "rgba(255,255,255,0.06)";
+      const tickColor = "rgba(255,255,255,0.38)";
+      const tooltipDefaults = {
+        backgroundColor: "rgba(10,10,16,0.92)",
+        borderColor: "rgba(255,255,255,0.10)",
+        borderWidth: 1,
+        titleColor: "rgba(255,255,255,0.85)",
+        bodyColor: "rgba(255,255,255,0.60)",
+        padding: 10,
+        cornerRadius: 8
+      };
+
+      const patrCtx = graficoPatrimonio.getContext("2d");
+      const patrGrad = patrCtx.createLinearGradient(0, 0, 0, graficoPatrimonio.height || 200);
+      patrGrad.addColorStop(0, "rgba(61,220,151,0.28)");
+      patrGrad.addColorStop(1, "rgba(61,220,151,0.00)");
+
+      chartPatrimonio = new Chart(patrCtx, {
         type: "line",
         data: {
           labels: meses,
@@ -3698,10 +3719,19 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             {
               label: "Patrimonio",
               data: patrimonioData,
-              borderColor: "#0f5132",
-              backgroundColor: "rgba(15, 81, 50, 0.25)",
-              tension: 0.25,
-              fill: true
+              borderColor: "#3ddc97",
+              backgroundColor: patrGrad,
+              borderWidth: 2,
+              tension: 0.38,
+              fill: true,
+              pointRadius: 3,
+              pointBackgroundColor: "#3ddc97",
+              pointBorderColor: "rgba(0,0,0,0.6)",
+              pointBorderWidth: 1,
+              pointHoverRadius: 6,
+              pointHoverBackgroundColor: "#fff",
+              pointHoverBorderColor: "#3ddc97",
+              pointHoverBorderWidth: 2
             }
           ]
         },
@@ -3710,13 +3740,26 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           plugins: {
             legend: { display: false },
             tooltip: {
+              ...tooltipDefaults,
               callbacks: {
-                label: (ctx) => `${ctx.dataset.label}: ${formatNumber(ctx.parsed.y)}`
+                label: (ctx) => ` ${ctx.dataset.label}: $${formatNumber(ctx.parsed.y)}`
               }
             }
           },
           scales: {
-            y: { beginAtZero: true, ticks: { callback: v => formatNumber(v) } }
+            x: {
+              grid: { color: gridColor },
+              ticks: { color: tickColor, font: chartDefaults.font }
+            },
+            y: {
+              beginAtZero: false,
+              grid: { color: gridColor },
+              ticks: {
+                color: tickColor,
+                font: chartDefaults.font,
+                callback: v => `$${formatNumber(v)}`
+              }
+            }
           }
         }
       });
@@ -3727,26 +3770,50 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           labels: meses,
           datasets: [
             {
-              label: "Ganancia / Pérdida",
+              label: "Mes",
               data: utilidadData,
-              backgroundColor: utilidadData.map(v => (v >= 0 ? "rgba(34, 197, 94, 0.6)" : "rgba(239, 68, 68, 0.6)")),
-              borderColor: utilidadData.map(v => (v >= 0 ? "#22c55e" : "#ef4444")),
-              borderWidth: 1
+              backgroundColor: utilidadData.map(v => v >= 0 ? "rgba(61,220,151,0.55)" : "rgba(255,92,122,0.55)"),
+              borderColor:     utilidadData.map(v => v >= 0 ? "#3ddc97" : "#ff5c7a"),
+              borderWidth: 1.5,
+              borderRadius: 5,
+              borderSkipped: false
             },
             {
               label: "Acumulada",
               data: utilidadAcumulada,
-              backgroundColor: utilidadAcumulada.map(v => (v >= 0 ? "rgba(15, 81, 50, 0.6)" : "rgba(127, 29, 29, 0.75)")),
-              borderColor: utilidadAcumulada.map(v => (v >= 0 ? "#0f5132" : "#7f1d1d")),
-              borderWidth: 1
+              backgroundColor: utilidadAcumulada.map(v => v >= 0 ? "rgba(61,220,151,0.18)" : "rgba(255,92,122,0.18)"),
+              borderColor:     utilidadAcumulada.map(v => v >= 0 ? "rgba(61,220,151,0.55)" : "rgba(255,92,122,0.55)"),
+              borderWidth: 1,
+              borderRadius: 5,
+              borderSkipped: false
             }
           ]
         },
         options: {
           responsive: true,
-          plugins: { legend: { display: false } },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              ...tooltipDefaults,
+              callbacks: {
+                label: (ctx) => ` ${ctx.dataset.label}: $${formatNumber(ctx.parsed.y)}`
+              }
+            }
+          },
           scales: {
-            y: { beginAtZero: true, ticks: { callback: v => formatNumber(v) } }
+            x: {
+              grid: { color: "transparent" },
+              ticks: { color: tickColor, font: chartDefaults.font }
+            },
+            y: {
+              beginAtZero: true,
+              grid: { color: gridColor },
+              ticks: {
+                color: tickColor,
+                font: chartDefaults.font,
+                callback: v => `$${formatNumber(v)}`
+              }
+            }
           }
         }
       });

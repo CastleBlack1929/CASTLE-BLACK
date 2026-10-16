@@ -3386,111 +3386,248 @@ table th,
   -webkit-mask-composite: xor;
 }
 
-/* ─── Tablas — nuevo estilo ────────────────────────────────────── */
+/* ─── Tablas: reset nuclear de bordes ──────────────────────────── */
 
 table,
 #tablaHonorarios,
-.tabla-resumen {
-  border-collapse: separate;
-  border-spacing: 0;
-  border: none;
-  background: transparent;
+.tabla-resumen,
+#tablaMeses {
+  border-collapse: collapse !important;
+  border: none !important;
+  background: transparent !important;
   width: 100%;
 }
 
-table th,
-#tablaHonorarios th,
-.tabla-resumen thead th {
+/* Matar TODOS los bordes de celda sin excepción */
+table th, table td,
+.tabla-resumen th, .tabla-resumen td,
+#tablaHonorarios th, #tablaHonorarios td,
+#tablaMeses th, #tablaMeses td,
+.movimientos table th, .movimientos table td,
+.reportes table th, .reportes table td {
+  border: none !important;
   background: transparent;
+}
+
+/* Separador de header — un solo borde al fondo del thead */
+table thead tr,
+.tabla-resumen thead tr,
+#tablaHonorarios thead tr,
+#tablaMeses thead tr,
+.movimientos table thead tr,
+.reportes table thead tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09) !important;
+}
+
+/* Separador de filas — borde superior en cada fila del body */
+table tbody tr,
+.tabla-resumen tbody tr,
+#tablaHonorarios tbody tr,
+#tablaMeses tbody tr,
+.movimientos table tbody tr,
+.reportes table tbody tr {
+  border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+  transition: background 110ms ease;
+}
+
+table tbody tr:first-child,
+.tabla-resumen tbody tr:first-child,
+#tablaHonorarios tbody tr:first-child,
+#tablaMeses tbody tr:first-child,
+.movimientos table tbody tr:first-child,
+.reportes table tbody tr:first-child {
+  border-top: none !important;
+}
+
+table tbody tr:hover,
+.tabla-resumen tbody tr:hover,
+#tablaHonorarios tbody tr:hover,
+#tablaMeses tbody tr:hover,
+.movimientos table tbody tr:hover,
+.reportes table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.035) !important;
+}
+
+/* Tipografía de celdas */
+table th, .tabla-resumen th, #tablaHonorarios th,
+#tablaMeses th, .movimientos table th, .reportes table th {
   color: rgba(255, 255, 255, 0.38);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   padding: 0 10px 10px;
-  border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-table tbody tr,
-#tablaHonorarios tbody tr,
-.tabla-resumen tbody tr {
-  background: transparent;
-  border: none;
-  transition: background 110ms ease;
-}
-
-table tbody tr:nth-child(even),
-#tablaHonorarios tbody tr:nth-child(even),
-.tabla-resumen tbody tr:nth-child(even) {
-  background: transparent;
-}
-
-table tbody tr:hover,
-#tablaHonorarios tbody tr:hover,
-.tabla-resumen tbody tr:hover {
-  background: rgba(255, 255, 255, 0.035);
-}
-
-table tbody td,
-#tablaHonorarios tbody td,
-.tabla-resumen tbody td,
-.tabla-resumen tbody th {
-  padding: 10px 10px;
-  border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.045);
+table td, .tabla-resumen td, #tablaHonorarios td,
+#tablaMeses td, .movimientos table td, .reportes table td {
+  padding: 10px;
   color: rgba(255, 255, 255, 0.88);
   font-size: 13px;
   font-variant-numeric: tabular-nums;
-}
-
-table tbody tr:last-child td,
-#tablaHonorarios tbody tr:last-child td,
-.tabla-resumen tbody tr:last-child td,
-.tabla-resumen tbody tr:last-child th {
-  border-bottom: none;
 }
 
 /* Columna etiqueta */
 .tabla-resumen tbody th,
 #tablaHonorarios tbody td:first-child,
 #tablaMeses tbody td:first-child,
-.movimientos tbody td:first-child,
-.reportes tbody td:first-child {
+.movimientos table tbody td:first-child,
+.reportes table tbody td:first-child {
   color: rgba(255, 255, 255, 0.42);
   font-weight: 500;
 }
 
 /* ─── Indicadores financieros ─────────────────────────────────── */
 
-.value-up,
-.arrow-up {
-  color: #3ddc97;
-  font-weight: 600;
-}
+.value-up, .arrow-up { color: #3ddc97; font-weight: 600; }
+.value-down, .arrow-down { color: #ff5c7a; font-weight: 600; }
 
-.value-down,
-.arrow-down {
-  color: #ff5c7a;
-  font-weight: 600;
-}
+#tablaMeses tbody td.value-up,
+#tablaMeses tbody td.value-up span { color: #3ddc97 !important; font-weight: 600; }
 
-#tablaMeses td.aporte-in {
-  color: #e8c46a;
-  font-weight: 600;
-}
+#tablaMeses tbody td.value-down,
+#tablaMeses tbody td.value-down span { color: #ff5c7a !important; font-weight: 600; }
 
-#tablaMeses td.aporte-out {
-  color: #c8885a;
-  font-weight: 600;
-}
+#tablaMeses td.aporte-in { color: #e8c46a !important; font-weight: 600; }
+#tablaMeses td.aporte-out { color: #c8885a !important; font-weight: 600; }
 
-/* Labels de sección — neutros */
-.resumen h3,
-.honorarios h3,
-.reportes h3,
-.movimientos h3,
-.grafico h4,
-.activos-panel h3 {
+/* Labels de sección */
+.resumen h3, .honorarios h3, .reportes h3,
+.movimientos h3, .grafico h4, .activos-panel h3 {
   color: rgba(255, 255, 255, 0.55);
+}
+
+/* ─── Botón de menú — mismo glassmorphism que las tarjetas ──────── */
+
+.menu-btn {
+  position: relative;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.menu-btn::before {
+  content: "";
+  display: block;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(6, 182, 212, 0.55) 0%,
+    rgba(61, 220, 151, 0.22) 42%,
+    rgba(255, 255, 255, 0.05) 68%,
+    rgba(6, 182, 212, 0.20) 100%
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  opacity: 0.75;
+  transition: opacity 160ms ease;
+}
+
+.menu-btn:hover::before,
+.menu-btn:focus-visible::before {
+  opacity: 1;
+}
+
+.menu-btn:hover,
+.menu-btn:focus-visible {
+  background: rgba(255, 255, 255, 0.08) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.30) !important;
+}
+
+/* ─── Dropdown — borde gradiente en panel e ítems ───────────────── */
+
+.menu-dropdown {
+  border: none !important;
+}
+
+.menu-dropdown::before {
+  content: "";
+  display: block;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(6, 182, 212, 0.60) 0%,
+    rgba(61, 220, 151, 0.24) 42%,
+    rgba(255, 255, 255, 0.05) 68%,
+    rgba(6, 182, 212, 0.22) 100%
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  z-index: 1;
+}
+
+/* Ítems del menú */
+.menu-item,
+.menu-item.download-btn {
+  position: relative;
+  border: none !important;
+}
+
+.menu-item::before,
+.menu-item.download-btn::before {
+  content: "";
+  display: block;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(6, 182, 212, 0.40) 0%,
+    rgba(61, 220, 151, 0.15) 42%,
+    rgba(255, 255, 255, 0.04) 68%,
+    rgba(6, 182, 212, 0.14) 100%
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  opacity: 0.6;
+  transition: opacity 160ms ease;
+}
+
+.menu-item:hover::before,
+.menu-item:focus-visible::before {
+  opacity: 1;
+}
+
+/* Logout mantiene acento rojo pero con el mismo truco */
+#logoutBtn::before {
+  background: linear-gradient(
+    135deg,
+    rgba(239, 68, 68, 0.55) 0%,
+    rgba(239, 68, 68, 0.18) 50%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  opacity: 0.7;
+}
+
+#logoutBtn:hover::before {
+  opacity: 1;
 }
