@@ -3258,7 +3258,6 @@ table th,
 
 .activos-bubbles {
   background: linear-gradient(150deg, #0c0c14 0%, #07070f 100%);
-  border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 16px;
 }
 
@@ -3352,7 +3351,7 @@ table th,
 .grafico,
 .activos-bubbles {
   position: relative;
-  border: none;
+  border: none !important;
 }
 
 .resumen::before,
@@ -3494,7 +3493,12 @@ table td, .tabla-resumen td, #tablaHonorarios td,
 /* Labels de sección */
 .resumen h3, .honorarios h3, .reportes h3,
 .movimientos h3, .grafico h4, .activos-panel h3 {
-  color: rgba(255, 255, 255, 0.55);
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+  margin-bottom: 14px !important;
 }
 
 /* ─── Botón de menú — mismo glassmorphism que las tarjetas ──────── */
@@ -3630,4 +3634,29 @@ table td, .tabla-resumen td, #tablaHonorarios td,
 
 #logoutBtn:hover::before {
   opacity: 1;
+}
+
+/* ─── Tablas móvil — valores completos, tamaño que escala ───────── */
+@media (max-width: 768px) {
+  table,
+  .tabla-resumen,
+  #tablaHonorarios,
+  #tablaMeses,
+  .movimientos table,
+  .reportes table {
+    table-layout: auto !important;
+    width: 100% !important;
+  }
+
+  table th, .tabla-resumen th, #tablaHonorarios th,
+  #tablaMeses th, .movimientos table th, .reportes table th,
+  table td, .tabla-resumen td, #tablaHonorarios td,
+  #tablaMeses td, .movimientos table td, .reportes table td {
+    font-size: clamp(8px, 2.2vw, 11px) !important;
+    padding: 6px clamp(2px, 1vw, 5px) !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    max-width: none !important;
+  }
 }
