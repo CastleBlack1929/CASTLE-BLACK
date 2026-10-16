@@ -2168,7 +2168,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
             <th>Fecha</th>
             <th>Cantidad</th>
             <th>Tipo</th>
-            <th>Cotización</th>
+            <th>Costo</th>
             <th>Cambio</th>
           `;
     }

@@ -3698,9 +3698,23 @@ table td, .tabla-resumen td, #tablaHonorarios td,
 
 /* ─── Movimientos: compresión extra en vertical de teléfono ─── */
 @media (max-width: 480px) {
+  .movimientos table {
+    table-layout: fixed !important;
+    width: 100% !important;
+  }
   .movimientos table th,
   .movimientos table td {
     font-size: 9px !important;
     padding: 5px 2px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: clip !important;
   }
+  /* Recibo | Fecha | Cantidad | Tipo | Costo | Cambio */
+  .movimientos table th:nth-child(1), .movimientos table td:nth-child(1) { width: 8%  !important; text-overflow: ellipsis !important; }
+  .movimientos table th:nth-child(2), .movimientos table td:nth-child(2) { width: 13% !important; }
+  .movimientos table th:nth-child(3), .movimientos table td:nth-child(3) { width: 18% !important; }
+  .movimientos table th:nth-child(4), .movimientos table td:nth-child(4) { width: 11% !important; text-overflow: ellipsis !important; }
+  .movimientos table th:nth-child(5), .movimientos table td:nth-child(5) { width: 11% !important; }
+  .movimientos table th:nth-child(6), .movimientos table td:nth-child(6) { width: 39% !important; }
 }
