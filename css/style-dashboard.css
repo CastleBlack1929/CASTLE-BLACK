@@ -3341,3 +3341,156 @@ table th,
   line-height: 1.45;
   pointer-events: none;
 }
+
+/* ─── Borde unificado — firma Castle Black ────────────────────── */
+
+.resumen,
+.rate-box,
+.honorarios,
+.reportes,
+.movimientos,
+.grafico,
+.activos-bubbles {
+  position: relative;
+  border: none;
+}
+
+.resumen::before,
+.rate-box::before,
+.honorarios::before,
+.reportes::before,
+.movimientos::before,
+.grafico::before,
+.activos-bubbles::before {
+  content: "";
+  display: block;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(6, 182, 212, 0.55) 0%,
+    rgba(61, 220, 151, 0.22) 42%,
+    rgba(255, 255, 255, 0.05) 68%,
+    rgba(6, 182, 212, 0.20) 100%
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+}
+
+/* ─── Tablas — nuevo estilo ────────────────────────────────────── */
+
+table,
+#tablaHonorarios,
+.tabla-resumen {
+  border-collapse: separate;
+  border-spacing: 0;
+  border: none;
+  background: transparent;
+  width: 100%;
+}
+
+table th,
+#tablaHonorarios th,
+.tabla-resumen thead th {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.38);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0 10px 10px;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+table tbody tr,
+#tablaHonorarios tbody tr,
+.tabla-resumen tbody tr {
+  background: transparent;
+  border: none;
+  transition: background 110ms ease;
+}
+
+table tbody tr:nth-child(even),
+#tablaHonorarios tbody tr:nth-child(even),
+.tabla-resumen tbody tr:nth-child(even) {
+  background: transparent;
+}
+
+table tbody tr:hover,
+#tablaHonorarios tbody tr:hover,
+.tabla-resumen tbody tr:hover {
+  background: rgba(255, 255, 255, 0.035);
+}
+
+table tbody td,
+#tablaHonorarios tbody td,
+.tabla-resumen tbody td,
+.tabla-resumen tbody th {
+  padding: 10px 10px;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+table tbody tr:last-child td,
+#tablaHonorarios tbody tr:last-child td,
+.tabla-resumen tbody tr:last-child td,
+.tabla-resumen tbody tr:last-child th {
+  border-bottom: none;
+}
+
+/* Columna etiqueta */
+.tabla-resumen tbody th,
+#tablaHonorarios tbody td:first-child,
+#tablaMeses tbody td:first-child,
+.movimientos tbody td:first-child,
+.reportes tbody td:first-child {
+  color: rgba(255, 255, 255, 0.42);
+  font-weight: 500;
+}
+
+/* ─── Indicadores financieros ─────────────────────────────────── */
+
+.value-up,
+.arrow-up {
+  color: #3ddc97;
+  font-weight: 600;
+}
+
+.value-down,
+.arrow-down {
+  color: #ff5c7a;
+  font-weight: 600;
+}
+
+#tablaMeses td.aporte-in {
+  color: #e8c46a;
+  font-weight: 600;
+}
+
+#tablaMeses td.aporte-out {
+  color: #c8885a;
+  font-weight: 600;
+}
+
+/* Labels de sección — neutros */
+.resumen h3,
+.honorarios h3,
+.reportes h3,
+.movimientos h3,
+.grafico h4,
+.activos-panel h3 {
+  color: rgba(255, 255, 255, 0.55);
+}
