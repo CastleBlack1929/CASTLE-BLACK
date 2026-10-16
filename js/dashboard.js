@@ -574,6 +574,12 @@ const initDashboard = async () => {
   const nivelText = document.getElementById("nivelText");
   const idClienteHeader = document.getElementById("idClienteHeader");
   const datetimeEl = document.getElementById("datetime");
+
+  const setNivel = (el, val) => {
+    if (!el) return;
+    el.textContent = val ? `Nivel: ${val}` : "";
+    el.dataset.tier = val ? val.charAt(0).toLowerCase() : "";
+  };
   const aporte = document.getElementById("aporte");
   const patrimonio = document.getElementById("patrimonio");
   const utilidad = document.getElementById("utilidad");
@@ -849,7 +855,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
     const populateHeader = (data) => {
       setHeaderClientName(data);
-      if (nivelText) nivelText.textContent = data.nivel ? `Nivel: ${data.nivel}` : "";
+      setNivel(nivelText, data.nivel);
       if (idClienteHeader) idClienteHeader.textContent = data.idCliente ? `ID: ${data.idCliente}` : "";
       if (menuCedula) menuCedula.textContent = data.cedula || "";
       if (menuTelefono) menuTelefono.textContent = data.telefono || "";
@@ -1229,7 +1235,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       document.body.classList.add("ozymandias-easter");
 
       if (idClienteHeader) idClienteHeader.textContent = "";
-      if (nivelText) nivelText.textContent = "";
+      setNivel(nivelText, "");
 
       const movBox = document.querySelector(".movimientos");
       if (movBox) movBox.style.display = "none";
@@ -1332,7 +1338,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
       if (nombreCliente) nombreCliente.textContent = "OBSESSION";
       if (idClienteHeader) idClienteHeader.textContent = "";
-      if (nivelText) nivelText.textContent = "";
+      setNivel(nivelText, "");
       if (datetimeEl) datetimeEl.textContent = "";
 
       const headerLogo = document.querySelector("header .logo");
@@ -1587,7 +1593,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
       if (nombreCliente) nombreCliente.textContent = "MAKIMA";
       if (idClienteHeader) idClienteHeader.textContent = "";
-      if (nivelText) nivelText.textContent = "";
+      setNivel(nivelText, "");
       if (datetimeEl) datetimeEl.textContent = "";
 
       // Quitar logo + nombre del header (solo para Makima)
@@ -1832,7 +1838,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     };
 
     if (baseData?.suspenderDashboard === true) {
-      if (nivelText) nivelText.textContent = "";
+      setNivel(nivelText, "");
       renderSuspensionNotice(baseData);
       return;
     }
@@ -2027,23 +2033,12 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       return text.replace(year.toString(), `<span class="year-pill ${cls}">${year}</span>`);
     };
 
-    // Reloj visible inmediato
     if (datetimeEl) {
-      if (isActualYear) {
-        const renderClock = () => {
-          const useBlue = displayYear === 2026;
-          const txt = highlightYear(formatLive(), displayYear, useBlue);
-          datetimeEl.innerHTML = txt;
-        };
-        renderClock();
-        setInterval(() => {
-          renderClock();
-        }, 1000);
-      } else {
-        const txt = `31/12/${yearLabel}`;
-        const useBlue = Number(displayYear) === 2026;
-        datetimeEl.innerHTML = highlightYear(txt, displayYear, useBlue);
-      }
+      datetimeEl.textContent = isActualYear
+        ? new Date().toLocaleDateString("es-CO", { timeZone: "America/Bogota", day: "2-digit", month: "2-digit", year: "2-digit" })
+        : `31/12/${String(yearLabel).slice(-2)}`;
+      datetimeEl.classList.toggle("year-actual", !!isActualYear);
+      datetimeEl.classList.toggle("year-historical", !isActualYear);
     }
 
     if (yearSelect && years.length > 1) {
@@ -2246,9 +2241,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
 
     // Mostrar datos del usuario
     setHeaderClientName(userData);
-    if (nivelText) {
-      nivelText.textContent = userData.nivel ? `Nivel: ${userData.nivel}` : "";
-    }
+    setNivel(nivelText, userData.nivel);
     idClienteHeader.textContent = userData.idCliente ? `ID: ${userData.idCliente}` : "";
 
     const getStartMonthKey = (data, year) => {
@@ -2696,10 +2689,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     lastPatOsc = patrimonioCalcUsd;
     utilidad.textContent = formatMoney(utilidadDisplayUsd);
     if (utilidadTotal) utilidadTotal.textContent = formatMoney(utilidadTotalDisplayUsd);
-    if (nivelText) {
-      const computedNivel = getNivelFromPatrimonio(patrimonioCalcUsd);
-      nivelText.textContent = computedNivel ? `Nivel: ${computedNivel}` : "";
-    }
+    setNivel(nivelText, getNivelFromPatrimonio(patrimonioCalcUsd));
     setTrendClass(utilidad, utilidadDisplayUsd);
     setTrendClass(utilidadTotal, utilidadTotalDisplayUsd);
     if (utilidadArrow) utilidadArrow.textContent = "";
@@ -4654,20 +4644,14 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const formatNow = () =>
       new Date().toLocaleDateString("es-CO", {
         timeZone: "America/Bogota",
-        weekday: "short",
-        year: "numeric",
-        month: "short",
-        day: "2-digit"
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit"
       });
 
-    if (isActualYear) {
-      datetimeEl.textContent = formatNow();
-      setInterval(() => {
-        datetimeEl.textContent = formatNow();
-      }, 1000);
-    } else {
-      datetimeEl.textContent = `31/12/${yearLabel}`;
-    }
+    datetimeEl.textContent = isActualYear ? formatNow() : `31/12/${String(yearLabel).slice(-2)}`;
+    datetimeEl.classList.toggle("year-actual", !!isActualYear);
+    datetimeEl.classList.toggle("year-historical", !isActualYear);
   }
 
  // Oscilación de patrimonio y utilidad (±0.25% cada 10-20s)

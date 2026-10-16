@@ -1802,13 +1802,21 @@ body:not(.makima-solid)::before {
 }
 
 header {
-  background: rgba(3, 3, 3, 0.94);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(12px);
+  height: 56px;
+  padding: 0 24px;
+  background: rgba(0, 0, 0, 0.88);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   box-shadow: none;
 }
 
+.header-left {
+  gap: 0;
+}
+
 .logo {
+  height: 34px;
   background: transparent;
   border: 0;
   border-radius: 0;
@@ -1816,22 +1824,89 @@ header {
   padding: 0;
 }
 
+.header-sep {
+  display: block;
+  width: 1px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.09);
+  margin: 0 14px;
+  flex-shrink: 0;
+}
+
 .user-info h2 {
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: -apple-system, "SF Pro Text", "Inter", sans-serif;
+  font-size: 14px;
   font-weight: 600;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.2;
+  text-transform: none;
+}
+
+.user-meta {
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.nivel-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  font-size: 17px;
+  padding: 1px 7px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: rgba(160, 168, 180, 0.85);
+  background: rgba(160, 168, 180, 0.06);
+  border-color: rgba(160, 168, 180, 0.22);
+}
+
+.nivel-badge[data-tier="b"] {
+  color: rgba(96, 165, 250, 0.90);
+  background: rgba(96, 165, 250, 0.07);
+  border-color: rgba(96, 165, 250, 0.25);
+}
+
+.nivel-badge[data-tier="a"] {
+  color: rgba(251, 191, 36, 0.92);
+  background: rgba(251, 191, 36, 0.07);
+  border-color: rgba(251, 191, 36, 0.25);
+}
+
+.nivel-badge[data-tier="s"] {
+  color: rgba(61, 220, 151, 0.92);
+  background: rgba(61, 220, 151, 0.07);
+  border-color: rgba(61, 220, 151, 0.25);
 }
 
 .user-id {
-  background: transparent;
-  border-color: rgba(255, 255, 255, 0.14);
-  border-radius: 4px;
-  color: #c9ccd1;
+  display: inline;
+  font-size: 10px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.30);
+  letter-spacing: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+  box-shadow: none;
 }
 
 .datetime-text {
-  color: #aeb4bd;
+  display: inline;
+}
+
+.datetime-text {
+  font-size: 10px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.25);
+  white-space: nowrap;
+  letter-spacing: 0;
+  margin-left: 0;
+  min-width: 0;
 }
 
 main {
@@ -2539,19 +2614,18 @@ table tbody tr:nth-child(even),
 
 /* Clean header refinement */
 header {
-  gap: 18px;
-  padding: 12px clamp(14px, 3vw, 34px);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.006)),
-    rgba(4, 5, 6, 0.92);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.085);
-  backdrop-filter: blur(18px);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.26);
+  height: 56px;
+  padding: 0 24px;
+  background: rgba(0, 0, 0, 0.88);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: none;
 }
 
 .header-left {
   min-width: 0;
-  gap: 14px;
+  gap: 0;
 }
 
 .header-right {
@@ -2559,27 +2633,27 @@ header {
 }
 
 .logo {
-  height: 52px;
+  height: 34px;
   width: auto;
-  padding: 6px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0)),
-    #010101;
-  border: 1px solid rgba(255, 255, 255, 0.075);
-  border-radius: 10px;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.04),
-    0 10px 24px rgba(0, 0, 0, 0.44);
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
   filter: none;
 }
 
 .header-left::before {
-  content: "";
-  width: 3px;
-  height: 42px;
-  border-radius: 999px;
-  background: linear-gradient(180deg, rgba(214, 181, 109, 0.92), rgba(61, 220, 151, 0.26));
-  box-shadow: 0 0 18px rgba(214, 181, 109, 0.16);
+  display: none;
+}
+
+.header-sep {
+  display: block;
+  width: 1px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.09);
+  margin: 0 14px;
+  flex-shrink: 0;
 }
 
 .user-info {
@@ -2589,54 +2663,52 @@ header {
 .user-info h2 {
   max-width: min(760px, 68vw);
   margin: 0;
-  font-family: "IBM Plex Sans", "Fira Sans", sans-serif;
-  font-size: clamp(15px, 2.2vw, 20px);
-  font-weight: 650;
-  line-height: 1.08;
-  letter-spacing: 0;
+  font-family: -apple-system, "SF Pro Text", "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
   text-transform: none;
-  color: #f6f7f5;
+  color: rgba(255, 255, 255, 0.92);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .user-meta {
-  gap: 6px;
-  margin-top: 7px;
-}
-
-.user-id,
-.datetime-text {
-  min-height: 22px;
-  padding: 3px 7px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.095);
-  background: rgba(255, 255, 255, 0.035);
-  color: #b8c0c8;
-  font-size: 11.5px;
-  line-height: 1;
-}
-
-.datetime-text {
-  display: inline-flex;
-  align-items: center;
   gap: 5px;
+  margin-top: 2px;
+}
+
+.user-id {
+  display: inline;
+  font-size: 10px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.30);
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+  line-height: normal;
+}
+
+.datetime-text {
+  display: inline;
+  font-size: 10px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.30);
+  padding: 0;
+  background: none;
+  border: none;
   margin-left: 0;
-  min-width: auto;
+  min-width: 0;
   white-space: nowrap;
-  color: #d8dde1;
-  border-color: rgba(214, 181, 109, 0.22);
-  background: rgba(214, 181, 109, 0.065);
+  line-height: normal;
 }
 
 .datetime-text::before {
-  content: "";
-  width: 5px;
-  height: 5px;
-  border-radius: 999px;
-  background: #d6b56d;
-  box-shadow: 0 0 10px rgba(214, 181, 109, 0.45);
+  display: none;
 }
 
 .menu-btn {
@@ -2975,4 +3047,51 @@ header {
     white-space: nowrap;
     text-align: right;
   }
+}
+
+/* ─── Header mobile ─────────────────────────────────────────── */
+@media (max-width: 640px) {
+  header {
+    height: 52px;
+    padding: 0 14px;
+  }
+
+  .header-sep {
+    display: none;
+  }
+
+  .header-left {
+    gap: 10px;
+  }
+
+  .logo {
+    height: 28px;
+  }
+
+  .user-info h2 {
+    font-size: 13px;
+  }
+
+  .user-meta {
+    gap: 4px;
+    margin-top: 1px;
+  }
+
+  .nivel-badge {
+    font-size: 8px;
+    padding: 1px 6px;
+  }
+
+  .datetime-text {
+    font-size: 9px;
+  }
+}
+
+/* Año actual vs histórico */
+#datetime.year-actual {
+  color: rgba(61, 220, 151, 0.75);
+}
+
+#datetime.year-historical {
+  color: rgba(255, 255, 255, 0.22);
 }
