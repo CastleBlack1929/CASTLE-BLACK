@@ -997,7 +997,7 @@ table tr:hover {
 
 /* Valores dinámicos */
 .value-up {
-  color: #22c55e;
+  color: #3ddc97;
 }
 
 .value-down {
@@ -1011,7 +1011,7 @@ table tr:hover {
 }
 
 .arrow-up {
-  color: #22c55e;
+  color: #3ddc97;
 }
 
 .arrow-down {
@@ -1526,9 +1526,9 @@ main {
   margin: 0 0 8px;
   padding: 7px 10px;
   border-radius: 8px;
-  border: 1px solid rgba(214, 181, 109, 0.24);
-  background: rgba(214, 181, 109, 0.08);
-  color: #efe5c9;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.72);
   font-size: 13px;
 }
 
@@ -1615,7 +1615,7 @@ table tr:hover {
 }
 
 .rate-value {
-  color: #fff4d7;
+  color: #ffffff;
   font-size: 26px;
 }
 
@@ -1691,7 +1691,7 @@ table tr:hover {
 }
 
 .asset-bubble {
-  border-color: rgba(214, 181, 109, 0.18);
+  border-color: rgba(255, 255, 255, 0.09);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.02)),
     #10151a;
@@ -1700,7 +1700,7 @@ table tr:hover {
 .asset-bubble:hover,
 .asset-bubble:focus,
 .asset-bubble.is-active {
-  border-color: rgba(214, 181, 109, 0.42);
+  border-color: rgba(61, 220, 151, 0.35);
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.52);
 }
 
@@ -1920,12 +1920,20 @@ main {
 .movimientos,
 .grafico,
 .activos-bubbles {
-  border-radius: 4px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.006)),
-    #090a0b;
-  border: 1px solid rgba(255, 255, 255, 0.11);
-  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.45);
+  border-radius: 8px;
+  background: linear-gradient(160deg, #111116 0%, #0c0c10 100%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.5);
+  transition: border-color 240ms ease, box-shadow 240ms ease;
+}
+
+.resumen:hover,
+.honorarios:hover,
+.reportes:hover,
+.movimientos:hover,
+.grafico:hover {
+  border-color: rgba(61, 220, 151, 0.18);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), inset 1px 0 0 rgba(61, 220, 151, 0.10);
 }
 
 .resumen::before,
@@ -1934,7 +1942,7 @@ main {
 .movimientos::before,
 .grafico::before {
   height: 1px;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.48), rgba(255, 255, 255, 0.08));
+  background: linear-gradient(90deg, rgba(61, 220, 151, 0.55), rgba(61, 220, 151, 0.12), transparent);
   opacity: 1;
 }
 
@@ -1944,11 +1952,12 @@ main {
 .movimientos h3,
 .grafico h4,
 .activos-panel h3 {
-  font-family: "IBM Plex Sans", sans-serif;
-  font-size: 14px;
+  font-family: -apple-system, "SF Pro Text", "Inter", "IBM Plex Sans", sans-serif;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  color: #f7f7f5;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .tabla-tip,
@@ -2191,7 +2200,7 @@ table tbody tr:nth-child(even),
 table tbody tr:hover,
 #tablaHonorarios tbody tr:hover,
 .tabla-resumen tbody tr:hover {
-  background: rgba(61, 220, 151, 0.045);
+  background: rgba(255, 255, 255, 0.045);
 }
 
 .tabla-resumen tbody th,
@@ -2448,7 +2457,7 @@ table tbody tr:hover,
 .movimientos::before,
 .grafico::before {
   height: 1px;
-  background: linear-gradient(90deg, rgba(214, 181, 109, 0.7), rgba(61, 220, 151, 0.32), transparent);
+  background: linear-gradient(90deg, rgba(61, 220, 151, 0.45), rgba(61, 220, 151, 0.12), transparent);
   opacity: 0.7;
 }
 
@@ -2724,8 +2733,9 @@ header {
 
 .menu-btn:hover,
 .menu-btn:focus-visible {
-  background: rgba(255, 255, 255, 0.085);
-  border-color: rgba(214, 181, 109, 0.34);
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.05);
   transform: translateY(-1px);
 }
 
@@ -2777,15 +2787,16 @@ header {
 }
 
 .menu-link {
-  color: #e2d2a7;
-  font-weight: 650;
-  border-bottom: 1px solid rgba(214, 181, 109, 0.24);
+  color: rgba(255, 255, 255, 0.70);
+  font-weight: 500;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  transition: color 150ms ease, border-bottom-color 150ms ease;
 }
 
 .menu-link:hover {
-  color: #fff1c7;
+  color: #ffffff;
   text-decoration: none;
-  border-bottom-color: rgba(214, 181, 109, 0.65);
+  border-bottom-color: rgba(255, 255, 255, 0.35);
 }
 
 .menu-info select.year-select {
@@ -2816,17 +2827,27 @@ header {
   margin: 0;
   width: 100%;
   min-height: 36px;
-  border: 1px solid rgba(214, 181, 109, 0.18);
-  background: rgba(214, 181, 109, 0.065);
-  color: #f1dfb0;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.03) 100%);
+  color: rgba(255, 255, 255, 0.88);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10), 0 4px 14px rgba(0, 0, 0, 0.28);
+  letter-spacing: 0.01em;
+  font-weight: 600;
 }
 
 .menu-item:hover,
-.menu-item:focus-visible,
+.menu-item:focus-visible {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
 .menu-item.download-btn:hover,
 .menu-item.download-btn:focus-visible {
-  background: rgba(255, 255, 255, 0.075);
-  color: #fff;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.07) 100%);
+  border-color: rgba(255, 255, 255, 0.24);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 8px 22px rgba(0, 0, 0, 0.38);
+  color: #ffffff;
   transform: translateY(-1px);
 }
 
@@ -3052,46 +3073,271 @@ header {
 /* ─── Header mobile ─────────────────────────────────────────── */
 @media (max-width: 640px) {
   header {
-    height: 52px;
-    padding: 0 14px;
+    height: auto;
+    padding: 10px 16px;
+    align-items: center;
+  }
+
+  .header-left {
+    gap: 10px;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
   }
 
   .header-sep {
     display: none;
   }
 
-  .header-left {
-    gap: 10px;
+  .logo {
+    height: 30px;
+    flex-shrink: 0;
   }
 
-  .logo {
-    height: 28px;
+  .user-info {
+    min-width: 0;
   }
 
   .user-info h2 {
-    font-size: 13px;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .user-meta {
-    gap: 4px;
-    margin-top: 1px;
+    gap: 6px;
+    margin-top: 3px;
+    flex-wrap: nowrap;
+    align-items: center;
   }
 
   .nivel-badge {
-    font-size: 8px;
-    padding: 1px 6px;
+    font-size: 9px;
+    padding: 2px 7px;
+    flex-shrink: 0;
+  }
+
+  .user-id {
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .datetime-text {
-    font-size: 9px;
+    font-size: 10px;
+    flex-shrink: 0;
+    white-space: nowrap;
   }
 }
 
 /* Año actual vs histórico */
 #datetime.year-actual {
-  color: rgba(61, 220, 151, 0.75);
+  color: rgba(61, 220, 151, 0.85);
 }
 
 #datetime.year-historical {
-  color: rgba(255, 255, 255, 0.22);
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ─── Clean pass ─────────────────────────────────────────────── */
+
+/* Tarjetas: sin línea decorativa superior, radio unificado, más aire */
+.resumen,
+.rate-box,
+.honorarios,
+.reportes,
+.movimientos,
+.grafico,
+.activos-bubbles {
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.35);
+  transition: border-color 220ms ease;
+}
+
+.resumen:hover,
+.honorarios:hover,
+.reportes:hover,
+.movimientos:hover,
+.grafico:hover {
+  border-color: rgba(255, 255, 255, 0.11);
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.45);
+}
+
+.resumen::before,
+.honorarios::before,
+.reportes::before,
+.movimientos::before,
+.grafico::before {
+  display: none;
+}
+
+/* Labels de sección: compactos pero legibles */
+.resumen h3,
+.honorarios h3,
+.reportes h3,
+.movimientos h3,
+.grafico h4,
+.activos-panel h3 {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* Tablas: headers planos, texto claro */
+table th,
+#tablaHonorarios th,
+.tabla-resumen thead th {
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.60);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Filas: separadores sutiles, hover limpio */
+table,
+#tablaHonorarios,
+.tabla-resumen {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+table tbody tr,
+#tablaHonorarios tbody tr,
+.tabla-resumen tbody tr {
+  background: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+table tbody tr:nth-child(even),
+#tablaHonorarios tbody tr:nth-child(even),
+.tabla-resumen tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+table tbody tr:hover,
+#tablaHonorarios tbody tr:hover,
+.tabla-resumen tbody tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+table td,
+table th,
+#tablaHonorarios td,
+#tablaHonorarios th,
+.tabla-resumen td,
+.tabla-resumen th {
+  border-color: transparent;
+}
+
+/* Valores: nítidos */
+.tabla-resumen td,
+#tablaHonorarios td,
+.reportes td,
+.movimientos td {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* Etiquetas de fila: secundarias pero legibles */
+.tabla-resumen tbody th,
+#tablaHonorarios tbody td:first-child,
+#tablaMeses tbody td:first-child,
+.movimientos tbody td:first-child {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ─── Burbujas de activos — glassmorphism ────────────────────── */
+
+.activos-bubbles {
+  background: linear-gradient(150deg, #0c0c14 0%, #07070f 100%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+}
+
+/* --tint se inyecta desde JS con el color del logo de cada asset */
+.asset-bubble { --tint: 180, 180, 210; }
+
+.asset-bubble {
+  background: radial-gradient(
+    circle at 33% 27%,
+    rgba(var(--tint, 180, 180, 210), 0.20) 0%,
+    rgba(var(--tint, 180, 180, 210), 0.07) 44%,
+    rgba(10, 10, 18, 0.55) 100%
+  );
+  border: 1px solid rgba(var(--tint, 180, 180, 210), 0.24);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    0 8px 32px rgba(0, 0, 0, 0.50),
+    0 0 22px rgba(var(--tint, 180, 180, 210), 0.07);
+}
+
+.asset-bubble:hover,
+.asset-bubble:focus {
+  outline: none;
+  border-color: rgba(var(--tint, 180, 180, 210), 0.44);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 12px 44px rgba(0, 0, 0, 0.60),
+    0 0 32px rgba(var(--tint, 180, 180, 210), 0.14);
+}
+
+.asset-bubble.is-active {
+  border-color: rgba(var(--tint, 180, 180, 210), 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 16px 52px rgba(0, 0, 0, 0.65),
+    0 0 44px rgba(var(--tint, 180, 180, 210), 0.18);
+}
+
+.asset-logo {
+  width: 54%;
+  height: 54%;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45));
+}
+
+.asset-logo.logo-invert {
+  filter: invert(1) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45));
+}
+
+.asset-pct {
+  position: absolute;
+  top: 9px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: rgba(var(--tint, 220, 220, 255), 0.95);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+}
+
+.asset-ticker {
+  position: absolute;
+  bottom: 9px;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.58);
+  pointer-events: none;
+}
+
+.asset-desc {
+  display: none;
+  font-size: 9.5px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.65);
+  max-width: 120px;
+  text-align: center;
+  line-height: 1.45;
+  pointer-events: none;
 }

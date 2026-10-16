@@ -921,6 +921,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         percent: 10,
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/d/dd/Coca-Cola_logo_white.png",
+        color: "224, 40, 40",
         detail: "Coca-Cola: consumo defensivo"
       },
       {
@@ -930,6 +931,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Apple_Logo.svg/960px-Apple_Logo.svg.png",
         invert: true,
+        color: "170, 175, 185",
         detail: "Apple: mega tecnología"
       },
       {
@@ -939,6 +941,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg",
         invert: false,
+        color: "0, 164, 239",
         detail: "Microsoft: nube empresarial"
       },
       {
@@ -948,6 +951,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Berkshire-Hathaway-Logo.svg",
         invert: true,
+        color: "185, 148, 60",
         detail: "Berkshire: holding estable"
       },
       {
@@ -956,6 +960,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         percent: 10,
         type: "Comodity",
         logo: "https://upload.wikimedia.org/wikipedia/commons/0/07/Gold_bar.png",
+        color: "230, 185, 45",
         detail: "Gold: refugio anticrisis"
       },
       {
@@ -964,6 +969,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         percent: 10,
         type: "Cripto",
         logo: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Bitcoin_Logo.png",
+        color: "247, 147, 26",
         detail: "Bitcoin: líder digital"
       },
       {
@@ -972,6 +978,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         percent: 5,
         type: "Comodity",
         logo: "https://upload.wikimedia.org/wikipedia/commons/2/23/US_one_dollar_bill%2C_obverse%2C_series_2009.jpg",
+        color: "80, 175, 100",
         detail: "USD: liquidez base"
       },
       {
@@ -981,6 +988,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         type: "Others",
         logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'><circle cx='30' cy='70' r='10' fill='white'/><circle cx='70' cy='30' r='10' fill='white'/><circle cx='110' cy='70' r='10' fill='white'/><circle cx='70' cy='110' r='10' fill='white'/><line x1='30' y1='70' x2='70' y2='30' stroke='white' stroke-width='4'/><line x1='70' y1='30' x2='110' y2='70' stroke='white' stroke-width='4'/><line x1='110' y1='70' x2='70' y2='110' stroke='white' stroke-width='4'/><line x1='70' y1='110' x2='30' y2='70' stroke='white' stroke-width='4'/></svg>",
         invert: false,
+        color: "140, 130, 200",
         detail: "Others: diversificación"
       }
     ];
@@ -992,6 +1000,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg",
         invert: false,
+        color: "0, 164, 239",
         detail: "Microsoft: nube empresarial"
       },
       {
@@ -1001,6 +1010,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/a/a4/NVIDIA_logo.svg",
         invert: false,
+        color: "118, 185, 0",
         detail: "NVIDIA: IA y chips"
       },
       {
@@ -1010,6 +1020,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg",
         invert: false,
+        color: "66, 133, 244",
         detail: "Alphabet: datos globales"
       },
       {
@@ -1019,6 +1030,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
         invert: false,
+        color: "255, 153, 0",
         detail: "Amazon: comercio nube"
       },
       {
@@ -1027,6 +1039,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         percent: 15,
         type: "Cripto",
         logo: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Bitcoin_Logo.png",
+        color: "247, 147, 26",
         detail: "Bitcoin: líder digital"
       },
       {
@@ -1036,6 +1049,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Berkshire-Hathaway-Logo.svg",
         invert: true,
+        color: "185, 148, 60",
         detail: "Berkshire: holding estable"
       },
       {
@@ -1045,6 +1059,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/c/c9/Logo_of_JPMorganChase_2024.svg",
         invert: true,
+        color: "0, 114, 186",
         detail: "JPM: banca global"
       },
       {
@@ -1054,6 +1069,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/3/37/Occidental-Petroleum-Logo.svg",
         invert: false,
+        color: "200, 60, 40",
         detail: "OXY: energía táctica"
       },
       {
@@ -1063,6 +1079,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         type: "Acción",
         logo: "https://upload.wikimedia.org/wikipedia/commons/d/d8/Logo-ishares_2019.svg",
         invert: true,
+        color: "0, 178, 94",
         detail: "SOXX: semiconductores"
       },
       {
@@ -1071,6 +1088,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         percent: 5,
         type: "Liquidez",
         logo: "https://upload.wikimedia.org/wikipedia/commons/2/23/US_one_dollar_bill%2C_obverse%2C_series_2009.jpg",
+        color: "80, 175, 100",
         detail: "Cash: liquidez"
       }
     ];
@@ -1183,6 +1201,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           bubble.style.transform = "translate(-50%, -50%)";
         }
         bubble.style.setProperty("--float-delay", `${idx * 0.4}s`);
+        bubble.style.setProperty("--tint", asset.color || "180, 180, 210");
         bubble.innerHTML = `
           <img class="asset-logo ${asset.invert ? "logo-invert" : ""}" src="${asset.logo}" alt="${asset.name} logo">
           <span class="asset-pct">${asset.percent}%</span>
