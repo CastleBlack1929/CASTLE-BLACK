@@ -3711,10 +3711,10 @@ table td, .tabla-resumen td, #tablaHonorarios td,
     text-overflow: clip !important;
   }
   /* Recibo | Fecha | Cantidad | Tipo | Costo | Cambio */
-  .movimientos table th:nth-child(1), .movimientos table td:nth-child(1) { width: 8%  !important; text-overflow: ellipsis !important; }
-  .movimientos table th:nth-child(2), .movimientos table td:nth-child(2) { width: 13% !important; }
-  .movimientos table th:nth-child(3), .movimientos table td:nth-child(3) { width: 18% !important; }
-  .movimientos table th:nth-child(4), .movimientos table td:nth-child(4) { width: 11% !important; text-overflow: ellipsis !important; }
-  .movimientos table th:nth-child(5), .movimientos table td:nth-child(5) { width: 11% !important; }
-  .movimientos table th:nth-child(6), .movimientos table td:nth-child(6) { width: 39% !important; }
+  .movimientos table th:nth-child(1), .movimientos table td:nth-child(1) { width: 7%  !important; text-overflow: ellipsis !important; }
+  .movimientos table th:nth-child(2), .movimientos table td:nth-child(2) { width: 12% !important; }
+  .movimientos table th:nth-child(3), .movimientos table td:nth-child(3) { width: 31% !important; }
+  .movimientos table th:nth-child(4), .movimientos table td:nth-child(4) { width: 10% !important; text-overflow: ellipsis !important; }
+  .movimientos table th:nth-child(5), .movimientos table td:nth-child(5) { width: 9%  !important; }
+  .movimientos table th:nth-child(6), .movimientos table td:nth-child(6) { width: 31% !important; }
 }
