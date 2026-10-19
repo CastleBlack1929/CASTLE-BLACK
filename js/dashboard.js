@@ -542,8 +542,13 @@ const computeDerivedWithMonthlyRules = ({
 
 const loadUserData = (filePath) =>
   new Promise((resolve, reject) => {
-    delete window.userData;
+    const cacheKey = `_ud_${filePath}`;
+    try {
+      const cached = sessionStorage.getItem(cacheKey);
+      if (cached) { resolve(JSON.parse(cached)); return; }
+    } catch (_) {}
 
+    delete window.userData;
     const script = document.createElement("script");
     script.src = `${filePath}?v=${Date.now()}`;
     script.async = true;
@@ -557,6 +562,7 @@ const loadUserData = (filePath) =>
       const data = window.userData;
       delete window.userData;
       script.remove();
+      try { sessionStorage.setItem(cacheKey, JSON.stringify(data)); } catch (_) {}
       resolve(data);
     };
 
@@ -781,6 +787,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const keys = ["currentUserFile", SESSION_ACTIVITY_KEY, "sessionStart"];
     if (clearPrefs) keys.push("dashboardYear");
     keys.forEach((k) => localStorage.removeItem(k));
+    try { Object.keys(sessionStorage).filter(k => k.startsWith("_ud_")).forEach(k => sessionStorage.removeItem(k)); } catch (_) {}
     const target = "login.html";
     if (silent) window.location.replace(target);
     else window.location.href = target;
@@ -2851,7 +2858,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       }
     };
     const AUTO_RATE_ENABLED = true;
-    const RATE_REFRESH_MS = 5 * 1000;
+    const RATE_REFRESH_MS = 30 * 1000;
     const DEFAULT_RATE_BY_YEAR = DEFAULT_RATE_BY_CURRENCY[localCurrency] || DEFAULT_RATE_BY_CURRENCY.COP;
     const TRADINGVIEW_API_URL = "https://scanner.tradingview.com/forex/scan";
     const RATE_SYMBOL = localCurrency === "EUR"
@@ -2890,7 +2897,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const fetchLiveRate = async () => {
       if (!RATE_API_URL) return false;
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4500);
+      const isMobile = window.matchMedia("(max-width: 768px)").matches;
+      const timeoutId = setTimeout(() => controller.abort(), isMobile ? 2000 : 4500);
       try {
         const options = { signal: controller.signal, cache: "no-store" };
         if (rateFetchMode === "tradingview") {
