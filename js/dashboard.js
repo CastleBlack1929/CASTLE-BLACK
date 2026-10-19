@@ -2053,9 +2053,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     };
 
     if (datetimeEl) {
-      datetimeEl.textContent = isActualYear
-        ? new Date().toLocaleDateString("es-CO", { timeZone: "America/Bogota", day: "2-digit", month: "2-digit", year: "2-digit" })
-        : `31/12/${String(yearLabel).slice(-2)}`;
+      const _fmtDate = () => { const n = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Bogota" })); return `${String(n.getMonth()+1).padStart(2,"0")}/${String(n.getDate()).padStart(2,"0")}/${String(n.getFullYear()).slice(-2)}`; };
+      datetimeEl.textContent = isActualYear ? _fmtDate() : `31/12/${String(yearLabel).slice(-2)}`;
       datetimeEl.classList.toggle("year-actual", !!isActualYear);
       datetimeEl.classList.toggle("year-historical", !isActualYear);
     }
@@ -4727,13 +4726,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
   // Fecha visible actualizada
   if (datetimeEl) {
     const yearLabel = selectedYear !== "actual" ? selectedYear : new Date().getFullYear();
-    const formatNow = () =>
-      new Date().toLocaleDateString("es-CO", {
-        timeZone: "America/Bogota",
-        day: "2-digit",
-        month: "2-digit",
-        year: "2-digit"
-      });
+    const formatNow = () => { const n = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Bogota" })); return `${String(n.getMonth()+1).padStart(2,"0")}/${String(n.getDate()).padStart(2,"0")}/${String(n.getFullYear()).slice(-2)}`; };
 
     datetimeEl.textContent = isActualYear ? formatNow() : `31/12/${String(yearLabel).slice(-2)}`;
     datetimeEl.classList.toggle("year-actual", !!isActualYear);
