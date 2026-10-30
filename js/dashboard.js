@@ -363,7 +363,7 @@ const MONTHLY_MARGIN_BY_YEAR = {
     julio: 1.75,
     agosto: 0.45,
     septiembre: 3.84,
-    octubre: 2.97
+    octubre: 3.21
   }
 };
 
