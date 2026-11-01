@@ -363,7 +363,8 @@ const MONTHLY_MARGIN_BY_YEAR = {
     julio: 1.75,
     agosto: 0.45,
     septiembre: 3.84,
-    octubre: 4.12
+    octubre: 4.12,
+    noviembre: -0.1
   }
 };
 
@@ -1973,13 +1974,13 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const initial = toNumber(prevPatrInicial);
       return Number.isFinite(initial) ? initial : 0;
     };
-    const computeMonthMetrics = (mes, patrimonioValue) => {
+    const computeMonthMetrics = (mes, patrimonioValue, { skipMarginOverride = false } = {}) => {
       const patrimonio = Number.isFinite(patrimonioValue) ? patrimonioValue : 0;
       const aporteMes = getMonthAporte(mes);
       let basePrev = getPrevMonthPatrimonio(mes);
       let g_p = patrimonio - basePrev - aporteMes;
       let margen = basePrev !== 0 ? (g_p / Math.abs(basePrev)) * 100 : 0;
-      if (isMonthlyRulesYear) {
+      if (isMonthlyRulesYear && !skipMarginOverride) {
         const marginPct = getMonthlyMarginPercent(displayYear, mes, { currentMonthIndex, currentDay });
         if (Number.isFinite(marginPct)) {
           const baseTotal = basePrev + aporteMes;
@@ -3277,7 +3278,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           const currentRow = currentMonthKey ? monthRowMap[currentMonthKey] : null;
           if (currentRow) {
             const prevGp = toNumber(currentRow.gpCell?.textContent);
-          const metrics = computeMonthMetrics(currentMonthKey, nuevoPat);
+          const metrics = computeMonthMetrics(currentMonthKey, nuevoPat, { skipMarginOverride: true });
           currentRow.patrCell.textContent = `$ ${formatNumber(metrics.patrimonio)}`;
             currentRow.gpCell.textContent = `$ ${formatNumber(metrics.g_p)}`;
             currentRow.margenCell.textContent = formatPercent(metrics.margen);
