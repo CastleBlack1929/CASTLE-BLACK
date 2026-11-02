@@ -50,7 +50,7 @@ window.userData = {
   ],
   "meses": {
     "enero": {
-      "aporte": 0.0,
+      "aporte": 274.33,
       "patrimonio": 4889.64405
     },
     "febrero": {
@@ -106,7 +106,7 @@ window.userData = {
       "nivel": "AA",
       "meses": {
         "enero": {
-          "aporte": 459.0,
+          "aporte": 459.78,
           "patrimonio": 2548.93
         },
         "febrero": {
@@ -154,7 +154,7 @@ window.userData = {
           "patrimonio": 4555.44
         }
       },
-      "aporte": 1758.43,
+      "aporte": 1759.21,
       "patrimonio": 4555.44,
       "honorariosTrimestres": [
         {
@@ -207,7 +207,7 @@ window.userData = {
       "aporteL": 7000000.0,
         "patrimonioL": 8814002.02,
       "tasaBase": 4373.5,
-      "aporte": 490.95,
+      "aporte": 1749.33,
       "patrimonio": 2015.32,
       "nivel": "AA",
       "meses": {
