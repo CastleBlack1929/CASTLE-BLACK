@@ -364,7 +364,7 @@ const MONTHLY_MARGIN_BY_YEAR = {
     agosto: 0.45,
     septiembre: 3.84,
     octubre: 4.12,
-    noviembre: -0.57
+    noviembre: -1.32
   }
 };
 
@@ -2507,7 +2507,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const sumMovCopAllYears = () => {
       if (typeof movimientosData === "undefined" || !Array.isArray(movimientosData)) return 0;
       return movimientosData
-        .filter((m) => matchMovimientoForUser(m) && !m.soloLista)
+        .filter((m) => matchMovimientoForUser(m) && (!m.soloLista || m.contarTotal))
         .reduce((acc, mov) => {
           const tipo = (mov.tipo || "").toUpperCase();
           if (tipo !== localCurrency) return acc;
@@ -2517,7 +2517,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
     const sumMovUsdAllYears = () => {
       if (typeof movimientosData === "undefined" || !Array.isArray(movimientosData)) return 0;
       return movimientosData
-        .filter((m) => matchMovimientoForUser(m) && !m.soloLista)
+        .filter((m) => matchMovimientoForUser(m) && (!m.soloLista || m.contarTotal))
         .reduce((acc, mov) => acc + getMovUsdValue(mov), 0);
     };
     const totalMovCopAll = sumMovCopAllYears();
@@ -3930,7 +3930,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         ? movimientosData.filter(m => {
             const sameUser = matchMovimientoForUser(m);
             const sameYear = Number(m.year) === targetYear;
-            return sameUser && sameYear;
+            return sameUser && sameYear && !m.soloLista;
           })
         : [];
       movimientosFiltrados = registros;

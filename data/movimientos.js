@@ -147,5 +147,5 @@ const movimientosData = [
   {"username": "dsgc2003", "cliente": "003", "recibo": "20", "fecha": "12/28/23", "year": 2024, "socio": "DAVID SANTIAGO GONZALEZ", "cedula": "1000474798", "cantidad": 400000.0, "tipo": "COP", "tasa": 3809.0, "cambio": 105.01, "soloLista": true},
   {"username": "scgr1998", "cliente": "004", "recibo": "19", "fecha": "12/28/23", "year": 2024, "socio": "SANDRA CAMILA GONZALEZ", "cedula": "1016103922", "cantidad": 430000.0, "tipo": "COP", "tasa": 3962.0, "cambio": 108.5, "soloLista": true},
   {"username": "jaen1971", "cliente": "005", "recibo": "8", "fecha": "12/28/23", "year": 2024, "socio": "JOSE ANTONIO ENCINAS", "cedula": "318674", "cantidad": 800000.0, "tipo": "COP", "tasa": 4300.0, "cambio": 186.0},
-  {"username": "aygr1975", "cliente": "002", "recibo": "1", "fecha": "12/28/23", "year": 2024, "socio": "ALEIDA YANIRA GONZALEZ", "cedula": "52332911", "cantidad": 5000000.0, "tipo": "COP", "tasa": 3973.0, "cambio": 1258.38}
+  {"username": "aygr1975", "cliente": "002", "recibo": "1", "fecha": "12/28/23", "year": 2024, "socio": "ALEIDA YANIRA GONZALEZ", "cedula": "52332911", "cantidad": 5000000.0, "tipo": "COP", "tasa": 3973.0, "cambio": 1258.38, "soloLista": true, "contarTotal": true}
 ];
