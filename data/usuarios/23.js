@@ -18,34 +18,30 @@ window.userData = {
   "honorariosTrimestres": [
     {
       "nombre": "TRIMESTRE 1",
-      "meses": [
-        "enero",
-        "febrero",
-        "marzo"
-      ]
+      "meses": []
     },
     {
       "nombre": "TRIMESTRE 2",
       "meses": [
+        "marzo",
         "abril",
-        "mayo",
-        "junio"
+        "mayo"
       ]
     },
     {
       "nombre": "TRIMESTRE 3",
       "meses": [
+        "junio",
         "julio",
-        "agosto",
-        "septiembre"
+        "agosto"
       ]
     },
     {
       "nombre": "TRIMESTRE 4",
       "meses": [
+        "septiembre",
         "octubre",
-        "noviembre",
-        "diciembre"
+        "noviembre"
       ]
     }
   ],
@@ -72,31 +68,31 @@ window.userData = {
     },
     "junio": {
       "aporte": 0,
-      "patrimonio": 324.93903
+      "patrimonio": 314.94
     },
     "julio": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 320.45
     },
     "agosto": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 321.89
     },
     "septiembre": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 324.25
     },
     "octubre": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 337.61
     },
     "noviembre": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 333.16
     },
     "diciembre": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 333.16
     }
   },
   "historico": {},

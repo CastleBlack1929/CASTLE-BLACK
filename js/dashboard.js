@@ -441,7 +441,7 @@ const computeDerivedWithMonthlyRules = ({
       mergeAbrToNext &&
       String(year) === "2026" &&
       String(corteAplicado || "").toUpperCase() === "ENE-ABR-JUL-OCT";
-    if (mergeFeb && (mes === "marzo" || mes === "junio" || mes === "septiembre")) return 0;
+    if (mergeFeb && mes === "marzo") return 0;
     if (mergeAbr && (mes === "febrero" || mes === "mayo")) return 0;
     const mergeAbrMAR =
       mergeAbrToNext &&
