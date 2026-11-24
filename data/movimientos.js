@@ -1,4 +1,5 @@
 const movimientosData = [
+  {"username": "GCC2007", "cliente": "025", "recibo": "160", "fecha": "11/24/26", "year": 2026, "socio": "GABRIELA CHACON CUEVAS", "cedula": "1014206942", "cantidad": 80000.0, "tipo": "COP", "tasa": 3503.0, "cambio": 22.84},
   {"username": "dsgc2003", "cliente": "003", "recibo": "159", "fecha": "11/23/26", "year": 2026, "socio": "DAVID SANTIAGO GONZALEZ", "cedula": "1000474798", "cantidad": 2000000.0, "tipo": "COP", "tasa": 3493.0, "cambio": 572.52},
   {"username": "vspg2008", "cliente": "006", "recibo": "158", "fecha": "11/19/26", "year": 2026, "socio": "VALERIA SOFIA PERALTA GONZALEZ", "cedula": "1141517022", "cantidad": 800000.0, "tipo": "COP", "tasa": 3401, "cambio": 235.24},
   {"username": "jgb1975", "cliente": "009", "recibo": "157", "fecha": "11/04/26", "year": 2026, "socio": "CARROCERIAS JGB", "cedula": "830103701-9", "cantidad": 3000000.0, "tipo": "COP", "tasa": 3213.0, "cambio": 933.65},
