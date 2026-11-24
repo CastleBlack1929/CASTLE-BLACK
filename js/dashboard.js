@@ -322,6 +322,7 @@ const validateUserData = (data) => {
 };
 
 const tarifaHonorarios = (utilidad) => {
+  if (utilidad <= 0) return { nombre: "—", comision: "—", valor: 0 };
   if (utilidad <= 40) return { nombre: "BRONCE / PLATA", comision: "Fijo $10", valor: 10 };
   if (utilidad <= 100) return { nombre: "ORO", comision: "25%", valor: utilidad * 0.25 };
   if (utilidad <= 500) return { nombre: "PLATINO", comision: "20%", valor: utilidad * 0.20 };
@@ -364,7 +365,7 @@ const MONTHLY_MARGIN_BY_YEAR = {
     agosto: 0.45,
     septiembre: 3.84,
     octubre: 4.12,
-    noviembre: -2.41
+    noviembre: -2.03
   }
 };
 
@@ -1979,7 +1980,8 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
       const aporteMes = getMonthAporte(mes);
       let basePrev = getPrevMonthPatrimonio(mes);
       let g_p = patrimonio - basePrev - aporteMes;
-      let margen = basePrev !== 0 ? (g_p / Math.abs(basePrev)) * 100 : 0;
+      const baseTotal = basePrev + aporteMes;
+      let margen = baseTotal !== 0 ? (g_p / Math.abs(baseTotal)) * 100 : 0;
       if (isMonthlyRulesYear && !skipMarginOverride) {
         const marginPct = getMonthlyMarginPercent(displayYear, mes, { currentMonthIndex, currentDay });
         if (Number.isFinite(marginPct)) {
