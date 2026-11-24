@@ -12,6 +12,7 @@ window.userData = {
     "patrimonioUsd": 0,
     "aporteCop": 0
   },
+  "preservarPatrimonioManual": true,
   "tasaBase": 3710.5,
   "aporteL": 0,
   "honorariosTrimestres": [
@@ -87,7 +88,7 @@ window.userData = {
     },
     "octubre": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 5495.02
     },
     "noviembre": {
       "aporte": 0,
