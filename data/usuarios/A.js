@@ -52,27 +52,27 @@ window.userData = {
   "meses": {
     "enero": {
       "aporte": 208.92,
-      "patrimonio": 961.34
+      "patrimonio": 0
     },
     "febrero": {
       "aporte": 0,
-      "patrimonio": 1661.86113
+      "patrimonio": 0
     },
     "marzo": {
       "aporte": 0,
-      "patrimonio": 1808.99254
+      "patrimonio": 0
     },
     "abril": {
       "aporte": 0,
-      "patrimonio": 2935.06197
+      "patrimonio": 0
     },
     "mayo": {
       "aporte": 0,
-      "patrimonio": 3134.91271
+      "patrimonio": 0
     },
     "junio": {
       "aporte": 0,
-      "patrimonio": 3181.9364
+      "patrimonio": 0
     },
     "julio": {
       "aporte": 0,
