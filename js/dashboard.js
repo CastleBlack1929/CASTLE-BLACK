@@ -392,7 +392,12 @@ const buildHonorarioDeductionMap = (corte) => {
     const mesesTri = Array.isArray(tri.meses) ? tri.meses : [];
     if (!mesesTri.length) return;
     const lastMes = mesesTri[mesesTri.length - 1];
-    if (lastMes === "diciembre") return;
+    if (lastMes === "diciembre") {
+      if (String(corte || "").toUpperCase() === "MAR-JUN-SEP-DIC") {
+        map["enero"] = { nombre: tri.nombre, meses: mesesTri, index };
+      }
+      return;
+    }
     const lastIdx = monthOrder.indexOf(lastMes);
     if (lastIdx === -1 || lastIdx + 1 >= monthOrder.length) return;
     const dedMes = monthOrder[lastIdx + 1];
@@ -474,6 +479,17 @@ const computeDerivedWithMonthlyRules = ({
       if (Number.isFinite(abrPrevVal)) {
         return tarifaHonorarios(utilTrim + abrPrevVal).valor || 0;
       }
+    }
+    if (mes === "enero" && (tri.meses || []).slice(-1)[0] === "diciembre") {
+      const t3Meses = ["julio", "agosto", "septiembre"];
+      const t3Util = t3Meses.reduce((s, m) => {
+        const cv = toNumber(utilByMes[m]);
+        if (Number.isFinite(cv)) return s + cv;
+        const pv = toNumber(prevYearUtilByMes[m]);
+        return s + (Number.isFinite(pv) ? pv : 0);
+      }, 0);
+      const t3Tarifa = tarifaHonorarios(t3Util).valor || 0;
+      return tarifaHonorarios(utilTrim + t3Tarifa).valor || 0;
     }
     const tarifa = tarifaHonorarios(utilTrim);
     return tarifa.valor || 0;
@@ -3620,6 +3636,13 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
         const extraAbr = mergeAbrToNext && triIndex === 2
           ? (toNumber(utilPorMes["abril"]) || 0)
           : 0;
+        const mergeAbrMAR = mergeAbrToNext && String(userData.corte || "").toUpperCase() === "MAR-JUN-SEP-DIC";
+        const extraOct = mergeAbrMAR && triIndex === 3
+          ? (() => {
+              const t3Util = ["julio", "agosto", "septiembre"].reduce((s, m) => s + (toNumber(utilPorMes[m]) || 0), 0);
+              return tarifaHonorarios(t3Util).valor || 0;
+            })()
+          : 0;
         const skipFirstYearCharge =
           (mergeFebToNext && triIndex === 0) ||
           (mergeAbrToNext && (triIndex === 0 || triIndex === 1));
@@ -3635,7 +3658,7 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
               if (Number.isFinite(prevVal)) return sum + prevVal;
             }
             return sum + (Number.isFinite(currentVal) ? currentVal : 0);
-        }, extraFeb + extraAbr);
+        }, extraFeb + extraAbr + extraOct);
         if (skipFirstYearCharge) {
           const row = document.createElement("tr");
           row.innerHTML = `
