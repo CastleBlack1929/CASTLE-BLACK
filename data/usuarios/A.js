@@ -76,15 +76,15 @@ window.userData = {
     },
     "julio": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 4551.70
     },
     "agosto": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 4739.11
     },
     "septiembre": {
       "aporte": 0,
-      "patrimonio": 0
+      "patrimonio": 5025.10
     },
     "octubre": {
       "aporte": 0,
