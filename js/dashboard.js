@@ -334,7 +334,7 @@ const tarifaHonorarios = (utilidad) => {
 const roundTo = (value, decimals = 6) => {
   if (!Number.isFinite(value)) return value;
   const factor = 10 ** decimals;
-  return Math.round(value * factor) / factor;
+  return Math.ceil(value * factor) / factor;
 };
 
 const getNivelFromPatrimonio = (patrimonioUsd) => {
