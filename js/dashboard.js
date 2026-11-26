@@ -365,7 +365,7 @@ const MONTHLY_MARGIN_BY_YEAR = {
     agosto: 0.45,
     septiembre: 3.84,
     octubre: 4.12,
-    noviembre: -2.03
+    noviembre: -1.82
   }
 };
 
@@ -3637,12 +3637,11 @@ const LOGO_BLACK_PATH = "img/logo-black.png";
           ? (toNumber(utilPorMes["abril"]) || 0)
           : 0;
         const mergeAbrMAR = mergeAbrToNext && String(userData.corte || "").toUpperCase() === "MAR-JUN-SEP-DIC";
-        const extraOct = mergeAbrMAR && triIndex === 3
-          ? (() => {
-              const t3Util = ["julio", "agosto", "septiembre"].reduce((s, m) => s + (toNumber(utilPorMes[m]) || 0), 0);
-              return tarifaHonorarios(t3Util).valor || 0;
-            })()
-          : 0;
+        let extraOct = 0;
+        if (mergeAbrMAR && triIndex === 3) {
+          const _t3Util = ["julio", "agosto", "septiembre"].reduce((s, m) => s + (toNumber(utilPorMes[m]) || 0), 0);
+          extraOct = tarifaHonorarios(_t3Util).valor || 0;
+        }
         const skipFirstYearCharge =
           (mergeFebToNext && triIndex === 0) ||
           (mergeAbrToNext && (triIndex === 0 || triIndex === 1));
